@@ -16,7 +16,7 @@
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*", "*://*.soundcloud.com/*"],
-      "js": ["content_script.js"],
+      "js": ["dist/content_script.js"],
       "run_at": "document_idle"
     }
   ],

@@ -18,12 +18,14 @@ test("manifest declares the expected MV3 basics", () => {
   ]);
   assert.equal(manifest.background.service_worker, "background.js");
   assert.equal(manifest.action.default_popup, "popup.html");
-  assert.equal(manifest.content_scripts[0].js[0], "content_script.js");
+  assert.equal(manifest.content_scripts[0].js[0], "dist/content_script.js");
 });
 
 test("scaffold files exist", () => {
   const expectedFiles = [
     "content_script.js",
+    "browser-polyfill.js",
+    "content-script-runtime.js",
     "background.js",
     "popup.html",
     "popup.js",
