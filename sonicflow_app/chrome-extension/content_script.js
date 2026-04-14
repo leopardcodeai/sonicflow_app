@@ -1,4 +1,5 @@
 import { BeatEngine } from "../core-js/beatEngine.js";
+import { extensionApi } from "./browser-polyfill.js";
 import { createChunkPlan, DEFAULT_ENGINE_SETTINGS } from "./content-script-runtime.js";
 
 const state = {
@@ -104,7 +105,7 @@ function refreshAvailability() {
 
 refreshAvailability();
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+extensionApi.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   if (message?.type === "FLOWTONES_GET_STATE") {
     refreshAvailability();
     sendResponse({ ...state });
