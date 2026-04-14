@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FlowTones</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f0f0f;
+        --fg: #f5f7fb;
+        --muted: #8e97a8;
+        --accent: #378add;
+        --border: #1f2735;
+      }
+
+      body {
+        margin: 0;
+        width: 320px;
+        min-height: 180px;
+        padding: 20px;
+        background: radial-gradient(circle at top, #1b2433 0%, var(--bg) 55%);
+        color: var(--fg);
+        font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      .shell {
+        display: grid;
+        gap: 14px;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .status {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        color: var(--muted);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #556070;
+      }
+
+      .dot.active {
+        background: #3ccf91;
+      }
+
+      .panel {
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: rgba(10, 14, 20, 0.75);
+      }
+
+      strong {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="header">
+        <strong>FlowTones</strong>
+        <div class="status">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Off</span>
+        </div>
+      </div>
+      <div class="panel">
+        <strong>Chrome scaffold ready</strong>
+        <p id="page-message">Checking current tab for YouTube or SoundCloud media...</p>
+      </div>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

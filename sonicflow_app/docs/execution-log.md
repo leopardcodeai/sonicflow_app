@@ -20,13 +20,11 @@ Build the SonicFlow app as a monorepo with three shared core beat engines first,
 
 ### In Progress
 
-- `SF-1` Core JS engine
-- `SF-2` Core Swift package
 - `SF-3` Core Kotlin module
+- `SF-4` Chrome extension scaffold
 
 ### Deferred Until Core Is Stable
 
-- `SF-4` Chrome scaffold
 - `SF-5` Chrome popup UI
 - `SF-6` Chrome BeatEngine integration
 - `SF-7` Safari conversion
@@ -63,3 +61,4 @@ sonicflow_app/
 - `SF-2` worker agent in `core-swift`
 - `SF-3` worker agent in `core-android`
 - GitHub pipeline is being established in parallel so each issue can land as its own branch and PR.
+- `SF-4` now provides the first Chrome extension skeleton with MV3 wiring, content-script messaging, placeholder popup, and icon assets.
