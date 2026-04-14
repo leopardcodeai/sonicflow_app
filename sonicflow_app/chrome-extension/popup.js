@@ -1,7 +1,8 @@
+import { extensionApi } from "./browser-polyfill.js";
 import { DEFAULT_SETTINGS, MODES } from "./popup-model.js";
 
 async function queryActiveTabState() {
-  const { tabId } = await chrome.runtime.sendMessage({
+  const { tabId } = await extensionApi.runtime.sendMessage({
     type: "FLOWTONES_QUERY_ACTIVE_TAB"
   });
 
@@ -9,7 +10,7 @@ async function queryActiveTabState() {
     return null;
   }
 
-  return chrome.runtime.sendMessage({
+  return extensionApi.runtime.sendMessage({
     type: "FLOWTONES_FORWARD_TO_TAB",
     tabId,
     payload: { type: "FLOWTONES_GET_STATE" }
@@ -17,11 +18,11 @@ async function queryActiveTabState() {
 }
 
 async function persistSettings(settings) {
-  await chrome.storage.local.set({ flowtonesSettings: settings });
+  await extensionApi.storage.local.set({ flowtonesSettings: settings });
 }
 
 async function loadStoredSettings() {
-  const stored = await chrome.storage.local.get("flowtonesSettings");
+  const stored = await extensionApi.storage.local.get("flowtonesSettings");
   return {
     ...DEFAULT_SETTINGS,
     ...(stored.flowtonesSettings ?? {})
@@ -29,7 +30,7 @@ async function loadStoredSettings() {
 }
 
 async function pushStateToTab(nextState) {
-  const { tabId } = await chrome.runtime.sendMessage({
+  const { tabId } = await extensionApi.runtime.sendMessage({
     type: "FLOWTONES_QUERY_ACTIVE_TAB"
   });
 
@@ -37,7 +38,7 @@ async function pushStateToTab(nextState) {
     return null;
   }
 
-  return chrome.runtime.sendMessage({
+  return extensionApi.runtime.sendMessage({
     type: "FLOWTONES_FORWARD_TO_TAB",
     tabId,
     payload: {
