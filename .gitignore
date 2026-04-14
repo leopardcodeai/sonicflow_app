@@ -1,0 +1,11 @@
+.DS_Store
+.build/
+.gradle/
+build/
+DerivedData/
+dist/
+node_modules/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
