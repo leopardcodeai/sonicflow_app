@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - "sf/**"
+  pull_request:
+
+jobs:
+  core-js:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sonicflow_app/core-js
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+
+  core-swift:
+    runs-on: macos-14
+    defaults:
+      run:
+        working-directory: sonicflow_app/core-swift
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+
