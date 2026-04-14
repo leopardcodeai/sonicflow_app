@@ -1,0 +1,42 @@
+name: FlowTones
+options:
+  deploymentTarget:
+    iOS: "16.0"
+packages:
+  FlowTonesCore:
+    path: ../core-swift
+targets:
+  FlowTones:
+    type: application
+    platform: iOS
+    sources:
+      - FlowTones
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.flowtones.ios
+        INFOPLIST_FILE: FlowTones/Info.plist
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1,2"
+    info:
+      path: FlowTones/Info.plist
+      properties:
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UIBackgroundModes:
+          - audio
+        NSDocumentsFolderUsageDescription: FlowTones uses selected audio files for playback.
+    dependencies:
+      - package: FlowTonesCore
+  FlowTonesTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - FlowTonesTests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.flowtones.ios.tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: FlowTones

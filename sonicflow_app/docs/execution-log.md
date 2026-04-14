@@ -20,12 +20,11 @@ Build the SonicFlow app as a monorepo with three shared core beat engines first,
 
 ### In Progress
 
-- `SF-6` Chrome BeatEngine integration
+- `SF-8` iOS audio engine
 
 ### Deferred Until Core Is Stable
 
 - `SF-7` Safari conversion
-- `SF-8` iOS audio engine
 - `SF-9` iOS UI
 - `SF-10` macOS system audio
 - `SF-11` macOS menu bar UI
@@ -61,3 +60,5 @@ sonicflow_app/
 - `SF-4` now provides the first Chrome extension skeleton with MV3 wiring, content-script messaging, placeholder popup, and icon assets.
 - `SF-5` layers in the interactive popup: mode cards, beat volume slider, storage persistence, and tab messaging hooks.
 - `SF-6` moves the extension onto the shared JS core and bundles the content script through `esbuild`, with chunk scheduling for continuous playback.
+- `SF-7` wraps the Chrome extension in a Safari Xcode project and aligns the shared JS to `browser`/`chrome` compatible messaging.
+- `SF-8` now has an iOS SwiftUI/Xcode project generated with `xcodegen`, wired to the local `FlowTonesCore` package and building for the iOS simulator.

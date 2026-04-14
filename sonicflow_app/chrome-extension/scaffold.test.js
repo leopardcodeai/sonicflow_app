@@ -24,6 +24,7 @@ test("manifest declares the expected MV3 basics", () => {
 test("scaffold files exist", () => {
   const expectedFiles = [
     "content_script.js",
+    "browser-polyfill.js",
     "content-script-runtime.js",
     "background.js",
     "popup.html",
