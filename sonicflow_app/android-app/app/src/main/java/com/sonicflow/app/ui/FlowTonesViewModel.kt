@@ -51,6 +51,10 @@ class FlowTonesViewModel @Inject constructor(
         mutableCurrentMode.value = mode
     }
 
+    fun setMode(mode: FlowMode) {
+        onModeSelected(mode)
+    }
+
     fun onBeatVolumeChanged(volume: Float) {
         mutableBeatVolume.value = volume.coerceIn(0f, 1f)
     }
