@@ -19,10 +19,11 @@ final class AudioManager: ObservableObject {
     @Published var selectedSource: AudioSource = .system
     @Published var systemAudioPermissionStatus = "Nicht angefragt"
 
-    private let beatEngine = BeatEngine()
     private let engine = AVAudioEngine()
     private let beatMixerNode = AVAudioMixerNode()
     private var beatSourceNode: AVAudioSourceNode?
+    private var carrierPhase: Double = 0
+    private var beatPhase: Double = 0
 
     init() {
         configureEngine()
@@ -33,6 +34,8 @@ final class AudioManager: ObservableObject {
         isPlaying.toggle()
         if isPlaying {
             startIfNeeded()
+        } else {
+            stopPlayback()
         }
     }
 
@@ -70,6 +73,13 @@ final class AudioManager: ObservableObject {
         }
     }
 
+    private func stopPlayback() {
+        guard engine.isRunning else {
+            return
+        }
+        engine.pause()
+    }
+
     private func configureEngine() {
         engine.attach(beatMixerNode)
 
@@ -98,20 +108,30 @@ final class AudioManager: ObservableObject {
     }
 
     private func renderBeatFrames(frameCount: Int, sampleRate: Double) -> [Float] {
-        guard let buffer = try? beatEngine.generate(
-            mode: currentMode,
-            durationSeconds: Double(frameCount) / sampleRate,
-            sampleRate: sampleRate
-        ),
-        let left = buffer.floatChannelData?[0],
-        let right = buffer.floatChannelData?[1] else {
-            return Array(repeating: 0, count: frameCount * 2)
-        }
+        let beatHz = currentMode.beatHz
+        let carrierHz = currentMode.carrierHz
+        let carrierIncrement = (2.0 * Double.pi * carrierHz) / sampleRate
+        let beatIncrement = (2.0 * Double.pi * beatHz) / sampleRate
+        let fade = min(0.05, Double(frameCount) / sampleRate / 2.0)
 
         var interleaved = Array(repeating: Float.zero, count: frameCount * 2)
         for frame in 0..<frameCount {
-            interleaved[frame * 2] = left[frame]
-            interleaved[(frame * 2) + 1] = right[frame]
+            let t = Double(frame) / sampleRate
+            let envelope = min(1.0, t / max(fade, .leastNonzeroMagnitude))
+            let am = 0.5 + 0.5 * sin(beatPhase)
+            let sample = Float(sin(carrierPhase) * am * envelope)
+
+            interleaved[frame * 2] = sample
+            interleaved[(frame * 2) + 1] = sample
+
+            carrierPhase += carrierIncrement
+            beatPhase += beatIncrement
+            if carrierPhase > (2.0 * Double.pi) {
+                carrierPhase -= 2.0 * Double.pi
+            }
+            if beatPhase > (2.0 * Double.pi) {
+                beatPhase -= 2.0 * Double.pi
+            }
         }
         return interleaved
     }
