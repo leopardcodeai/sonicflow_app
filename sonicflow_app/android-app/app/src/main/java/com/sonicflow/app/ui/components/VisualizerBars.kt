@@ -25,7 +25,7 @@ fun VisualizerBars(
     color: Color,
     modifier: Modifier = Modifier
 ) {
-    val transition = rememberInfiniteTransition(label = "visualizer")
+    val transition = if (isActive) rememberInfiniteTransition(label = "visualizer") else null
 
     Row(
         modifier = modifier,
@@ -33,17 +33,21 @@ fun VisualizerBars(
         verticalAlignment = Alignment.Bottom
     ) {
         repeat(5) { index ->
-            val animated by transition.animateFloat(
-                initialValue = 0.2f,
-                targetValue = 1f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(durationMillis = 520 + (index * 90), easing = LinearEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "bar-$index"
-            )
+            val level = if (transition != null) {
+                val animated by transition.animateFloat(
+                    initialValue = 0.2f,
+                    targetValue = 1f,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(durationMillis = 520 + (index * 90), easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse
+                    ),
+                    label = "bar-$index"
+                )
+                animated
+            } else {
+                0.25f
+            }
 
-            val level = if (isActive) animated else 0.25f
             Box(
                 modifier = Modifier
                     .width(8.dp)
