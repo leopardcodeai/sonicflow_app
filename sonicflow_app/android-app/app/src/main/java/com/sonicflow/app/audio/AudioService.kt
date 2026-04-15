@@ -33,6 +33,9 @@ class AudioService : Service() {
     private val beatEngine = BeatEngine()
     private var beatJob: Job? = null
     private var mediaPlayer: MediaPlayer? = null
+    @Volatile
+    var isSessionActive: Boolean = false
+        private set
 
     private lateinit var audioManager: AudioManager
     private lateinit var audioFocusRequest: AudioFocusRequest
@@ -77,6 +80,7 @@ class AudioService : Service() {
     fun startSession(mode: FlowMode, beatVolume: Float, selectedFile: String?): Boolean {
         val focusResult = audioManager.requestAudioFocus(audioFocusRequest)
         if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            isSessionActive = false
             return false
         }
 
@@ -86,10 +90,12 @@ class AudioService : Service() {
 
         startBeatLoop(mode, normalizedVolume)
         startMediaLayer(selectedFile)
+        isSessionActive = true
         return true
     }
 
     fun stopSession() {
+        isSessionActive = false
         beatJob?.cancel()
         beatJob = null
         beatEngine.stop()
