@@ -1,71 +1,60 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-12
+- Active ticket: SF-13
 - Linear state: In Progress
-- Working branch: sf/SF-12-android-app
-- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app
+- Working branch: sf/SF-13-compose-ui
+- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui
 - PR: not opened yet
+- Base branch: sf/SF-12-android-app (stacked)
 
 ## Current Stand
-- Android App Modul `sonicflow_app/android-app` neu erstellt.
-- Gradle Wrapper (`./gradlew`) vorhanden und ausführbar.
-- BeatEngine-Modul als lokales Gradle-Modul eingebunden.
-- Foreground `AudioService` + `FlowTonesViewModel` + Hilt + Compose Main Screen implementiert.
+- Compose UI auf die SF-13-Struktur refaktoriert: `MainScreen`, `ModeCard`, `VisualizerBars`.
+- Material 3 Dark Theme mit Seed-Farbfamilie auf Basis `#378ADD` ergänzt.
+- `FlowMode` UI-Mappings (`label`, `accentColor`) + `setMode()` API im ViewModel ergänzt.
 
 ## Done
-- Projekt-/Build-Setup:
-  - `android-app/settings.gradle.kts` + `build.gradle.kts` + `gradle.properties`
-  - `app/build.gradle.kts` inkl. Compose, Hilt, Coroutines, Material
-  - Gradle Wrapper Dateien (`gradlew`, `gradlew.bat`, `gradle/wrapper/*`)
-- App-Implementierung:
-  - `AudioService` mit Foreground Notification, AudioFocusRequest, Beat-Loop, optional MediaPlayer-Datei
-  - `FlowTonesSessionController` + `AudioServiceController` (start/stop + bind/unbind)
-  - `FlowTonesViewModel` mit `StateFlow` + `pickFile()` Event
-  - `MainActivity` + Compose UI (Mode, Volume, File Pick, Start/Stop)
-  - Manifest-Permissions + Service-Declaration `foregroundServiceType="mediaPlayback"`
-- Tests:
-  - Unit-Tests für `FlowTonesViewModel` geschrieben und grün gemacht.
+- `MainScreen` umgesetzt mit:
+  - TopAppBar + Active/Off Chip
+  - 2-spaltigem `LazyVerticalGrid` für Moduswahl
+  - Slider `Neural layer` (0f..1f)
+  - SourceSection (Pick file + Start/Stop)
+- `ModeCard` umgesetzt:
+  - selektierbare Karte, farbige Border bei aktivem Modus
+  - Mode Label + Hz Anzeige
+  - Accent-Icon-Tint
+- `VisualizerBars` umgesetzt:
+  - 5 animierte Bars via `rememberInfiniteTransition`
+  - statische Bars bei `isActive=false`
+  - Farbgebung per `currentMode.accentColor`
+- Theme/Design:
+  - dediziertes `FlowTonesTheme` (dark color scheme)
+- Tests ergänzt:
+  - `FlowModeUiTest` für Label/Farb-Mapping
+  - ViewModel-Test für `setMode()`
 
 ## Open
-- PR erstellen und SF-12 auf `In Review` setzen.
-- Nächstes Ticket danach: SF-13 (Compose UI Vertiefung auf Android).
+- PR erstellen und SF-13 auf `In Review` setzen.
 
 ## Tests
 - Erfolgreich:
-  - `cd sonicflow_app/android-app && ./gradlew --version`
   - `cd sonicflow_app/android-app && ./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon`
 - Hinweis:
-  - Hilt/Kapt gibt nicht-blockierende Warnung zu unrecognized options in Unit-Test-Task aus.
+  - Kapt/Hilt-Warnung zu unrecognized options im Unit-Test-Task ist nicht-blockierend.
 
-## Affected Files (SF-12)
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/.gitignore
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/build.gradle.kts
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/settings.gradle.kts
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/gradle.properties
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/gradlew
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/gradlew.bat
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/gradle/wrapper/gradle-wrapper.jar
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/gradle/wrapper/gradle-wrapper.properties
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/build.gradle.kts
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/proguard-rules.pro
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/AndroidManifest.xml
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/FlowTonesApplication.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/MainActivity.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/audio/AudioService.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/audio/AudioServiceController.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/audio/FlowTonesSessionController.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/audio/SessionCommand.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/audio/SessionState.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/di/AudioModule.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/FlowTonesViewModel.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/res/drawable/ic_music.xml
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/res/values/strings.xml
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/main/res/values/themes.xml
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/FlowTonesViewModelTest.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/MainDispatcherRule.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/sonicflow_app/core-android/beatengine/build.gradle.kts
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-12-android-app/STATUS.md
+## Affected Files (SF-13)
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/STATUS.md
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/build.gradle.kts
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/MainActivity.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/FlowModeUi.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/ColorHex.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/MainScreen.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/FlowTonesViewModel.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/components/ModeCard.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/components/VisualizerBars.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/theme/Theme.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/FlowModeUiTest.kt
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/FlowTonesViewModelTest.kt
 
 ## Next Step
-- PR für SF-12 öffnen, Linear kommentieren, auf `In Review` setzen.
+- PR für SF-13 öffnen (gegen SF-12-Branch), Linear kommentieren und auf `In Review` setzen.

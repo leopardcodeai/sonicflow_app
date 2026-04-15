@@ -71,6 +71,16 @@ class FlowTonesViewModelTest {
         job.cancel()
     }
 
+    @Test
+    fun `setMode updates the current mode immediately`() = runTest {
+        val controller = FakeController()
+        val viewModel = FlowTonesViewModel(controller)
+
+        viewModel.setMode(FlowMode.SLEEP)
+
+        assertEquals(FlowMode.SLEEP, viewModel.currentMode.value)
+    }
+
     private class FakeController : FlowTonesSessionController {
         override val state = MutableStateFlow(SessionState())
         var lastCommand: SessionCommand? = null
