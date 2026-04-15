@@ -2,16 +2,18 @@
 
 ## Ticket-ID & Scope
 - Active ticket: SF-11
-- Linear state: In Progress
+- Linear state: In Progress (status transition to In Review currently blocked by Linear connector tool error)
 - Working branch: sf/SF-11-menu-bar-app-ui
 - Worktree: /Users/alexanderbrunker/Coding/soundhealing_sonicflow
+- PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
 
 ## Current Stand
 - Frühere unvollständige Arbeit zu SF-11 wurde fortgesetzt (bestehender Branch + handoff).
-- PR/Review-Check per `gh` war in dieser Umgebung nicht möglich (Netzwerkzugriff auf api.github.com blockiert).
-- Lokale Änderungen vor Start: nur untracked `STATUS.md`.
+- SF-11 ist implementiert, gebaut, committed und in PR #11.
+- PR-Labels gesetzt: `codex`, `codex-automation`.
+- Linear-Kommentar mit PR + Build-Validierung wurde hinzugefügt.
 
-## Done (this run)
+## Done
 - Menu-Bar-App Verhalten umgesetzt:
 - `NSStatusItem` mit SF Symbol `waveform`.
 - Click öffnet/schließt `NSPopover` mit `FlowTonesPopoverView` (300x400).
@@ -29,17 +31,17 @@
 - macOS Deployment Target für App auf `13.0` gesetzt.
 
 ## Open
-- Kein PR in diesem Run erstellt.
-- Feinschliff: optional Entfernen nicht mehr benötigter Legacy-WebView/Storyboard-Ressourcen aus dem macOS-App-Target.
+- Linear-Statuswechsel `In Progress` -> `In Review` noch offen (technischer Connector-Blocker).
+- Optionaler Feinschliff: Entfernen nicht mehr benötigter Legacy-WebView/Storyboard-Ressourcen aus dem macOS-App-Target.
 
 ## Tests
 - Erfolgreich:
 - `xcodebuild -project sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-derived CODE_SIGNING_ALLOWED=NO build`
 - Ergebnis: `BUILD SUCCEEDED`
 - Hinweis:
-- Xcode gibt in Sandbox weiterhin CoreSimulator/Log-Warnungen aus, Build war dennoch erfolgreich.
+- Xcode gibt weiterhin CoreSimulator/Log-Warnungen in dieser Umgebung aus; Build war dennoch erfolgreich.
 
-## Affected Files (this run)
+## Affected Files (SF-11)
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/AppDelegate.swift
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/AudioManager.swift
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/BeatEngine.swift
@@ -51,7 +53,6 @@
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/PlayerManager.swift
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj/project.pbxproj
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/STATUS.md
 
 ## Next Step
-- SF-11 auf diesem Branch final reviewen und in PR überführen; danach Linear auf `In Review` setzen.
+- Linear-Status manuell oder via funktionierendem Connector auf `In Review` setzen, dann auf Reviewer-Feedback der PR #11 warten.
