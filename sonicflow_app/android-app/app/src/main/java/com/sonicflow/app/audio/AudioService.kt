@@ -57,11 +57,15 @@ class AudioService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START -> {
-                startSession(
+                val started = startSession(
                     mode = parseMode(intent.getStringExtra(EXTRA_MODE)),
                     beatVolume = intent.getFloatExtra(EXTRA_BEAT_VOLUME, DEFAULT_BEAT_VOLUME),
                     selectedFile = intent.getStringExtra(EXTRA_SELECTED_FILE)
                 )
+                if (!started) {
+                    stopSelfResult(startId)
+                    return START_NOT_STICKY
+                }
             }
 
             ACTION_STOP -> stopSession()
@@ -70,9 +74,11 @@ class AudioService : Service() {
         return START_STICKY
     }
 
-    fun startSession(mode: FlowMode, beatVolume: Float, selectedFile: String?) {
+    fun startSession(mode: FlowMode, beatVolume: Float, selectedFile: String?): Boolean {
         val focusResult = audioManager.requestAudioFocus(audioFocusRequest)
-        if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) return
+        if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            return false
+        }
 
         val normalizedVolume = beatVolume.coerceIn(0f, 1f)
         val title = "FlowTones – ${mode.name.lowercase().replaceFirstChar(Char::uppercase)} ${mode.beatHz}Hz ●"
@@ -80,6 +86,7 @@ class AudioService : Service() {
 
         startBeatLoop(mode, normalizedVolume)
         startMediaLayer(selectedFile)
+        return true
     }
 
     fun stopSession() {
