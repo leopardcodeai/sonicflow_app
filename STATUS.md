@@ -2,7 +2,7 @@
 
 ## Ticket-ID & Scope
 - Active ticket: SF-11
-- Linear state: In Progress (status transition to In Review currently blocked by Linear connector tool error)
+- Linear state: In Review
 - Working branch: sf/SF-11-menu-bar-app-ui
 - Worktree: /Users/alexanderbrunker/Coding/soundhealing_sonicflow
 - PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
@@ -12,6 +12,7 @@
 - SF-11 ist implementiert, gebaut, committed und in PR #11.
 - PR-Labels gesetzt: `codex`, `codex-automation`.
 - Linear-Kommentar mit PR + Build-Validierung wurde hinzugefügt.
+- Linear-Status wurde erfolgreich von `In Progress` auf `In Review` gesetzt.
 
 ## Done
 - Menu-Bar-App Verhalten umgesetzt:
@@ -31,8 +32,8 @@
 - macOS Deployment Target für App auf `13.0` gesetzt.
 
 ## Open
-- Linear-Statuswechsel `In Progress` -> `In Review` noch offen (technischer Connector-Blocker).
 - Optionaler Feinschliff: Entfernen nicht mehr benötigter Legacy-WebView/Storyboard-Ressourcen aus dem macOS-App-Target.
+- Warten auf Reviewer-Feedback in PR #11.
 
 ## Tests
 - Erfolgreich:
@@ -55,4 +56,4 @@
 - /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj/project.pbxproj
 
 ## Next Step
-- Linear-Status manuell oder via funktionierendem Connector auf `In Review` setzen, dann auf Reviewer-Feedback der PR #11 warten.
+- Auf Reviewer-Feedback der PR #11 reagieren und nur bei konkreten Änderungswünschen nachschärfen.
