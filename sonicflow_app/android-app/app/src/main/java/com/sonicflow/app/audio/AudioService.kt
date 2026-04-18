@@ -33,6 +33,7 @@ class AudioService : Service() {
     private val beatEngine = BeatEngine()
     private var beatJob: Job? = null
     private var mediaPlayer: MediaPlayer? = null
+    private var currentSessionState = SessionState()
 
     private lateinit var audioManager: AudioManager
     private lateinit var audioFocusRequest: AudioFocusRequest
@@ -77,6 +78,12 @@ class AudioService : Service() {
     fun startSession(mode: FlowMode, beatVolume: Float, selectedFile: String?): Boolean {
         val focusResult = audioManager.requestAudioFocus(audioFocusRequest)
         if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            currentSessionState = SessionState(
+                mode = mode,
+                isActive = false,
+                beatVolume = beatVolume.coerceIn(0f, 1f),
+                selectedFile = selectedFile
+            )
             return false
         }
 
@@ -86,6 +93,12 @@ class AudioService : Service() {
 
         startBeatLoop(mode, normalizedVolume)
         startMediaLayer(selectedFile)
+        currentSessionState = SessionState(
+            mode = mode,
+            isActive = true,
+            beatVolume = normalizedVolume,
+            selectedFile = selectedFile
+        )
         return true
     }
 
@@ -103,8 +116,11 @@ class AudioService : Service() {
         audioManager.abandonAudioFocusRequest(audioFocusRequest)
 
         stopForeground(STOP_FOREGROUND_REMOVE)
+        currentSessionState = currentSessionState.copy(isActive = false)
         stopSelf()
     }
+
+    fun sessionState(): SessionState = currentSessionState
 
     override fun onDestroy() {
         stopSession()
