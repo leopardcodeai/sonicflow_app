@@ -1,19 +1,20 @@
 # FlowTones Monorepo
 
-FlowTones overlays neural beat modulation on top of user audio across browser and Apple platforms.
+FlowTones overlays neural beat modulation on top of user audio across browser and Apple/Android platforms.
 The repository is organized around shared audio engines plus platform-specific UI/runtime layers.
 
 ## Repository Layout
 
 ```text
-flowtones/
+soundhealing_sonicflow/
 ├── sonicflow_app/
 │   ├── core-js/          (SF-1, beatEngine.js)
 │   ├── core-swift/       (SF-2, FlowTonesCore Swift Package)
 │   ├── core-android/     (SF-3, beatengine Android library module)
 │   ├── chrome-extension/ (SF-4, SF-5, SF-6)
-│   ├── safari-extension/ (SF-7, SF-10, SF-11)
+│   ├── safari-extension/ (SF-7)
 │   ├── ios-app/          (SF-8, SF-9)
+│   ├── android-app/      (SF-12, SF-13, SF-20)
 │   └── docs/
 ├── Makefile
 └── README.md
@@ -24,10 +25,10 @@ flowtones/
 | Platform | Audio sources | System audio capture |
 |---|---|---|
 | Chrome Extension | YouTube, SoundCloud tab audio | N/A (content script on web audio context) |
-| Safari Extension (iOS/macOS) | Web content audio inside extension contexts | macOS target only (see limitations) |
+| Safari Extension (iOS/macOS) | Web content audio inside extension contexts | No dedicated system capture path |
 | iOS App | Local audio file + generated beat layer | No |
-| macOS App | Local audio file + generated beat layer | Yes (macOS 14.2+ path planned/targeted) |
-| Android | Core beat engine module implemented, app UI/service pending | No (app pending) |
+| macOS App | Local audio file + generated beat layer | Partial/limited path only |
+| Android App | Local audio service + generated beat layer (`android-app`) | No |
 
 ## Quick Start
 
@@ -69,7 +70,15 @@ Compiles the macOS app target via `xcodebuild`.
 make android
 ```
 
-Runs `./gradlew assembleDebug` when an Android app wrapper is present.
+Builds debug APK from `sonicflow_app/android-app`.
+
+Manual install/run (optional):
+
+```bash
+cd sonicflow_app/android-app
+./gradlew installDebug
+adb shell am start -n com.sonicflow.app/.MainActivity
+```
 
 ## Beat Modes Reference
 
@@ -83,11 +92,11 @@ Runs `./gradlew assembleDebug` when an Android app wrapper is present.
 ## Architecture Overview
 
 - Shared engines: `core-js`, `core-swift`, and `core-android` hold beat synthesis logic.
-- Platform UIs: browser extension UI, SwiftUI app surfaces, and future Android app Compose UI.
+- Platform UIs: browser extensions, SwiftUI app surfaces, and Jetpack Compose Android UI.
 - Runtime integration: each platform owns playback/session plumbing while reusing the closest shared beat engine.
 
 ## Known Limitations
 
-- iOS and Android do not support Spotify/system-output capture in this repo state.
-- System audio capture is macOS-only and intended for macOS 14.2+ capable implementations.
-- Android app module (`android-app/`) is not in this repository yet; current Android deliverable is `core-android/beatengine`.
+- iOS and Android do not support Spotify/system-output capture in this repository.
+- Safari extension behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
+- Android emulator/device setup must match installed SDK/platform tools (common failure: missing or mismatched API image).
