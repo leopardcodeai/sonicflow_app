@@ -28,7 +28,7 @@ final class AudioManager: ObservableObject {
 
     func configureSession() {
         let session = AVAudioSession.sharedInstance()
-        try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowBluetooth])
+        try? session.setCategory(.playback, mode: .default, options: [.mixWithOthers, .allowBluetoothHFP])
         try? session.setActive(true)
     }
 
