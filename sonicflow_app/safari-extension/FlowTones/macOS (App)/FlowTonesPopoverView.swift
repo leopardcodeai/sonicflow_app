@@ -64,6 +64,9 @@ struct FlowTonesPopoverView: View {
         switch audioManager.selectedSource {
         case .system:
             VStack(alignment: .leading, spacing: 8) {
+                Text(audioManager.canCaptureSystemAudio ? "System capture verfügbar" : "System capture erst ab macOS 14.2")
+                    .font(.caption2)
+                    .foregroundStyle(audioManager.canCaptureSystemAudio ? Color.secondary : Color.orange)
                 Text("Permission: \(audioManager.systemAudioPermissionStatus)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -71,6 +74,7 @@ struct FlowTonesPopoverView: View {
                     audioManager.startSystemAudioCapture()
                 }
                 .buttonStyle(.bordered)
+                .disabled(!audioManager.canCaptureSystemAudio)
             }
         case .file:
             VStack(alignment: .leading, spacing: 8) {
