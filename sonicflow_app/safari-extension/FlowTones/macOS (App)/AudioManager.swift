@@ -1,14 +1,16 @@
 import AVFoundation
 import Combine
 import CoreGraphics
+import CoreMedia
 import Foundation
+import ScreenCaptureKit
 
 enum AudioSource: String, CaseIterable {
     case system
     case file
 }
 
-final class AudioManager: ObservableObject {
+class AudioManager: ObservableObject {
     @Published var isPlaying = false
     @Published var currentMode: FlowMode = .focus
     @Published var beatVolume: Double = 0.15 {
@@ -16,16 +18,34 @@ final class AudioManager: ObservableObject {
             beatMixerNode.volume = Float(beatVolume)
         }
     }
-    @Published var selectedSource: AudioSource = .system
+    @Published var selectedSource: AudioSource = .system {
+        didSet {
+            guard isPlaying else { return }
+            switch selectedSource {
+            case .system:
+                startSystemCaptureIfPossible()
+            case .file:
+                stopSystemCapture()
+            }
+        }
+    }
     @Published var systemAudioPermissionStatus = "Nicht angefragt"
+    @Published private(set) var canCaptureSystemAudio: Bool = {
+        if #available(macOS 13.0, *) {
+            return true
+        }
+        return false
+    }()
 
     private let engine = AVAudioEngine()
     private let beatMixerNode = AVAudioMixerNode()
+    private let capturedAudioNode = AVAudioPlayerNode()
     private var beatSourceNode: AVAudioSourceNode?
     private var carrierPhase: Double = 0
     private var beatPhase: Double = 0
-    private var startupRampTotalFrames: Int = 0
-    private var startupRampFramesRemaining: Int = 0
+    private lazy var systemAudioManager = SystemAudioManager { [weak self] sampleBuffer in
+        self?.enqueueCapturedSample(sampleBuffer)
+    }
 
     init() {
         configureEngine()
@@ -36,22 +56,40 @@ final class AudioManager: ObservableObject {
         isPlaying.toggle()
         if isPlaying {
             startIfNeeded()
+            if selectedSource == .system {
+                startSystemCaptureIfPossible()
+            } else {
+                stopSystemCapture()
+            }
         } else {
+            stopSystemCapture()
             stopPlayback()
         }
     }
 
     func startSystemAudioCapture() {
-        if CGPreflightScreenCaptureAccess() {
-            systemAudioPermissionStatus = "Erlaubt"
+        guard canCaptureSystemAudio else {
+            systemAudioPermissionStatus = "Nicht verfugbar"
             return
         }
 
-        let granted = CGRequestScreenCaptureAccess()
+        let granted = CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess()
         systemAudioPermissionStatus = granted ? "Erlaubt" : "Verweigert"
+        guard granted else {
+            return
+        }
+
+        if isPlaying, selectedSource == .system {
+            startSystemCaptureIfPossible()
+        }
     }
 
     func refreshSystemAudioPermission() {
+        guard canCaptureSystemAudio else {
+            systemAudioPermissionStatus = "Nicht verfugbar"
+            return
+        }
+
         systemAudioPermissionStatus = CGPreflightScreenCaptureAccess() ? "Erlaubt" : "Nicht erlaubt"
     }
 
@@ -68,12 +106,11 @@ final class AudioManager: ObservableObject {
             return
         }
 
-        let sampleRate = engine.outputNode.outputFormat(forBus: 0).sampleRate
-        startupRampTotalFrames = max(1, Int(sampleRate * 0.05))
-        startupRampFramesRemaining = startupRampTotalFrames
-
         do {
             try engine.start()
+            if !capturedAudioNode.isPlaying {
+                capturedAudioNode.play()
+            }
         } catch {
             isPlaying = false
         }
@@ -108,7 +145,9 @@ final class AudioManager: ObservableObject {
 
         beatSourceNode = sourceNode
         engine.attach(sourceNode)
+        engine.attach(capturedAudioNode)
         engine.connect(sourceNode, to: beatMixerNode, format: format)
+        engine.connect(capturedAudioNode, to: engine.mainMixerNode, format: format)
         engine.connect(beatMixerNode, to: engine.mainMixerNode, format: format)
         beatMixerNode.volume = Float(beatVolume)
     }
@@ -118,17 +157,12 @@ final class AudioManager: ObservableObject {
         let carrierHz = currentMode.carrierHz
         let carrierIncrement = (2.0 * Double.pi * carrierHz) / sampleRate
         let beatIncrement = (2.0 * Double.pi * beatHz) / sampleRate
+        let fade = min(0.05, Double(frameCount) / sampleRate / 2.0)
 
         var interleaved = Array(repeating: Float.zero, count: frameCount * 2)
         for frame in 0..<frameCount {
-            let envelope: Double
-            if startupRampFramesRemaining > 0, startupRampTotalFrames > 0 {
-                let progressedFrames = startupRampTotalFrames - startupRampFramesRemaining
-                envelope = min(1.0, Double(progressedFrames) / Double(startupRampTotalFrames))
-                startupRampFramesRemaining -= 1
-            } else {
-                envelope = 1.0
-            }
+            let t = Double(frame) / sampleRate
+            let envelope = min(1.0, t / max(fade, .leastNonzeroMagnitude))
             let am = 0.5 + 0.5 * sin(beatPhase)
             let sample = Float(sin(carrierPhase) * am * envelope)
 
@@ -145,5 +179,202 @@ final class AudioManager: ObservableObject {
             }
         }
         return interleaved
+    }
+
+    private func startSystemCaptureIfPossible() {
+        guard canCaptureSystemAudio else {
+            systemAudioPermissionStatus = "Nicht verfugbar"
+            return
+        }
+
+        do {
+            try systemAudioManager.startSystemCapture()
+            systemAudioPermissionStatus = "Erlaubt"
+        } catch let error as SystemAudioCaptureError {
+            switch error {
+            case .permissionDenied:
+                systemAudioPermissionStatus = "Verweigert"
+            case .noDisplay:
+                systemAudioPermissionStatus = "Kein Display gefunden"
+            case .unavailable:
+                systemAudioPermissionStatus = "Nicht verfugbar"
+            }
+        } catch {
+            systemAudioPermissionStatus = "Fehler beim Start"
+        }
+    }
+
+    private func stopSystemCapture() {
+        systemAudioManager.stopSystemCapture()
+    }
+
+    private func enqueueCapturedSample(_ sampleBuffer: CMSampleBuffer) {
+        guard selectedSource == .system, isPlaying else { return }
+        guard let pcmBuffer = Self.pcmBuffer(from: sampleBuffer) else { return }
+
+        if !capturedAudioNode.isPlaying {
+            capturedAudioNode.play()
+        }
+        capturedAudioNode.scheduleBuffer(pcmBuffer, completionHandler: nil)
+    }
+
+    private static func pcmBuffer(from sampleBuffer: CMSampleBuffer) -> AVAudioPCMBuffer? {
+        guard let formatDescription = CMSampleBufferGetFormatDescription(sampleBuffer),
+              let asbdPointer = CMAudioFormatDescriptionGetStreamBasicDescription(formatDescription) else {
+            return nil
+        }
+
+        var asbd = asbdPointer.pointee
+        guard let format = AVAudioFormat(streamDescription: &asbd) else {
+            return nil
+        }
+
+        let frameCount = CMSampleBufferGetNumSamples(sampleBuffer)
+        guard frameCount > 0,
+              let pcmBuffer = AVAudioPCMBuffer(
+                  pcmFormat: format,
+                  frameCapacity: AVAudioFrameCount(frameCount)
+              ) else {
+            return nil
+        }
+
+        pcmBuffer.frameLength = AVAudioFrameCount(frameCount)
+
+        let status = CMSampleBufferCopyPCMDataIntoAudioBufferList(
+            sampleBuffer,
+            at: 0,
+            frameCount: Int32(frameCount),
+            into: pcmBuffer.mutableAudioBufferList
+        )
+        guard status == noErr else {
+            return nil
+        }
+        return pcmBuffer
+    }
+}
+
+final class MacAudioManager: AudioManager {}
+
+enum SystemAudioCaptureError: Error {
+    case permissionDenied
+    case noDisplay
+    case unavailable
+}
+
+final class SystemAudioManager: NSObject {
+    private let captureQueue = DispatchQueue(label: "SystemAudioCaptureQueue")
+    private let onBuffer: (CMSampleBuffer) -> Void
+    private let streamOutput: SystemAudioStreamOutput
+    private var stream: SCStream?
+
+    init(onBuffer: @escaping (CMSampleBuffer) -> Void) {
+        self.onBuffer = onBuffer
+        self.streamOutput = SystemAudioStreamOutput(onBuffer: onBuffer)
+        super.init()
+    }
+
+    func startSystemCapture() throws {
+        guard #available(macOS 13.0, *) else {
+            throw SystemAudioCaptureError.unavailable
+        }
+
+        if stream != nil {
+            return
+        }
+
+        guard CGPreflightScreenCaptureAccess() else {
+            throw SystemAudioCaptureError.permissionDenied
+        }
+
+        var startError: Error?
+        var createdStream: SCStream?
+
+        captureQueue.sync {
+            let semaphore = DispatchSemaphore(value: 0)
+            SCShareableContent.getExcludingDesktopWindows(false, onScreenWindowsOnly: true) { content, error in
+                defer { semaphore.signal() }
+
+                if let error {
+                    startError = error
+                    return
+                }
+
+                guard let display = content?.displays.first else {
+                    startError = SystemAudioCaptureError.noDisplay
+                    return
+                }
+
+                let filter = SCContentFilter(display: display, excludingApplications: [], exceptingWindows: [])
+                if #available(macOS 14.2, *) {
+                    filter.includeMenuBar = false
+                }
+
+                let configuration = SCStreamConfiguration()
+                configuration.capturesAudio = true
+                configuration.width = max(display.width, 2)
+                configuration.height = max(display.height, 2)
+                configuration.minimumFrameInterval = CMTime(value: 1, timescale: 30)
+                configuration.sampleRate = 48_000
+                configuration.channelCount = 2
+
+                let stream = SCStream(filter: filter, configuration: configuration, delegate: nil)
+
+                do {
+                    try self.addAudioOutput(to: stream)
+                } catch {
+                    startError = error
+                    return
+                }
+
+                let startSemaphore = DispatchSemaphore(value: 0)
+                stream.startCapture { error in
+                    startError = error
+                    startSemaphore.signal()
+                }
+                startSemaphore.wait()
+
+                if startError == nil {
+                    createdStream = stream
+                }
+            }
+            semaphore.wait()
+        }
+
+        if let startError {
+            throw startError
+        }
+
+        stream = createdStream
+    }
+
+    func stopSystemCapture() {
+        guard let stream else { return }
+
+        captureQueue.sync {
+            let semaphore = DispatchSemaphore(value: 0)
+            stream.stopCapture { _ in
+                semaphore.signal()
+            }
+            semaphore.wait()
+        }
+
+        self.stream = nil
+    }
+
+    private func addAudioOutput(to stream: SCStream) throws {
+        try stream.addStreamOutput(streamOutput, type: .audio, sampleHandlerQueue: captureQueue)
+    }
+}
+
+final class SystemAudioStreamOutput: NSObject, SCStreamOutput {
+    private let onBuffer: (CMSampleBuffer) -> Void
+
+    init(onBuffer: @escaping (CMSampleBuffer) -> Void) {
+        self.onBuffer = onBuffer
+    }
+
+    func stream(_ stream: SCStream, didOutputSampleBuffer sampleBuffer: CMSampleBuffer, of type: SCStreamOutputType) {
+        guard type == .audio else { return }
+        onBuffer(sampleBuffer)
     }
 }
