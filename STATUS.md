@@ -1,46 +1,49 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-10
+- Active ticket: SF-14
 - Linear state: In Progress
-- Working branch: sf/SF-10-system-audio
-- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio
-- PR: (wird in diesem Run erstellt)
+- Working branch: sf/SF-14-cross-platform-readme
+- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme
+- PR: not opened yet
 
 ## Current Stand
-- Frühere unvollständige Arbeit zu SF-10 wurde im bestehenden Worktree fortgesetzt.
-- System-Audio-Capture-Path für macOS integriert (Capture Session + Mix in Audio Engine).
-- UI zeigt Verfügbarkeit von System Capture und deaktiviert Start bei fehlender Capability.
-- Berechtigungen/Entitlements für Audio-Input ergänzt.
-- macOS Build auf SF-10-Branch erfolgreich validiert.
+- Root `README.md` rewritten with monorepo structure, platform support matrix, quick-start commands, beat mode table, architecture and limitations.
+- Top-level `Makefile` added with required targets: `chrome`, `safari`, `ios`, `mac`, `android`.
+- Plattform-Smoke-Checks durchgeführt und dokumentiert.
 
 ## Done
-- `MacAudioManager` als konkrete macOS-Implementierung eingeführt und in `AppDelegate` verdrahtet.
-- System-Audio-Capture via `AVCaptureSession` + `AVCaptureAudioDataOutput` integriert.
-- Capture-Samples werden in Float-Frames konvertiert und in den bestehenden Mix eingespeist.
-- `canCaptureSystemAudio` + Permission-Request (`AVCaptureDevice.requestAccess`) eingebaut.
-- Popover-UI zeigt Capability-Status und blockiert Capture-Start wenn nicht verfügbar.
-- `NSMicrophoneUsageDescription` hinzugefügt.
-- macOS Entitlement `com.apple.security.device.audio-input` hinzugefügt.
-- `CODE_SIGN_ENTITLEMENTS` für macOS Target gesetzt.
-- `MACOSX_DEPLOYMENT_TARGET` für macOS Target auf `14.2` angehoben.
+- `README.md` enthält die geforderten 6 Bereiche:
+  - What is FlowTones
+  - Platform support table
+  - Quick start per platform (exact commands)
+  - Beat modes reference
+  - Architecture overview
+  - Known limitations
+- `Makefile` Targets implementiert:
+  - `make chrome` baut Extension und legt Output in `dist/chrome/`
+  - `make safari` öffnet Safari-Xcode-Projekt
+  - `make ios` führt `xcodebuild` für iOS Simulator aus
+  - `make mac` führt `xcodebuild` für macOS aus
+  - `make android` führt `./gradlew assembleDebug` aus, sobald Wrapper vorhanden ist
 
 ## Open
-- PR für SF-10 erstellen und in Linear verlinken.
-- Review-Feedback abwarten.
+- PR erstellen und SF-14 auf `In Review` setzen.
+- Android App Wrapper (`android-app/gradlew`) fehlt noch; betrifft SF-12/SF-13 und ist als Limitierung dokumentiert.
 
 ## Tests
 - Erfolgreich:
-- `xcodebuild -project /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf10-derived CODE_SIGNING_ALLOWED=NO build`
-- Ergebnis: `BUILD SUCCEEDED`
+  - `make chrome`
+  - `cd sonicflow_app/core-swift && swift test`
+  - `make ios` (`** BUILD SUCCEEDED **`)
+  - `make mac` (`** BUILD SUCCEEDED **`)
+- Fehlgeschlagen:
+  - `make android` (kein `./gradlew` in `android-app` oder `core-android/beatengine`)
 
-## Affected Files (SF-10)
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj/project.pbxproj
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/macOS (App)/AppDelegate.swift
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/macOS (App)/AudioManager.swift
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/macOS (App)/Info.plist
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-10-system-audio/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTones.entitlements
+## Affected Files (SF-14)
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/README.md
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/Makefile
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/STATUS.md
 
 ## Next Step
-- SF-10 committen/pushen, PR erstellen (gestackt auf SF-11), Linear auf `In Review` setzen.
+- Commit + Push + PR für SF-14 öffnen, Linear-Kommentar ergänzen und Status auf `In Review` setzen.
