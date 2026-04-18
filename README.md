@@ -15,6 +15,7 @@ soundhealing_sonicflow/
 │   ├── safari-extension/ (SF-7)
 │   ├── ios-app/          (SF-8, SF-9)
 │   ├── android-app/      (SF-12, SF-13, SF-20)
+│   ├── mac-app/          (macOS app module placeholder)
 │   └── docs/
 ├── Makefile
 └── README.md
