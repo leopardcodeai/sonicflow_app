@@ -4,7 +4,7 @@
 - Active ticket: SF-20
 - Linear state: In Review
 - Working branch: sf/SF-11-menu-bar-app-ui
-- Worktree: /Users/alexanderbrunker/Coding/soundhealing_sonicflow
+- Worktree: `soundhealing_sonicflow`
 - PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
 
 ## Current Stand
@@ -22,8 +22,8 @@
 - None for this branch-level integration step.
 
 ## Tests
-- `cd /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/android-app && ./gradlew testDebugUnitTest assembleDebug`
-- `xcodebuild -project /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf11-derived CODE_SIGNING_ALLOWED=NO build`
+- `cd sonicflow_app/android-app && ./gradlew testDebugUnitTest assembleDebug`
+- `xcodebuild -project sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf11-derived CODE_SIGNING_ALLOWED=NO build`
 - Result: successful in this run.
 
 ## Next Step

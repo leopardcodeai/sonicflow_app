@@ -7,10 +7,10 @@ Safari wrapper project for the FlowTones Chrome extension, generated via `safari
 ## Build And Run
 
 1. Install and build the shared extension assets:
-   - `cd /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/chrome-extension`
+   - `cd sonicflow_app/chrome-extension`
    - `npm ci`
    - `npm run build`
-2. Open `/Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj`
+2. Open `sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj`
 3. Select either the `FlowTones (iOS)` or `FlowTones (macOS)` app target and a simulator/device
 4. Build and run from Xcode
 5. When Safari opens, enable the FlowTones extension in Safari settings
