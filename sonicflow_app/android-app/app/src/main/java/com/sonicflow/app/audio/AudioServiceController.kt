@@ -21,13 +21,18 @@ class AudioServiceController @Inject constructor(
     override val state: StateFlow<SessionState> = mutableState.asStateFlow()
 
     private var isBound = false
+    private var boundService: AudioService? = null
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             isBound = true
+            boundService = (service as? AudioService.LocalBinder)?.service()
+            syncStateFromService()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             isBound = false
+            boundService = null
+            mutableState.value = mutableState.value.copy(isActive = false)
         }
     }
 
@@ -44,7 +49,7 @@ class AudioServiceController @Inject constructor(
                 context.startForegroundService(intent)
                 mutableState.value = SessionState(
                     mode = command.mode,
-                    isActive = true,
+                    isActive = false,
                     beatVolume = command.beatVolume,
                     selectedFile = command.selectedFile
                 )
@@ -68,5 +73,11 @@ class AudioServiceController @Inject constructor(
         if (!isBound) return
         context.unbindService(connection)
         isBound = false
+        boundService = null
+    }
+
+    private fun syncStateFromService() {
+        val service = boundService ?: return
+        mutableState.value = service.sessionState()
     }
 }
