@@ -14,4 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "beatengine"
+rootProject.name = "FlowTonesAndroid"
+include(":app", ":beatengine")
+project(":beatengine").projectDir = file("../core-android/beatengine")
