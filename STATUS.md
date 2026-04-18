@@ -1,59 +1,49 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-11
-- Linear state: In Review
-- Working branch: sf/SF-11-menu-bar-app-ui
-- Worktree: /Users/alexanderbrunker/Coding/soundhealing_sonicflow
-- PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
+- Active ticket: SF-14
+- Linear state: In Progress
+- Working branch: sf/SF-14-cross-platform-readme
+- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme
+- PR: not opened yet
 
 ## Current Stand
-- Frühere unvollständige Arbeit zu SF-11 wurde fortgesetzt (bestehender Branch + handoff).
-- SF-11 ist implementiert, gebaut, committed und in PR #11.
-- PR-Labels gesetzt: `codex`, `codex-automation`.
-- Linear-Kommentar mit PR + Build-Validierung wurde hinzugefügt.
-- Linear-Status wurde erfolgreich von `In Progress` auf `In Review` gesetzt.
+- Root `README.md` rewritten with monorepo structure, platform support matrix, quick-start commands, beat mode table, architecture and limitations.
+- Top-level `Makefile` added with required targets: `chrome`, `safari`, `ios`, `mac`, `android`.
+- Plattform-Smoke-Checks durchgeführt und dokumentiert.
 
 ## Done
-- Menu-Bar-App Verhalten umgesetzt:
-- `NSStatusItem` mit SF Symbol `waveform`.
-- Click öffnet/schließt `NSPopover` mit `FlowTonesPopoverView` (300x400).
-- Dock-Icon ausgeblendet via `LSUIElement = YES`.
-- SwiftUI Popover UI umgesetzt:
-- Mode Grid (2-spaltig) mit `ModeCard`.
-- Source-Toggle `System audio` / `File` (segmented).
-- System audio: Permission-Status + `Start Capture` Button.
-- File: `NSOpenPanel` Picker + Dateiname.
-- Beat-Volume Slider + Statuszeile (`Active – ...` oder `Stopped`).
-- Shortcut-Handling umgesetzt:
-- `Cmd+Shift+F` toggelt FlowTones über `NSEvent.addGlobalMonitorForEvents` (+ local monitor für Fokusfall).
-- Projektintegration:
-- neue macOS-App-Dateien in `FlowTones.xcodeproj` eingebunden.
-- macOS Deployment Target für App auf `13.0` gesetzt.
+- `README.md` enthält die geforderten 6 Bereiche:
+  - What is FlowTones
+  - Platform support table
+  - Quick start per platform (exact commands)
+  - Beat modes reference
+  - Architecture overview
+  - Known limitations
+- `Makefile` Targets implementiert:
+  - `make chrome` baut Extension und legt Output in `dist/chrome/`
+  - `make safari` öffnet Safari-Xcode-Projekt
+  - `make ios` führt `xcodebuild` für iOS Simulator aus
+  - `make mac` führt `xcodebuild` für macOS aus
+  - `make android` führt `./gradlew assembleDebug` aus, sobald Wrapper vorhanden ist
 
 ## Open
-- Optionaler Feinschliff: Entfernen nicht mehr benötigter Legacy-WebView/Storyboard-Ressourcen aus dem macOS-App-Target.
-- Warten auf Reviewer-Feedback in PR #11.
+- PR erstellen und SF-14 auf `In Review` setzen.
+- Android App Wrapper (`android-app/gradlew`) fehlt noch; betrifft SF-12/SF-13 und ist als Limitierung dokumentiert.
 
 ## Tests
 - Erfolgreich:
-- `xcodebuild -project sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-derived CODE_SIGNING_ALLOWED=NO build`
-- Ergebnis: `BUILD SUCCEEDED`
-- Hinweis:
-- Xcode gibt weiterhin CoreSimulator/Log-Warnungen in dieser Umgebung aus; Build war dennoch erfolgreich.
+  - `make chrome`
+  - `cd sonicflow_app/core-swift && swift test`
+  - `make ios` (`** BUILD SUCCEEDED **`)
+  - `make mac` (`** BUILD SUCCEEDED **`)
+- Fehlgeschlagen:
+  - `make android` (kein `./gradlew` in `android-app` oder `core-android/beatengine`)
 
-## Affected Files (SF-11)
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/AppDelegate.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/AudioManager.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/BeatEngine.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/Color+Hex.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/Info.plist
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/MacMenuCommands.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/macOS (App)/PlayerManager.swift
-- /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj/project.pbxproj
+## Affected Files (SF-14)
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/README.md
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/Makefile
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/STATUS.md
 
 ## Next Step
-- Auf Reviewer-Feedback der PR #11 reagieren und nur bei konkreten Änderungswünschen nachschärfen.
+- Commit + Push + PR für SF-14 öffnen, Linear-Kommentar ergänzen und Status auf `In Review` setzen.
