@@ -1,49 +1,30 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-14
-- Linear state: In Progress
-- Working branch: sf/SF-14-cross-platform-readme
-- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme
-- PR: not opened yet
+- Active ticket: SF-20
+- Linear state: In Review
+- Working branch: sf/SF-11-menu-bar-app-ui
+- Worktree: /Users/alexanderbrunker/Coding/soundhealing_sonicflow
+- PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
 
 ## Current Stand
-- Root `README.md` rewritten with monorepo structure, platform support matrix, quick-start commands, beat mode table, architecture and limitations.
-- Top-level `Makefile` added with required targets: `chrome`, `safari`, `ios`, `mac`, `android`.
-- Plattform-Smoke-Checks durchgeführt und dokumentiert.
+- Android app scaffold is implemented under `sonicflow_app/android-app` and wired to `core-android/beatengine`.
+- AudioTrack initialization path was hardened and Android demo UI was improved (mode layout + status messaging).
+- Existing SF-11 work remains in this branch and was preserved.
 
 ## Done
-- `README.md` enthält die geforderten 6 Bereiche:
-  - What is FlowTones
-  - Platform support table
-  - Quick start per platform (exact commands)
-  - Beat modes reference
-  - Architecture overview
-  - Known limitations
-- `Makefile` Targets implementiert:
-  - `make chrome` baut Extension und legt Output in `dist/chrome/`
-  - `make safari` öffnet Safari-Xcode-Projekt
-  - `make ios` führt `xcodebuild` für iOS Simulator aus
-  - `make mac` führt `xcodebuild` für macOS aus
-  - `make android` führt `./gradlew assembleDebug` aus, sobald Wrapper vorhanden ist
+- Added runnable Android app module with Compose UI and unit tests.
+- Added Gradle wrappers for `android-app` and `core-android/beatengine`.
+- Updated beatengine/player integration and Android playback robustness.
+- Verified builds/tests on local environment.
 
 ## Open
-- PR erstellen und SF-14 auf `In Review` setzen.
-- Android App Wrapper (`android-app/gradlew`) fehlt noch; betrifft SF-12/SF-13 und ist als Limitierung dokumentiert.
+- None for this branch-level integration step.
 
 ## Tests
-- Erfolgreich:
-  - `make chrome`
-  - `cd sonicflow_app/core-swift && swift test`
-  - `make ios` (`** BUILD SUCCEEDED **`)
-  - `make mac` (`** BUILD SUCCEEDED **`)
-- Fehlgeschlagen:
-  - `make android` (kein `./gradlew` in `android-app` oder `core-android/beatengine`)
-
-## Affected Files (SF-14)
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/README.md
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/Makefile
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/STATUS.md
+- `cd /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/android-app && ./gradlew testDebugUnitTest assembleDebug`
+- `xcodebuild -project /Users/alexanderbrunker/Coding/soundhealing_sonicflow/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf11-derived CODE_SIGNING_ALLOWED=NO build`
+- Result: successful in this run.
 
 ## Next Step
-- Commit + Push + PR für SF-14 öffnen, Linear-Kommentar ergänzen und Status auf `In Review` setzen.
+- Merge branch to `main`, return to `main`, and close the branch.

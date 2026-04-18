@@ -1,8 +1,7 @@
 package com.sonicflow.beatengine
 
-import android.media.AudioFormat
 import android.media.AudioAttributes
-import android.media.AudioManager
+import android.media.AudioFormat
 import android.media.AudioTrack
 
 internal class AndroidAudioTrackPlayer : PcmPlayer {
@@ -16,36 +15,46 @@ internal class AndroidAudioTrackPlayer : PcmPlayer {
             AudioFormat.CHANNEL_OUT_STEREO,
             AudioFormat.ENCODING_PCM_16BIT
         )
-        val bufferSize = if (minBufferSize > 0) {
-            maxOf(minBufferSize, pcm.size * 2)
-        } else {
-            pcm.size * 2
-        }
+        require(minBufferSize > 0) { "AudioTrack min buffer size unavailable." }
 
-        val format = AudioFormat.Builder()
-            .setSampleRate(sampleRate)
-            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
-            .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
-            .build()
-        val attributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-            .build()
         val track = AudioTrack.Builder()
-            .setAudioFormat(format)
-            .setAudioAttributes(attributes)
-            .setBufferSizeInBytes(bufferSize)
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            .setAudioFormat(
+                AudioFormat.Builder()
+                    .setSampleRate(sampleRate)
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+                    .build()
+            )
+            .setBufferSizeInBytes(minBufferSize)
             .setTransferMode(AudioTrack.MODE_STREAM)
             .build()
 
-        track.write(pcm, 0, pcm.size)
+        require(track.state == AudioTrack.STATE_INITIALIZED) {
+            track.release()
+            "AudioTrack failed to initialize."
+        }
+
+        val written = track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
+        require(written > 0) {
+            track.release()
+            "AudioTrack write failed: $written"
+        }
+
         track.play()
         audioTrack = track
     }
 
     override fun stop() {
         audioTrack?.run {
-            stop()
+            if (playState == AudioTrack.PLAYSTATE_PLAYING) {
+                stop()
+            }
             release()
         }
         audioTrack = null
