@@ -261,7 +261,7 @@ enum SystemAudioCaptureError: Error {
     case unavailable
 }
 
-final class SystemAudioManager: NSObject, SCStreamDelegate {
+final class SystemAudioManager: NSObject {
     private let captureQueue = DispatchQueue(label: "SystemAudioCaptureQueue")
     private let onBuffer: (CMSampleBuffer) -> Void
     private let streamOutput: SystemAudioStreamOutput
@@ -317,7 +317,7 @@ final class SystemAudioManager: NSObject, SCStreamDelegate {
                 configuration.sampleRate = 48_000
                 configuration.channelCount = 2
 
-                let stream = SCStream(filter: filter, configuration: configuration, delegate: self)
+                let stream = SCStream(filter: filter, configuration: configuration, delegate: nil)
 
                 do {
                     try self.addAudioOutput(to: stream)
@@ -363,10 +363,6 @@ final class SystemAudioManager: NSObject, SCStreamDelegate {
 
     private func addAudioOutput(to stream: SCStream) throws {
         try stream.addStreamOutput(streamOutput, type: .audio, sampleHandlerQueue: captureQueue)
-    }
-
-    func stream(_ stream: SCStream, didStopWithError error: Error) {
-        self.stream = nil
     }
 }
 
