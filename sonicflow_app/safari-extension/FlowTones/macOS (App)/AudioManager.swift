@@ -46,6 +46,8 @@ class AudioManager: ObservableObject {
     private lazy var systemAudioManager = SystemAudioManager { [weak self] sampleBuffer in
         self?.enqueueCapturedSample(sampleBuffer)
     }
+    private var startupRampTotalFrames: Int = 0
+    private var startupRampFramesRemaining: Int = 0
 
     init() {
         configureEngine()
@@ -106,6 +108,10 @@ class AudioManager: ObservableObject {
             return
         }
 
+        let sampleRate = engine.outputNode.outputFormat(forBus: 0).sampleRate
+        startupRampTotalFrames = max(1, Int(sampleRate * 0.05))
+        startupRampFramesRemaining = startupRampTotalFrames
+
         do {
             try engine.start()
             if !capturedAudioNode.isPlaying {
@@ -157,12 +163,17 @@ class AudioManager: ObservableObject {
         let carrierHz = currentMode.carrierHz
         let carrierIncrement = (2.0 * Double.pi * carrierHz) / sampleRate
         let beatIncrement = (2.0 * Double.pi * beatHz) / sampleRate
-        let fade = min(0.05, Double(frameCount) / sampleRate / 2.0)
 
         var interleaved = Array(repeating: Float.zero, count: frameCount * 2)
         for frame in 0..<frameCount {
-            let t = Double(frame) / sampleRate
-            let envelope = min(1.0, t / max(fade, .leastNonzeroMagnitude))
+            let envelope: Double
+            if startupRampFramesRemaining > 0, startupRampTotalFrames > 0 {
+                let progressedFrames = startupRampTotalFrames - startupRampFramesRemaining
+                envelope = min(1.0, Double(progressedFrames) / Double(startupRampTotalFrames))
+                startupRampFramesRemaining -= 1
+            } else {
+                envelope = 1.0
+            }
             let am = 0.5 + 0.5 * sin(beatPhase)
             let sample = Float(sin(carrierPhase) * am * envelope)
 

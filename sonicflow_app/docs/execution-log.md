@@ -21,13 +21,13 @@ Build the SonicFlow app as a monorepo with three shared core beat engines first,
 ### In Progress
 
 - `SF-8` iOS audio engine
+- `SF-11` macOS menu bar UI is on branch `sf/SF-11-menu-bar-app-ui` and currently in review on PR #11
 
 ### Deferred Until Core Is Stable
 
 - `SF-7` Safari conversion
 - `SF-9` iOS UI
 - `SF-10` macOS system audio
-- `SF-11` macOS menu bar UI
 - `SF-12` Android app/service
 - `SF-13` Android UI
 - `SF-14` parity, docs, Makefile
