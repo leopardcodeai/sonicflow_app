@@ -5,7 +5,7 @@ import SwiftUI
 final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private let popover = NSPopover()
-    private let audioManager = AudioManager()
+    private let audioManager = MacAudioManager()
     private let playerManager = PlayerManager()
     private let menuCommands = MacMenuCommands()
 

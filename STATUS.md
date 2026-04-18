@@ -1,53 +1,49 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-19
+- Active ticket: SF-14
 - Linear state: In Progress
-- Working branch: sf/SF-19-create-mac-app
-- Worktree: /tmp/soundhealing-sf19
+- Working branch: sf/SF-14-cross-platform-readme
+- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme
 - PR: not opened yet
 
 ## Current Stand
-- Neues Backlog-Ticket SF-19 wurde ausgewählt.
-- Ticket-Header in Linear wurde vollständig ausgefüllt (Summary, Scope, Acceptance Criteria, Deliverables).
-- macOS-App-Baseline aus vorhandener Umsetzung wurde in den SF-19-Branch übernommen.
+- Root `README.md` rewritten with monorepo structure, platform support matrix, quick-start commands, beat mode table, architecture and limitations.
+- Top-level `Makefile` added with required targets: `chrome`, `safari`, `ios`, `mac`, `android`.
+- Plattform-Smoke-Checks durchgeführt und dokumentiert.
 
-## Erledigt
-- Erste lauffähige macOS-Menüleisten-App in das Projekt integriert:
-- `NSStatusItem` + `NSPopover` UI.
-- Audio-Playback-Management inkl. Start/Stop-Pfad.
-- Kontinuierliche Beat-Synthese mit Phasenkontinuität und Startup-Ramp-State.
-- Doku verbessert: Build-Voraussetzungen (`npm ci` + `npm run build`) in Safari/macOS README ergänzt.
+## Done
+- `README.md` enthält die geforderten 6 Bereiche:
+  - What is FlowTones
+  - Platform support table
+  - Quick start per platform (exact commands)
+  - Beat modes reference
+  - Architecture overview
+  - Known limitations
+- `Makefile` Targets implementiert:
+  - `make chrome` baut Extension und legt Output in `dist/chrome/`
+  - `make safari` öffnet Safari-Xcode-Projekt
+  - `make ios` führt `xcodebuild` für iOS Simulator aus
+  - `make mac` führt `xcodebuild` für macOS aus
+  - `make android` führt `./gradlew assembleDebug` aus, sobald Wrapper vorhanden ist
 
-## Offen
-- Branch auf Remote pushen.
-- PR erstellen und SF-19 mit PR verknüpfen.
-
-## Hindernisse
-- Kein aktueller Blocker.
-- Wichtig: Vor Xcode-Build müssen Chrome-Assets (`dist/`, `node_modules`) vorhanden sein.
-
-## Betroffene Dateien
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj/project.pbxproj
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/AppDelegate.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/AudioManager.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/BeatEngine.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/Color+Hex.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/Info.plist
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/MacMenuCommands.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/macOS (App)/PlayerManager.swift
-- /tmp/soundhealing-sf19/sonicflow_app/safari-extension/README-safari.md
-- /tmp/soundhealing-sf19/STATUS.md
+## Open
+- PR erstellen und SF-14 auf `In Review` setzen.
+- Android App Wrapper (`android-app/gradlew`) fehlt noch; betrifft SF-12/SF-13 und ist als Limitierung dokumentiert.
 
 ## Tests
 - Erfolgreich:
-- `npm ci` (chrome-extension)
-- `npm run build` (chrome-extension)
-- `xcodebuild -project /tmp/soundhealing-sf19/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf19-derived CODE_SIGNING_ALLOWED=NO build`
-- Ergebnis: `BUILD SUCCEEDED`
+  - `make chrome`
+  - `cd sonicflow_app/core-swift && swift test`
+  - `make ios` (`** BUILD SUCCEEDED **`)
+  - `make mac` (`** BUILD SUCCEEDED **`)
+- Fehlgeschlagen:
+  - `make android` (kein `./gradlew` in `android-app` oder `core-android/beatengine`)
+
+## Affected Files (SF-14)
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/README.md
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/Makefile
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/STATUS.md
 
 ## Next Step
-- Remote-Branch pushen, PR öffnen und SF-19 in Linear auf `In Review` setzen.
+- Commit + Push + PR für SF-14 öffnen, Linear-Kommentar ergänzen und Status auf `In Review` setzen.

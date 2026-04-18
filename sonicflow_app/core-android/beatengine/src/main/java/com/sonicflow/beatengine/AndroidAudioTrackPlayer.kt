@@ -1,6 +1,7 @@
 package com.sonicflow.beatengine
 
 import android.media.AudioFormat
+import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.AudioTrack
 
@@ -21,14 +22,21 @@ internal class AndroidAudioTrackPlayer : PcmPlayer {
             pcm.size * 2
         }
 
-        val track = AudioTrack(
-            AudioManager.STREAM_MUSIC,
-            sampleRate,
-            AudioFormat.CHANNEL_OUT_STEREO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize,
-            AudioTrack.MODE_STREAM
-        )
+        val format = AudioFormat.Builder()
+            .setSampleRate(sampleRate)
+            .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+            .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+            .build()
+        val attributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+            .build()
+        val track = AudioTrack.Builder()
+            .setAudioFormat(format)
+            .setAudioAttributes(attributes)
+            .setBufferSizeInBytes(bufferSize)
+            .setTransferMode(AudioTrack.MODE_STREAM)
+            .build()
 
         track.write(pcm, 0, pcm.size)
         track.play()
