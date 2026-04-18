@@ -10,7 +10,7 @@ const manifest = JSON.parse(
 
 test("manifest declares the expected MV3 basics", () => {
   assert.equal(manifest.manifest_version, 3);
-  assert.equal(manifest.name, "FlowTones");
+  assert.equal(manifest.name, "SonicFlow");
   assert.deepEqual(manifest.permissions, ["storage", "activeTab", "scripting"]);
   assert.deepEqual(manifest.host_permissions, [
     "*://*.youtube.com/*",

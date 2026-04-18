@@ -1,7 +1,11 @@
-# FlowTones Monorepo
+# SonicFlow Monorepo
 
-FlowTones overlays neural beat modulation on top of user audio across browser and Apple/Android platforms.
+SonicFlow overlays neural beat modulation on top of user audio across browser and Apple/Android platforms.
 The repository is organized around shared audio engines plus platform-specific UI/runtime layers.
+
+Public app name: `SonicFlow`.
+Legacy internal codename: `FlowTones`.
+Some project paths, Swift package names, Xcode schemes, and internal identifiers still use `FlowTones` for compatibility.
 
 ## Repository Layout
 

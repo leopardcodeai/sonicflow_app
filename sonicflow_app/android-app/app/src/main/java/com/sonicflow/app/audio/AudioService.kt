@@ -88,7 +88,7 @@ class AudioService : Service() {
         }
 
         val normalizedVolume = beatVolume.coerceIn(0f, 1f)
-        val title = "FlowTones – ${mode.name.lowercase().replaceFirstChar(Char::uppercase)} ${mode.beatHz}Hz ●"
+        val title = "SonicFlow - ${mode.name.lowercase().replaceFirstChar(Char::uppercase)} ${mode.beatHz}Hz ●"
         startForeground(NOTIFICATION_ID, buildNotification(title))
 
         startBeatLoop(mode, normalizedVolume)
@@ -189,7 +189,7 @@ class AudioService : Service() {
         val manager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(
             CHANNEL_ID,
-            "FlowTones Playback",
+            "SonicFlow Playback",
             NotificationManager.IMPORTANCE_LOW
         )
         manager.createNotificationChannel(channel)
@@ -204,7 +204,7 @@ class AudioService : Service() {
     }
 
     companion object {
-        private const val CHANNEL_ID = "flowtones-playback"
+        private const val CHANNEL_ID = "sonicflow-playback"
         private const val NOTIFICATION_ID = 2001
         private const val SAMPLE_RATE = 44_100
         private const val LOOP_SECONDS = 30

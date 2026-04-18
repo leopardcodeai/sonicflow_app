@@ -5,7 +5,7 @@
     <application
         android:name=".FlowTonesApplication"
         android:allowBackup="true"
-        android:label="FlowTones"
+        android:label="SonicFlow"
         android:supportsRtl="true"
         android:theme="@style/Theme.FlowTones">
         <service

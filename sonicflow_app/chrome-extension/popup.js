@@ -90,7 +90,7 @@ function renderState(settings, tabState) {
   statusText.textContent = settings.active ? "Active" : "Off";
   toggleButton.disabled = !tabState.pageHasAudioSource;
   toggleButton.classList.toggle("stop", settings.active);
-  toggleButton.textContent = settings.active ? "Stop FlowTones" : "Start FlowTones";
+  toggleButton.textContent = settings.active ? "Stop SonicFlow" : "Start SonicFlow";
   pageMessage.textContent = tabState.pageHasAudioSource
     ? "Media element detected. Ready to layer the selected mode."
     : "Open YouTube or SoundCloud first.";

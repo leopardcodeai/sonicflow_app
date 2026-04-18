@@ -19,7 +19,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string>FlowTones uses selected audio files for playback.</string>
+	<string>SonicFlow uses selected audio files for playback.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

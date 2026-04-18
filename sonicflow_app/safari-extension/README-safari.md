@@ -1,8 +1,12 @@
-# FlowTones Safari Web Extension
+# SonicFlow Safari Web Extension
 
 ## What This Is
 
-Safari wrapper project for the FlowTones Chrome extension, generated via `safari-web-extension-converter` and pointed at the shared extension sources in `../chrome-extension`.
+Safari wrapper project for the SonicFlow Chrome extension, generated via `safari-web-extension-converter` and pointed at the shared extension sources in `../chrome-extension`.
+
+Public app name: `SonicFlow`.
+Legacy internal codename: `FlowTones`.
+The generated Xcode project, paths, and schemes still use `FlowTones` internally.
 
 ## Build And Run
 
@@ -13,7 +17,7 @@ Safari wrapper project for the FlowTones Chrome extension, generated via `safari
 2. Open `sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj`
 3. Select either the `FlowTones (iOS)` or `FlowTones (macOS)` app target and a simulator/device
 4. Build and run from Xcode
-5. When Safari opens, enable the FlowTones extension in Safari settings
+5. When Safari opens, enable the SonicFlow extension in Safari settings
 
 ## Enable Unsigned Extensions
 
@@ -22,13 +26,13 @@ Safari wrapper project for the FlowTones Chrome extension, generated via `safari
 1. Open Safari
 2. Enable the Develop menu in `Safari > Settings > Advanced`
 3. In the Develop menu, allow unsigned extensions for local testing if prompted
-4. Go to `Safari > Settings > Extensions` and enable `FlowTones`
+4. Go to `Safari > Settings > Extensions` and enable `SonicFlow`
 
 ### iOS Simulator
 
 1. Run the iOS host app from Xcode
 2. Open `Settings > Apps > Safari > Extensions`
-3. Enable `FlowTones`
+3. Enable `SonicFlow`
 4. Allow the extension on test sites if Safari prompts for permission
 
 ## Known Safari Limitations

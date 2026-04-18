@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "FlowTones",
+  "name": "SonicFlow",
   "version": "0.1.0",
   "description": "Layer focus beats over supported audio sites.",
   "permissions": ["storage", "activeTab", "scripting"],
@@ -11,7 +11,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "FlowTones"
+    "default_title": "SonicFlow"
   },
   "content_scripts": [
     {

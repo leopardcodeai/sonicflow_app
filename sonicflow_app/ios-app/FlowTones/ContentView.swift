@@ -64,7 +64,7 @@ struct ContentView: View {
 
     private var header: some View {
         HStack {
-            Text("FlowTones")
+            Text("SonicFlow")
                 .font(.largeTitle.weight(.bold))
                 .foregroundStyle(.white)
             Spacer()

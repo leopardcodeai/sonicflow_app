@@ -12,7 +12,7 @@ struct FlowTonesPopoverView: View {
                 .ignoresSafeArea()
 
             VStack(alignment: .leading, spacing: 12) {
-                Text("FlowTones")
+                Text("SonicFlow")
                     .font(.title3.weight(.bold))
                     .foregroundStyle(.white)
 

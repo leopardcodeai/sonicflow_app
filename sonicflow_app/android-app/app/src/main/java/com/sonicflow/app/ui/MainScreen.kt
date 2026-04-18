@@ -41,7 +41,7 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         TopAppBar(
-            title = { Text("FlowTones") },
+            title = { Text("SonicFlow") },
             actions = {
                 AssistChip(
                     onClick = {},

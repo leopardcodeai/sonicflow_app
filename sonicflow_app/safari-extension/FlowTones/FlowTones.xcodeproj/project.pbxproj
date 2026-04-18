@@ -732,7 +732,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "FlowTones Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "SonicFlow Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -745,8 +745,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari.Extension;
-				PRODUCT_NAME = "FlowTones Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari.Extension;
+				PRODUCT_NAME = "SonicFlow Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -765,7 +765,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "FlowTones Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "SonicFlow Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -778,8 +778,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari.Extension;
-				PRODUCT_NAME = "FlowTones Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari.Extension;
+				PRODUCT_NAME = "SonicFlow Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -802,7 +802,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = FlowTones;
+				INFOPLIST_KEY_CFBundleDisplayName = SonicFlow;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -820,8 +820,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari;
-				PRODUCT_NAME = FlowTones;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari;
+				PRODUCT_NAME = SonicFlow;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -841,7 +841,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = FlowTones;
+				INFOPLIST_KEY_CFBundleDisplayName = SonicFlow;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -859,8 +859,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari;
-				PRODUCT_NAME = FlowTones;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari;
+				PRODUCT_NAME = SonicFlow;
 				SDKROOT = iphoneos;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -882,7 +882,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "FlowTones Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "SonicFlow Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -895,8 +895,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari.Extension;
-				PRODUCT_NAME = "FlowTones Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari.Extension;
+				PRODUCT_NAME = "SonicFlow Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -917,7 +917,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "FlowTones Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "SonicFlow Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -930,8 +930,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari.Extension;
-				PRODUCT_NAME = "FlowTones Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari.Extension;
+				PRODUCT_NAME = "SonicFlow Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -956,7 +956,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = FlowTones;
+				INFOPLIST_KEY_CFBundleDisplayName = SonicFlow;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -970,8 +970,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari;
-				PRODUCT_NAME = FlowTones;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari;
+				PRODUCT_NAME = SonicFlow;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -996,7 +996,7 @@
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = FlowTones;
+				INFOPLIST_KEY_CFBundleDisplayName = SonicFlow;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1010,8 +1010,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.safari;
-				PRODUCT_NAME = FlowTones;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.safari;
+				PRODUCT_NAME = SonicFlow;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = macosx;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;

@@ -239,10 +239,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.ios.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowTones.app/FlowTones";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
 			};
 			name = Debug;
 		};
@@ -258,7 +258,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios;
+				PRODUCT_NAME = SonicFlow;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -339,7 +340,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.ios;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios;
+				PRODUCT_NAME = SonicFlow;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -411,10 +413,10 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.flowtones.ios.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowTones.app/FlowTones";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
 			};
 			name = Release;
 		};

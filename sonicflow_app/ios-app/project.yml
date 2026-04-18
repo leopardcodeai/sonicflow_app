@@ -13,7 +13,8 @@ targets:
       - FlowTones
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.flowtones.ios
+        PRODUCT_BUNDLE_IDENTIFIER: com.sonicflow.ios
+        PRODUCT_NAME: SonicFlow
         INFOPLIST_FILE: FlowTones/Info.plist
         DEVELOPMENT_TEAM: ""
         CODE_SIGN_STYLE: Automatic
@@ -26,7 +27,7 @@ targets:
           UIApplicationSupportsMultipleScenes: false
         UIBackgroundModes:
           - audio
-        NSDocumentsFolderUsageDescription: FlowTones uses selected audio files for playback.
+        NSDocumentsFolderUsageDescription: SonicFlow uses selected audio files for playback.
     dependencies:
       - package: FlowTonesCore
   FlowTonesTests:
@@ -36,7 +37,7 @@ targets:
       - FlowTonesTests
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.flowtones.ios.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.sonicflow.ios.tests
         GENERATE_INFOPLIST_FILE: YES
     dependencies:
       - target: FlowTones
