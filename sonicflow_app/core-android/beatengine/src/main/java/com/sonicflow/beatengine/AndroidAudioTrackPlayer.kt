@@ -1,7 +1,7 @@
 package com.sonicflow.beatengine
 
 import android.media.AudioFormat
-import android.media.AudioManager
+import android.media.AudioAttributes
 import android.media.AudioTrack
 
 internal class AndroidAudioTrackPlayer : PcmPlayer {
@@ -15,29 +15,46 @@ internal class AndroidAudioTrackPlayer : PcmPlayer {
             AudioFormat.CHANNEL_OUT_STEREO,
             AudioFormat.ENCODING_PCM_16BIT
         )
-        val bufferSize = if (minBufferSize > 0) {
-            maxOf(minBufferSize, pcm.size * 2)
-        } else {
-            pcm.size * 2
+        require(minBufferSize > 0) { "AudioTrack min buffer size unavailable." }
+
+        val track = AudioTrack.Builder()
+            .setAudioAttributes(
+                AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build()
+            )
+            .setAudioFormat(
+                AudioFormat.Builder()
+                    .setSampleRate(sampleRate)
+                    .setEncoding(AudioFormat.ENCODING_PCM_16BIT)
+                    .setChannelMask(AudioFormat.CHANNEL_OUT_STEREO)
+                    .build()
+            )
+            .setBufferSizeInBytes(minBufferSize)
+            .setTransferMode(AudioTrack.MODE_STREAM)
+            .build()
+
+        require(track.state == AudioTrack.STATE_INITIALIZED) {
+            track.release()
+            "AudioTrack failed to initialize."
         }
 
-        val track = AudioTrack(
-            AudioManager.STREAM_MUSIC,
-            sampleRate,
-            AudioFormat.CHANNEL_OUT_STEREO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize,
-            AudioTrack.MODE_STREAM
-        )
+        val written = track.write(pcm, 0, pcm.size, AudioTrack.WRITE_BLOCKING)
+        require(written > 0) {
+            track.release()
+            "AudioTrack write failed: $written"
+        }
 
-        track.write(pcm, 0, pcm.size)
         track.play()
         audioTrack = track
     }
 
     override fun stop() {
         audioTrack?.run {
-            stop()
+            if (playState == AudioTrack.PLAYSTATE_PLAYING) {
+                stop()
+            }
             release()
         }
         audioTrack = null
