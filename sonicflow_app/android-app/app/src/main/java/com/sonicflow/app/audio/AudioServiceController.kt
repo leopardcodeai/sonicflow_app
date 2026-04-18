@@ -21,21 +21,17 @@ class AudioServiceController @Inject constructor(
     override val state: StateFlow<SessionState> = mutableState.asStateFlow()
 
     private var isBound = false
-    private var pendingStart = false
+    private var boundService: AudioService? = null
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             isBound = true
-            val localBinder = service as? AudioService.LocalBinder
-            val active = localBinder?.service()?.isSessionActive ?: false
-            if (pendingStart && active) {
-                pendingStart = false
-            }
-            mutableState.value = mutableState.value.copy(isActive = active)
+            boundService = (service as? AudioService.LocalBinder)?.service()
+            syncStateFromService()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
             isBound = false
-            pendingStart = false
+            boundService = null
             mutableState.value = mutableState.value.copy(isActive = false)
         }
     }
@@ -44,7 +40,6 @@ class AudioServiceController @Inject constructor(
         when (command) {
             is SessionCommand.Start -> {
                 bindIfNeeded()
-                pendingStart = true
                 val intent = AudioService.buildStartIntent(
                     context,
                     command.mode,
@@ -61,7 +56,6 @@ class AudioServiceController @Inject constructor(
             }
 
             SessionCommand.Stop -> {
-                pendingStart = false
                 context.startService(AudioService.buildStopIntent(context))
                 unbindIfNeeded()
                 mutableState.value = mutableState.value.copy(isActive = false)
@@ -79,5 +73,11 @@ class AudioServiceController @Inject constructor(
         if (!isBound) return
         context.unbindService(connection)
         isBound = false
+        boundService = null
+    }
+
+    private fun syncStateFromService() {
+        val service = boundService ?: return
+        mutableState.value = service.sessionState()
     }
 }

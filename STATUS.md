@@ -1,60 +1,49 @@
 # STATUS
 
 ## Ticket-ID & Scope
-- Active ticket: SF-13
+- Active ticket: SF-14
 - Linear state: In Progress
-- Working branch: sf/SF-13-compose-ui
-- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui
+- Working branch: sf/SF-14-cross-platform-readme
+- Worktree: /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme
 - PR: not opened yet
-- Base branch: sf/SF-12-android-app (stacked)
 
 ## Current Stand
-- Compose UI auf die SF-13-Struktur refaktoriert: `MainScreen`, `ModeCard`, `VisualizerBars`.
-- Material 3 Dark Theme mit Seed-Farbfamilie auf Basis `#378ADD` ergänzt.
-- `FlowMode` UI-Mappings (`label`, `accentColor`) + `setMode()` API im ViewModel ergänzt.
+- Root `README.md` rewritten with monorepo structure, platform support matrix, quick-start commands, beat mode table, architecture and limitations.
+- Top-level `Makefile` added with required targets: `chrome`, `safari`, `ios`, `mac`, `android`.
+- Plattform-Smoke-Checks durchgeführt und dokumentiert.
 
 ## Done
-- `MainScreen` umgesetzt mit:
-  - TopAppBar + Active/Off Chip
-  - 2-spaltigem `LazyVerticalGrid` für Moduswahl
-  - Slider `Neural layer` (0f..1f)
-  - SourceSection (Pick file + Start/Stop)
-- `ModeCard` umgesetzt:
-  - selektierbare Karte, farbige Border bei aktivem Modus
-  - Mode Label + Hz Anzeige
-  - Accent-Icon-Tint
-- `VisualizerBars` umgesetzt:
-  - 5 animierte Bars via `rememberInfiniteTransition`
-  - statische Bars bei `isActive=false`
-  - Farbgebung per `currentMode.accentColor`
-- Theme/Design:
-  - dediziertes `FlowTonesTheme` (dark color scheme)
-- Tests ergänzt:
-  - `FlowModeUiTest` für Label/Farb-Mapping
-  - ViewModel-Test für `setMode()`
+- `README.md` enthält die geforderten 6 Bereiche:
+  - What is FlowTones
+  - Platform support table
+  - Quick start per platform (exact commands)
+  - Beat modes reference
+  - Architecture overview
+  - Known limitations
+- `Makefile` Targets implementiert:
+  - `make chrome` baut Extension und legt Output in `dist/chrome/`
+  - `make safari` öffnet Safari-Xcode-Projekt
+  - `make ios` führt `xcodebuild` für iOS Simulator aus
+  - `make mac` führt `xcodebuild` für macOS aus
+  - `make android` führt `./gradlew assembleDebug` aus, sobald Wrapper vorhanden ist
 
 ## Open
-- PR erstellen und SF-13 auf `In Review` setzen.
+- PR erstellen und SF-14 auf `In Review` setzen.
+- Android App Wrapper (`android-app/gradlew`) fehlt noch; betrifft SF-12/SF-13 und ist als Limitierung dokumentiert.
 
 ## Tests
 - Erfolgreich:
-  - `cd sonicflow_app/android-app && ./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon`
-- Hinweis:
-  - Kapt/Hilt-Warnung zu unrecognized options im Unit-Test-Task ist nicht-blockierend.
+  - `make chrome`
+  - `cd sonicflow_app/core-swift && swift test`
+  - `make ios` (`** BUILD SUCCEEDED **`)
+  - `make mac` (`** BUILD SUCCEEDED **`)
+- Fehlgeschlagen:
+  - `make android` (kein `./gradlew` in `android-app` oder `core-android/beatengine`)
 
-## Affected Files (SF-13)
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/STATUS.md
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/build.gradle.kts
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/MainActivity.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/FlowModeUi.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/ColorHex.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/MainScreen.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/FlowTonesViewModel.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/components/ModeCard.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/components/VisualizerBars.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/main/java/com/sonicflow/app/ui/theme/Theme.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/FlowModeUiTest.kt
-- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-13-compose-ui/sonicflow_app/android-app/app/src/test/java/com/sonicflow/app/ui/FlowTonesViewModelTest.kt
+## Affected Files (SF-14)
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/README.md
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/Makefile
+- /Users/alexanderbrunker/.config/superpowers/worktrees/soundhealing_sonicflow/sf-SF-14-cross-platform-readme/STATUS.md
 
 ## Next Step
-- PR für SF-13 öffnen (gegen SF-12-Branch), Linear kommentieren und auf `In Review` setzen.
+- Commit + Push + PR für SF-14 öffnen, Linear-Kommentar ergänzen und Status auf `In Review` setzen.
