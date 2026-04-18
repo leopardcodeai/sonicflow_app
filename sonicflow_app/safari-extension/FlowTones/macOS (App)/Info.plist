@@ -4,6 +4,10 @@
 <dict>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSAudioCaptureUsageDescription</key>
+	<string>FlowTones benötigt Zugriff auf System-Audio, um den Wiedergabeton des Macs mit den Beats zu mischen.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>FlowTones benötigt Audio-Zugriff für System-Audio-Capture und Beat-Mixing.</string>
 	<key>SFSafariWebExtensionConverterVersion</key>
 	<string>26.4</string>
 </dict>
