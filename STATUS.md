@@ -1,30 +1,46 @@
 # STATUS
 
-## Ticket-ID & Scope
-- Active ticket: SF-20
-- Linear state: In Review
-- Working branch: sf/SF-11-menu-bar-app-ui
-- Worktree: `soundhealing_sonicflow`
-- PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
+Date: 2026-04-19
 
-## Current Stand
-- Android app scaffold is implemented under `sonicflow_app/android-app` and wired to `core-android/beatengine`.
-- AudioTrack initialization path was hardened and Android demo UI was improved (mode layout + status messaging).
-- Existing SF-11 work remains in this branch and was preserved.
+## Ticket
+
+- Active ticket: `SF-21`
+- Branch: `feature/SF-21-linear-github-process`
+- Goal: end-to-end Linear-first engineering workflow with PR guards and automation.
 
 ## Done
-- Added runnable Android app module with Compose UI and unit tests.
-- Added Gradle wrappers for `android-app` and `core-android/beatengine`.
-- Updated beatengine/player integration and Android playback robustness.
-- Verified builds/tests on local environment.
+
+- Added PR governance:
+  - `.github/workflows/pr-ticket-guard.yml`
+  - `.github/PULL_REQUEST_TEMPLATE.md`
+- Added Linear sync automation:
+  - `.github/workflows/linear-pr-sync.yml`
+  - `scripts/linear/pr_state_sync.mjs`
+- Added auto-merge by Linear `Done`:
+  - `.github/workflows/linear-done-automerge.yml`
+  - `scripts/linear/automerge_done_tickets.mjs`
+- Added process docs:
+  - `docs/guides/linear-github-process.md`
+  - `docs/guides/codex-automation-prompts.md`
+- Updated docs index + README links.
+- Updated CI branch pattern toward `feature/**`.
 
 ## Open
-- None for this branch-level integration step.
 
-## Tests
-- `cd sonicflow_app/android-app && ./gradlew testDebugUnitTest assembleDebug`
-- `xcodebuild -project sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf11-derived CODE_SIGNING_ALLOWED=NO build`
-- Result: successful in this run.
+- Ensure repo secret `LINEAR_API_TOKEN` is set in GitHub Actions.
+- Add `Preview` workflow state in Linear team (fallback currently uses `In Review`).
+- Merge workflow PR and validate first real ticket through the full state machine.
+
+## Verification
+
+- `node scripts/linear/pr_state_sync.mjs` (graceful skip without token): ✅
+- `node scripts/linear/automerge_done_tickets.mjs` (graceful skip without token/context): ✅
+- `make test-core-js`: ✅
+- `make test-core-swift`: ✅
+- `make verify`: ✅ (including Android build in this environment)
 
 ## Next Step
-- Merge branch to `main`, return to `main`, and close the branch.
+
+- Commit + push latest workflow hardening changes.
+- Keep/update PR #21 (`[SF-21] ...`) until checks pass.
+- Keep ticket in `Preview` when PR is ready; merge path then drives `Done`.

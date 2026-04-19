@@ -1,106 +1,130 @@
 # SonicFlow Monorepo
 
-SonicFlow overlays neural beat modulation on top of user audio across browser and Apple/Android platforms.
-The repository is organized around shared audio engines plus platform-specific UI/runtime layers.
+SonicFlow is a cross-platform audio project that overlays entrainment-style beat layers on user audio across browser, iOS, macOS, and Android surfaces.
 
-Public app name: `SonicFlow`.
-Legacy internal codename: `FlowTones`.
-Some project paths, Swift package names, Xcode schemes, and internal identifiers still use `FlowTones` for compatibility.
+Public product name: `SonicFlow`  
+Legacy internal codename still present in paths/schemes/packages: `FlowTones`
 
-## Repository Layout
+## Architecture (Visual)
+
+```mermaid
+flowchart LR
+    subgraph Cores["Shared Beat Cores"]
+        JS["core-js (JavaScript)"]
+        SW["core-swift (Swift Package)"]
+        KT["core-android/beatengine (Kotlin)"]
+    end
+
+    subgraph Platforms["Platform Apps & Extensions"]
+        CH["chrome-extension"]
+        SF["safari-extension (iOS/macOS wrapper)"]
+        IOS["ios-app"]
+        MAC["macOS target in safari-extension"]
+        AND["android-app"]
+    end
+
+    JS --> CH
+    JS --> SF
+    SW --> IOS
+    KT --> AND
+    SF --> MAC
+```
+
+## Repository Structure
 
 ```text
 soundhealing_sonicflow/
+├── docs/
+│   ├── architecture/
+│   ├── graphics/
+│   ├── guides/
+│   └── reports/
+├── scripts/
 ├── sonicflow_app/
-│   ├── core-js/          (SF-1, beatEngine.js)
-│   ├── core-swift/       (SF-2, FlowTonesCore Swift Package)
-│   ├── core-android/     (SF-3, beatengine Android library module)
-│   ├── chrome-extension/ (SF-4, SF-5, SF-6)
-│   ├── safari-extension/ (SF-7)
-│   ├── ios-app/          (SF-8, SF-9)
-│   ├── android-app/      (SF-12, SF-13, SF-20)
-│   └── docs/
+│   ├── android-app/
+│   ├── chrome-extension/
+│   ├── core-android/
+│   ├── core-js/
+│   ├── core-swift/
+│   ├── ios-app/
+│   └── safari-extension/
 ├── Makefile
 └── README.md
 ```
 
-## Platform Support
+## Platform Capability
 
-| Platform | Audio sources | System audio capture |
+| Platform | Audio source path | System audio capture |
 |---|---|---|
-| Chrome Extension | YouTube, SoundCloud tab audio | N/A (content script on web audio context) |
-| Safari Extension (iOS/macOS) | Web content audio inside extension contexts | No dedicated system capture path |
-| iOS App | Local audio file + generated beat layer | No |
-| macOS App | Local audio file + generated beat layer | Partial/limited path only |
-| Android App | Local audio service + generated beat layer (`android-app`) | No |
+| Chrome extension | Web tab audio via content script + shared JS beat engine | No |
+| Safari extension (iOS/macOS) | Web extension runtime audio context | No dedicated system capture path |
+| iOS app | Local file + generated beat layer | No |
+| macOS app | Local file + generated beat layer | Partial/limited |
+| Android app | Local session/service + generated beat layer | No |
 
 ## Quick Start
 
-### Chrome
+### Prerequisites
+
+- Node.js 22+
+- Xcode 17+ (for iOS/macOS/Safari targets)
+- Java 17+ and Android SDK API 34 (for Android targets)
+
+### Main Commands
 
 ```bash
+make help
 make chrome
-```
-
-Artifacts are copied to `dist/chrome/` for loading as an unpacked extension.
-
-### Safari
-
-```bash
-make safari
-```
-
-This opens `sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj` in Xcode.
-
-### iOS
-
-```bash
 make ios
-```
-
-Compiles the iOS app for simulator via `xcodebuild`.
-
-### macOS
-
-```bash
 make mac
-```
-
-Compiles the macOS app target via `xcodebuild`.
-
-### Android
-
-```bash
 make android
+make verify
 ```
 
-Builds debug APK from `sonicflow_app/android-app`.
+`make chrome` copies unpacked extension artifacts to `dist/chrome/`.
 
-Manual install/run (optional):
+## Development Checks
 
-```bash
-cd sonicflow_app/android-app
-./gradlew installDebug
-adb shell am start -n com.sonicflow.app/.MainActivity
-```
+- Full warning audit: `make verify`
+- JS core tests: `make test-core-js`
+- Swift core tests: `make test-core-swift`
+- Chrome extension tests: `make test-chrome`
 
-## Beat Modes Reference
+The warning audit runs cross-platform checks and skips Android only when SDK/Java prerequisites are not configured locally.
 
-| Mode | Beat frequency | Use case |
+## Workflow (Linear-First)
+
+1. Move ticket from `Backlog` to `Todo` (manual/explicit).
+2. Create branch `feature/TICKET-ID-desc`.
+3. Implement and verify (`make test-*`, `make verify`).
+4. Open PR with title `[TICKET-ID] ...` and Linear link in PR body.
+5. Set PR ready for review -> ticket moves to `Preview` (or `In Review` fallback).
+6. Merge path:
+   - PR merge -> ticket `Done`
+   - ticket `Done` -> automation merges open PR
+
+Parallel work is supported via agents for independent tickets, with one branch/PR per ticket.
+
+## Beat Mode Reference
+
+| Mode | Frequency | Typical intent |
 |---|---|---|
-| Focus | 40 Hz (gamma) | Deep concentration |
+| Focus | 40 Hz (gamma) | Concentration |
 | Flow | 10 Hz (alpha) | Light productivity |
-| Meditation | 6 Hz (theta) | Calm and reflection |
-| Sleep | 2 Hz (delta) | Wind-down and sleep prep |
+| Meditation | 6 Hz (theta) | Calm/reflection |
+| Sleep | 2 Hz (delta) | Wind-down |
 
-## Architecture Overview
+## Documentation Map
 
-- Shared engines: `core-js`, `core-swift`, and `core-android` hold beat synthesis logic.
-- Platform UIs: browser extensions, SwiftUI app surfaces, and Jetpack Compose Android UI.
-- Runtime integration: each platform owns playback/session plumbing while reusing the closest shared beat engine.
+- [Architecture details](docs/architecture/system-overview.md)
+- [Structure walkthrough](docs/guides/project-structure.md)
+- [Team workflow](docs/guides/github-workflow.md)
+- [Linear + GitHub process automation](docs/guides/linear-github-process.md)
+- [Codex automation prompts/instructions](docs/guides/codex-automation-prompts.md)
+- [Historical execution notes](docs/reports/execution-log.md)
+- [Current status snapshot](STATUS.md)
 
 ## Known Limitations
 
-- iOS and Android do not support Spotify/system-output capture in this repository.
-- Safari extension behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
-- Android emulator/device setup must match installed SDK/platform tools (common failure: missing or mismatched API image).
+- iOS and Android targets do not implement Spotify/system-output capture in this repository.
+- Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.

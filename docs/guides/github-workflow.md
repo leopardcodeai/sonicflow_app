@@ -11,7 +11,7 @@
 - `sf/SF-1-shared-js-engine`
 - `sf/SF-2-swift-core-package`
 - `sf/SF-3-kotlin-core-module`
-- follow the same pattern for later tickets
+- Follow the same `sf/SF-<ticket>-<short-slug>` pattern for later tickets.
 
 ## Pull Request Convention
 
@@ -31,9 +31,3 @@
 - PRs are expected to merge with zero project warnings across JS, Swift, iOS, macOS, Chrome extension, and Android app builds.
 - `./scripts/check_warnings.sh` is the shared audit entry point for local verification and CI enforcement.
 - Toolchain-only noise that cannot be acted on in repo code should be explicitly filtered in the script instead of being ignored in review.
-
-## Current Core Status
-
-- `SF-1`: implemented and locally verified
-- `SF-2`: implemented and locally verified
-- `SF-3`: implemented, verification blocked by missing Java runtime and Gradle wrapper

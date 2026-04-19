@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant UI as "Platform UI"
+    participant Core as "Beat Core"
+    participant Mixer as "Playback Mixer"
+    participant Output as "Audio Output"
+
+    UI->>Core: Select mode + gain + duration
+    Core-->>UI: PCM beat layer
+    UI->>Mixer: Mix source audio + beat layer
+    Mixer->>Output: Stream final audio
