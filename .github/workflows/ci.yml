@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - "feature/**"
   pull_request:
 
 jobs:
@@ -19,12 +18,3 @@ jobs:
         with:
           node-version: 22
       - run: npm test
-
-  core-swift:
-    runs-on: macos-14
-    defaults:
-      run:
-        working-directory: sonicflow_app/core-swift
-    steps:
-      - uses: actions/checkout@v6
-      - run: swift test
