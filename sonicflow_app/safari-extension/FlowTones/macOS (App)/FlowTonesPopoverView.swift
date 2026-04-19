@@ -4,19 +4,25 @@ struct FlowTonesPopoverView: View {
     @ObservedObject var audioManager: AudioManager
     @ObservedObject var playerManager: PlayerManager
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 2)
+    private let columns = Array(
+        repeating: GridItem(.flexible(), spacing: BrandTokens.Spacing.sm),
+        count: 2
+    )
 
     var body: some View {
         ZStack {
-            Color(hex: "#121212")
+            BrandTokens.Neutral.bg
                 .ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: 12) {
+            LeopardBackgroundView()
+                .ignoresSafeArea()
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
                 Text("SonicFlow")
                     .font(.title3.weight(.bold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(BrandTokens.Neutral.fg)
 
-                LazyVGrid(columns: columns, spacing: 8) {
+                LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.sm) {
                     ForEach(FlowMode.allCases, id: \.self) { mode in
                         ModeCard(mode: mode, isSelected: mode == audioManager.currentMode) {
                             audioManager.currentMode = mode
@@ -32,20 +38,24 @@ struct FlowTonesPopoverView: View {
 
                 sourceSection
 
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
                     Text("Beat volume")
                         .font(.caption.weight(.semibold))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
                     Slider(value: $audioManager.beatVolume, in: 0...1)
                         .tint(audioManager.currentMode.accentColor)
                 }
 
-                HStack(spacing: 8) {
+                HStack(spacing: BrandTokens.Spacing.sm) {
                     Image(systemName: "waveform")
-                        .foregroundStyle(audioManager.isPlaying ? .green : .secondary)
+                        .foregroundStyle(
+                            audioManager.isPlaying
+                                ? BrandTokens.Accent.success
+                                : BrandTokens.Neutral.muted
+                        )
                     Text(audioManager.statusText)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
                 }
 
                 Button(audioManager.isPlaying ? "Pause" : "Start") {
@@ -54,7 +64,16 @@ struct FlowTonesPopoverView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(audioManager.currentMode.accentColor)
             }
-            .padding(12)
+            .padding(BrandTokens.Spacing.md)
+            .background(
+                RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                    .fill(BrandTokens.Neutral.panel)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                            .stroke(BrandTokens.Neutral.border, lineWidth: 1)
+                    )
+            )
+            .padding(BrandTokens.Spacing.sm)
         }
         .frame(width: 300, height: 400)
     }
@@ -63,13 +82,17 @@ struct FlowTonesPopoverView: View {
     private var sourceSection: some View {
         switch audioManager.selectedSource {
         case .system:
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
                 Text(audioManager.canCaptureSystemAudio ? "System capture verfügbar" : "System capture erst ab macOS 14.2")
                     .font(.caption2)
-                    .foregroundStyle(audioManager.canCaptureSystemAudio ? Color.secondary : Color.orange)
+                    .foregroundStyle(
+                        audioManager.canCaptureSystemAudio
+                            ? BrandTokens.Neutral.muted
+                            : BrandTokens.Chakra.sacral
+                    )
                 Text("Permission: \(audioManager.systemAudioPermissionStatus)")
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(BrandTokens.Neutral.muted)
                 Button("Start Capture") {
                     audioManager.startSystemAudioCapture()
                 }
@@ -77,7 +100,7 @@ struct FlowTonesPopoverView: View {
                 .disabled(!audioManager.canCaptureSystemAudio)
             }
         case .file:
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
                 Button(playerManager.selectedFileURL == nil ? "Pick File" : "Replace File") {
                     playerManager.pickAudioFile()
                 }
@@ -86,7 +109,7 @@ struct FlowTonesPopoverView: View {
                 if let selectedFileURL = playerManager.selectedFileURL {
                     Text(selectedFileURL.lastPathComponent)
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
                         .lineLimit(1)
                         .truncationMode(.middle)
                 }

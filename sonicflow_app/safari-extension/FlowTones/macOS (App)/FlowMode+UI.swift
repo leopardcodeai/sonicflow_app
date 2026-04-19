@@ -27,20 +27,16 @@ extension FlowMode {
         }
     }
 
-    var accentColorHex: String {
+    var accentColor: Color {
         switch self {
         case .focus:
-            return "#378ADD"
+            return BrandTokens.Mode.focus
         case .flow:
-            return "#7F77DD"
+            return BrandTokens.Mode.flow
         case .meditation:
-            return "#1D9E75"
+            return BrandTokens.Mode.meditation
         case .sleep:
-            return "#534AB7"
+            return BrandTokens.Mode.sleep
         }
-    }
-
-    var accentColor: Color {
-        Color(hex: accentColorHex)
     }
 }
