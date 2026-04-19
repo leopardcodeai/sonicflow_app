@@ -4,29 +4,60 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SonicFlow</title>
+    <link rel="stylesheet" href="brand.css">
     <style>
-      :root {
-        color-scheme: dark;
-        --bg: #0f0f0f;
-        --fg: #f5f7fb;
-        --muted: #8e97a8;
-        --border: #1f2735;
-        --panel: rgba(10, 14, 20, 0.8);
+      html, body {
+        background: var(--neutral-ink);
       }
 
       body {
+        position: relative;
         margin: 0;
         width: 320px;
         min-height: 420px;
-        padding: 20px;
-        background: radial-gradient(circle at top, #1b2433 0%, var(--bg) 55%);
-        color: var(--fg);
-        font: 14px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        padding: var(--space-lg);
+        color: var(--neutral-fg);
+        font: 14px/1.4 var(--font-body);
+        isolation: isolate;
+      }
+
+      /* Leopard pattern — procedural, sits behind the blurred panels.
+         Base = leopard-base, spots = leopard-spot with leopard-ring outline.
+         No motion; never sits directly under body copy. */
+      .leopard-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-color: var(--leopard-base);
+        background-image:
+          radial-gradient(circle at 12% 18%, var(--leopard-spot) 0 6px, var(--leopard-ring) 7px 10px, transparent 11px),
+          radial-gradient(circle at 78% 10%, var(--leopard-spot) 0 8px, var(--leopard-ring) 9px 13px, transparent 14px),
+          radial-gradient(circle at 42% 34%, var(--leopard-spot) 0 5px, var(--leopard-ring) 6px 9px, transparent 10px),
+          radial-gradient(circle at 88% 42%, var(--leopard-spot) 0 9px, var(--leopard-ring) 10px 14px, transparent 15px),
+          radial-gradient(circle at 22% 58%, var(--leopard-spot) 0 7px, var(--leopard-ring) 8px 12px, transparent 13px),
+          radial-gradient(circle at 62% 66%, var(--leopard-spot) 0 10px, var(--leopard-ring) 11px 15px, transparent 16px),
+          radial-gradient(circle at 8%  82%, var(--leopard-spot) 0 6px, var(--leopard-ring) 7px 10px, transparent 11px),
+          radial-gradient(circle at 48% 88%, var(--leopard-spot) 0 8px, var(--leopard-ring) 9px 13px, transparent 14px),
+          radial-gradient(circle at 92% 78%, var(--leopard-spot) 0 7px, var(--leopard-ring) 8px 11px, transparent 12px),
+          radial-gradient(circle at 32% 14%, var(--leopard-spot) 0 5px, var(--leopard-ring) 6px 9px, transparent 10px),
+          radial-gradient(circle at 70% 50%, var(--leopard-spot) 0 6px, var(--leopard-ring) 7px 10px, transparent 11px),
+          radial-gradient(circle at 16% 38%, var(--leopard-spot) 0 7px, var(--leopard-ring) 8px 12px, transparent 13px);
+        background-size: 180px 180px, 220px 220px, 160px 160px, 200px 200px,
+                         190px 190px, 230px 230px, 170px 170px, 210px 210px,
+                         175px 175px, 205px 205px, 195px 195px, 185px 185px;
+        background-position: 0 0, 40px 10px, 80px 40px, 20px 80px,
+                             60px 100px, 100px 60px, 10px 130px, 70px 140px,
+                             120px 20px, 150px 90px, 40px 160px, 130px 150px;
+        opacity: var(--leopard-opacity);
+        filter: blur(var(--leopard-blur));
+        pointer-events: none;
       }
 
       .shell {
+        position: relative;
         display: grid;
-        gap: 14px;
+        gap: var(--space-md);
+        z-index: 1;
       }
 
       .header {
@@ -35,39 +66,49 @@
         align-items: center;
       }
 
+      .header strong {
+        font-family: var(--font-display);
+        letter-spacing: -0.01em;
+        color: var(--accent-gold);
+      }
+
       .status {
         display: inline-flex;
-        gap: 8px;
+        gap: var(--space-sm);
         align-items: center;
-        color: var(--muted);
+        color: var(--neutral-muted);
       }
 
       .dot {
         width: 10px;
         height: 10px;
-        border-radius: 999px;
-        background: #556070;
+        border-radius: var(--radius-pill);
+        background: var(--neutral-muted);
       }
 
       .dot.active {
-        background: #3ccf91;
+        background: var(--accent-success);
+        box-shadow: 0 0 8px var(--accent-success);
       }
 
       .panel {
-        padding: 14px;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: var(--panel);
+        padding: var(--space-md);
+        border: 1px solid var(--neutral-border);
+        border-radius: var(--radius-md);
+        background: var(--neutral-panel);
+        backdrop-filter: blur(14px) saturate(120%);
+        -webkit-backdrop-filter: blur(14px) saturate(120%);
+        box-shadow: var(--elev-soft);
       }
 
       strong {
         display: block;
-        margin-bottom: 6px;
+        margin-bottom: var(--space-xs);
       }
 
       p {
         margin: 0;
-        color: var(--muted);
+        color: var(--neutral-muted);
       }
 
       .grid {
@@ -77,56 +118,79 @@
       }
 
       .mode-card {
-        border: 1px solid var(--border);
-        border-radius: 14px;
+        border: 1px solid var(--neutral-border);
+        border-radius: var(--radius-md);
         background: rgba(255, 255, 255, 0.02);
         padding: 12px;
         text-align: left;
         color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition: box-shadow 160ms ease, border-color 160ms ease, transform 160ms ease;
       }
 
+      .mode-card:hover {
+        border-color: var(--mode-color, var(--neutral-border));
+      }
+
+      /* Active mode card glow per BRAND.md:
+         0 0 24px modeColor + 0 0 64px (modeColor at 30% alpha) */
       .mode-card.active {
         border-color: var(--mode-color);
-        box-shadow: inset 0 0 0 1px var(--mode-color);
+        box-shadow:
+          inset 0 0 0 1px var(--mode-color),
+          0 0 24px var(--mode-color),
+          0 0 64px color-mix(in oklab, var(--mode-color), transparent 70%);
       }
 
       .mode-card small {
         display: block;
-        margin-bottom: 6px;
-        color: var(--muted);
+        margin-bottom: var(--space-xs);
+        color: var(--neutral-muted);
+        font-family: var(--font-mono);
       }
 
       .slider-row {
         display: grid;
-        gap: 8px;
+        gap: var(--space-sm);
       }
 
       .slider-meta {
         display: flex;
         justify-content: space-between;
-        color: var(--muted);
+        color: var(--neutral-muted);
       }
 
       input[type="range"] {
         width: 100%;
+        accent-color: var(--accent-gold);
       }
 
       .toggle {
         border: 0;
-        border-radius: 16px;
-        padding: 14px 16px;
+        border-radius: var(--radius-md);
+        padding: var(--space-md) var(--space-lg);
         font: inherit;
         font-weight: 600;
-        color: #f7fbff;
-        background: linear-gradient(135deg, #378add, #235dd3);
+        color: var(--neutral-fg);
+        background: linear-gradient(135deg, var(--mode-focus), var(--chakra-crown));
+        cursor: pointer;
+        box-shadow: var(--elev-gold);
+        transition: box-shadow 160ms ease, opacity 160ms ease;
+      }
+
+      .toggle:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
 
       .toggle.stop {
-        background: linear-gradient(135deg, #1d9e75, #12795a);
+        background: linear-gradient(135deg, var(--accent-danger), var(--chakra-root));
       }
     </style>
   </head>
   <body>
+    <div class="leopard-bg" aria-hidden="true"></div>
     <div class="shell">
       <div class="header">
         <strong>SonicFlow</strong>
