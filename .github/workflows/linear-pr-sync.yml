@@ -4,9 +4,12 @@ on:
   pull_request:
     types: [opened, reopened, synchronize, ready_for_review, converted_to_draft, closed]
 
+env:
+  LINEAR_API_TOKEN: ${{ secrets.LINEAR_API_TOKEN }}
+
 jobs:
   linear-pr-sync:
-    if: ${{ secrets.LINEAR_API_TOKEN != '' }}
+    if: ${{ env.LINEAR_API_TOKEN != '' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -14,6 +17,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Sync Linear state from PR event
-        env:
-          LINEAR_API_TOKEN: ${{ secrets.LINEAR_API_TOKEN }}
         run: node scripts/linear/pr_state_sync.mjs
