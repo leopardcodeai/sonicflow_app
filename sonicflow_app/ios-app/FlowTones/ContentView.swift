@@ -4,18 +4,24 @@ import FlowTonesCore
 struct ContentView: View {
     @ObservedObject var audioManager: AudioManager
     @ObservedObject var playerManager: PlayerManager
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 2)
+    private let columns = Array(
+        repeating: GridItem(.flexible(), spacing: BrandTokens.Spacing.md),
+        count: 2
+    )
 
     var body: some View {
         ZStack {
-            Color(hex: "#0f0f0f")
+            BrandTokens.Neutral.bg
+                .ignoresSafeArea()
+
+            LeopardBackgroundView()
                 .ignoresSafeArea()
 
             ScrollView {
-                VStack(alignment: .leading, spacing: 20) {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
                     header
 
-                    LazyVGrid(columns: columns, spacing: 12) {
+                    LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.md) {
                         ForEach(FlowMode.allCases, id: \.self) { mode in
                             ModeCard(
                                 mode: mode,
@@ -26,10 +32,10 @@ struct ContentView: View {
                         }
                     }
 
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
                         Text("Neural layer")
                             .font(.headline)
-                            .foregroundStyle(.white)
+                            .foregroundStyle(BrandTokens.Neutral.fg)
                         Slider(value: $audioManager.beatVolume, in: 0...1)
                             .tint(audioManager.currentMode.accentColor)
                     }
@@ -39,7 +45,7 @@ struct ContentView: View {
                         mode: audioManager.currentMode
                     )
 
-                    HStack(spacing: 12) {
+                    HStack(spacing: BrandTokens.Spacing.md) {
                         Button(audioManager.isPlaying ? "Pause" : "Play") {
                             audioManager.togglePlayback()
                         }
@@ -52,12 +58,12 @@ struct ContentView: View {
                     if let selectedFileURL = playerManager.selectedFileURL {
                         Text(selectedFileURL.lastPathComponent)
                             .font(.footnote)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(BrandTokens.Neutral.muted)
                             .lineLimit(1)
                             .truncationMode(.middle)
                     }
                 }
-                .padding(20)
+                .padding(BrandTokens.Spacing.lg)
             }
         }
     }
@@ -66,19 +72,19 @@ struct ContentView: View {
         HStack {
             Text("SonicFlow")
                 .font(.largeTitle.weight(.bold))
-                .foregroundStyle(.white)
+                .foregroundStyle(BrandTokens.Neutral.fg)
             Spacer()
-            HStack(spacing: 8) {
+            HStack(spacing: BrandTokens.Spacing.sm) {
                 Circle()
-                    .fill(audioManager.isPlaying ? .green : .gray)
+                    .fill(audioManager.isPlaying ? BrandTokens.Accent.success : BrandTokens.Neutral.muted)
                     .frame(width: 10, height: 10)
                 Text(audioManager.isPlaying ? "Active" : "Off")
                     .font(.footnote.weight(.medium))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(BrandTokens.Neutral.muted)
             }
-            .padding(.horizontal, 10)
-            .padding(.vertical, 8)
-            .background(Color.white.opacity(0.08), in: Capsule())
+            .padding(.horizontal, BrandTokens.Spacing.md)
+            .padding(.vertical, BrandTokens.Spacing.sm)
+            .background(BrandTokens.Neutral.panel, in: Capsule())
         }
     }
 }

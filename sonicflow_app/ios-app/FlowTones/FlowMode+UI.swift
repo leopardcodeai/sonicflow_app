@@ -28,6 +28,12 @@ extension FlowMode {
         }
     }
 
+    /// Canonical hex identifier for the mode's chakra color.
+    ///
+    /// Kept as a public string for the existing test contract (see
+    /// `FlowModePresentationTests`). All rendered color consumption routes
+    /// through ``accentColor`` which resolves from `BrandTokens.Mode.*` —
+    /// never parse this string for a real color at runtime.
     var accentColorHex: String {
         switch self {
         case .focus:
@@ -42,6 +48,29 @@ extension FlowMode {
     }
 
     var accentColor: Color {
-        Color(hex: accentColorHex)
+        switch self {
+        case .focus:
+            return BrandTokens.Mode.focus
+        case .flow:
+            return BrandTokens.Mode.flow
+        case .meditation:
+            return BrandTokens.Mode.meditation
+        case .sleep:
+            return BrandTokens.Mode.sleep
+        }
+    }
+
+    /// Chakra token backing this mode (see brand/BRAND.md mode↔chakra mapping).
+    var chakraColor: Color {
+        switch self {
+        case .focus:
+            return BrandTokens.Chakra.throat
+        case .flow:
+            return BrandTokens.Chakra.thirdEye
+        case .meditation:
+            return BrandTokens.Chakra.heart
+        case .sleep:
+            return BrandTokens.Chakra.crown
+        }
     }
 }
