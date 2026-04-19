@@ -3,13 +3,24 @@ package com.sonicflow.app.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import com.sonicflow.app.ui.fromHex
+import com.sonicflow.app.brand.BrandTokens
 
 private val FlowTonesDarkScheme = darkColorScheme(
-    primary = Color.fromHex("#378ADD"),
-    secondary = Color.fromHex("#7F77DD"),
-    tertiary = Color.fromHex("#1D9E75")
+    primary = BrandTokens.Chakra.throat,
+    onPrimary = BrandTokens.Neutral.fg,
+    secondary = BrandTokens.Chakra.thirdEye,
+    onSecondary = BrandTokens.Neutral.fg,
+    tertiary = BrandTokens.Chakra.heart,
+    onTertiary = BrandTokens.Neutral.fg,
+    background = BrandTokens.Neutral.bg,
+    onBackground = BrandTokens.Neutral.fg,
+    surface = BrandTokens.Neutral.ink,
+    onSurface = BrandTokens.Neutral.fg,
+    surfaceVariant = BrandTokens.Neutral.border,
+    onSurfaceVariant = BrandTokens.Neutral.muted,
+    outline = BrandTokens.Neutral.border,
+    error = BrandTokens.Accent.danger,
+    onError = BrandTokens.Neutral.fg
 )
 
 @Composable

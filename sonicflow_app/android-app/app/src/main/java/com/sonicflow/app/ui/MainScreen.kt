@@ -1,6 +1,7 @@
 package com.sonicflow.app.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sonicflow.app.brand.BrandTokens
+import com.sonicflow.app.ui.components.LeopardBackground
 import com.sonicflow.app.ui.components.ModeCard
 import com.sonicflow.app.ui.components.VisualizerBars
 import com.sonicflow.beatengine.FlowMode
@@ -32,64 +35,71 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
     val beatVolume by viewModel.beatVolume.collectAsState()
     val selectedFile by viewModel.selectedFile.collectAsState()
 
-    val accent = androidx.compose.ui.graphics.Color.fromHex(currentMode.accentColor)
+    val accent = currentMode.modeColor
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        TopAppBar(
-            title = { Text("SonicFlow") },
-            actions = {
-                AssistChip(
-                    onClick = {},
-                    label = { Text(if (isActive) "Active" else "Off") }
-                )
-            }
-        )
+    Box(modifier = Modifier.fillMaxSize()) {
+        LeopardBackground()
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(max = 220.dp)
+                .fillMaxSize()
+                .padding(
+                    horizontal = BrandTokens.Spacing.md.dp,
+                    vertical = BrandTokens.Spacing.sm.dp
+                ),
+            verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.md.dp)
         ) {
-            items(FlowMode.entries) { mode ->
-                ModeCard(
-                    mode = mode,
-                    selected = currentMode == mode,
-                    onClick = { viewModel.setMode(mode) }
-                )
+            TopAppBar(
+                title = { Text("SonicFlow") },
+                actions = {
+                    AssistChip(
+                        onClick = {},
+                        label = { Text(if (isActive) "Active" else "Off") }
+                    )
+                }
+            )
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.sm.dp),
+                verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.sm.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 220.dp)
+            ) {
+                items(FlowMode.entries) { mode ->
+                    ModeCard(
+                        mode = mode,
+                        selected = currentMode == mode,
+                        onClick = { viewModel.setMode(mode) }
+                    )
+                }
             }
+
+            Text(text = "Neural layer", style = MaterialTheme.typography.labelLarge)
+            Slider(
+                value = beatVolume,
+                onValueChange = viewModel::onBeatVolumeChanged,
+                valueRange = 0f..1f
+            )
+
+            VisualizerBars(isActive = isActive, color = accent)
+
+            Button(onClick = viewModel::pickFile, modifier = Modifier.fillMaxWidth()) {
+                Text(if (selectedFile.isNullOrBlank()) "Pick file" else "Change file")
+            }
+
+            Button(
+                onClick = { if (isActive) viewModel.stopSession() else viewModel.startSession() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(if (isActive) "Stop" else "Start")
+            }
+
+            Text(
+                text = selectedFile ?: "No file selected",
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
-
-        Text(text = "Neural layer", style = MaterialTheme.typography.labelLarge)
-        Slider(
-            value = beatVolume,
-            onValueChange = viewModel::onBeatVolumeChanged,
-            valueRange = 0f..1f
-        )
-
-        VisualizerBars(isActive = isActive, color = accent)
-
-        Button(onClick = viewModel::pickFile, modifier = Modifier.fillMaxWidth()) {
-            Text(if (selectedFile.isNullOrBlank()) "Pick file" else "Change file")
-        }
-
-        Button(
-            onClick = { if (isActive) viewModel.stopSession() else viewModel.startSession() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(if (isActive) "Stop" else "Start")
-        }
-
-        Text(
-            text = selectedFile ?: "No file selected",
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
     }
 }
