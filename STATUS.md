@@ -1,30 +1,23 @@
-# STATUS
+# Project Status Snapshot
 
-## Ticket-ID & Scope
-- Active ticket: SF-20
-- Linear state: In Review
-- Working branch: sf/SF-11-menu-bar-app-ui
-- Worktree: `soundhealing_sonicflow`
-- PR: https://github.com/alexanderbrunker-star/sonicflow_app/pull/11
+Date: 2026-04-19
 
-## Current Stand
-- Android app scaffold is implemented under `sonicflow_app/android-app` and wired to `core-android/beatengine`.
-- AudioTrack initialization path was hardened and Android demo UI was improved (mode layout + status messaging).
-- Existing SF-11 work remains in this branch and was preserved.
+## Current State
 
-## Done
-- Added runnable Android app module with Compose UI and unit tests.
-- Added Gradle wrappers for `android-app` and `core-android/beatengine`.
-- Updated beatengine/player integration and Android playback robustness.
-- Verified builds/tests on local environment.
+- Monorepo structure is active across shared cores (`core-js`, `core-swift`, `core-android`) and platform runtimes (Chrome, Safari/macOS, iOS, Android).
+- Documentation has been reorganized under root `docs/` with architecture, guides, graphics, and reports sections.
+- Cross-platform warning audit is available through `./scripts/check_warnings.sh` and `make verify`.
 
-## Open
-- None for this branch-level integration step.
+## Verification Baseline (This Snapshot)
 
-## Tests
-- `cd sonicflow_app/android-app && ./gradlew testDebugUnitTest assembleDebug`
-- `xcodebuild -project sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx -derivedDataPath /tmp/flowtones-sf11-derived CODE_SIGNING_ALLOWED=NO build`
-- Result: successful in this run.
+- `core-js` tests: passing
+- `chrome-extension` build: passing
+- `core-swift` tests: passing
+- `ios-app` build: passing
+- `safari-extension` macOS build: passing
+- `android-app` build: requires Java/SDK prerequisites in local environment
 
-## Next Step
-- Merge branch to `main`, return to `main`, and close the branch.
+## Next Recommended Work
+
+- Keep docs and architecture diagrams in sync with future platform changes.
+- Continue Android verification on machines with configured Java + Android SDK.

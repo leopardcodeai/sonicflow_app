@@ -1,0 +1,20 @@
+flowchart LR
+    subgraph Cores["Shared Beat Cores"]
+        JS["core-js (JavaScript)"]
+        SW["core-swift (Swift Package)"]
+        KT["core-android/beatengine (Kotlin)"]
+    end
+
+    subgraph Platforms["Platform Apps & Extensions"]
+        CH["chrome-extension"]
+        SF["safari-extension"]
+        IOS["ios-app"]
+        MAC["macOS target"]
+        AND["android-app"]
+    end
+
+    JS --> CH
+    JS --> SF
+    SW --> IOS
+    SF --> MAC
+    KT --> AND

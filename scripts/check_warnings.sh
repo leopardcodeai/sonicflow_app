@@ -77,10 +77,18 @@ check_step ios_build
 run_step mac_build xcodebuild -project "$ROOT_DIR/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj" -scheme "FlowTones (macOS)" -configuration Debug -destination "generic/platform=macOS" CODE_SIGNING_ALLOWED=NO build
 check_step mac_build
 
+has_android_sdk_config=false
 if [[ -n "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" || -f "$ROOT_DIR/sonicflow_app/android-app/local.properties" ]]; then
-  run_step android_build bash -lc "cd '$ROOT_DIR/sonicflow_app/android-app' && ./gradlew assembleDebug"
-  check_step android_build
-else
+  has_android_sdk_config=true
+fi
+
+if [[ "$has_android_sdk_config" != true ]]; then
   echo "==> android_build"
   echo "Skipping Android warning audit because no Android SDK path is configured."
+elif ! command -v java >/dev/null 2>&1; then
+  echo "==> android_build"
+  echo "Skipping Android warning audit because Java is not available on PATH."
+else
+  run_step android_build bash -lc "cd '$ROOT_DIR/sonicflow_app/android-app' && ./gradlew assembleDebug"
+  check_step android_build
 fi

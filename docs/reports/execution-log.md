@@ -1,4 +1,6 @@
-# SonicFlow Execution Log
+# SonicFlow Execution Log (Historical)
+
+> This document is a preserved implementation-phase log and may reference older ticket sequencing or branch state.
 
 ## Goal
 
@@ -42,9 +44,7 @@ sonicflow_app/
   chrome-extension/
   safari-extension/
   ios-app/
-  mac-app/
   android-app/
-  docs/
 ```
 
 ## Implementation Notes
