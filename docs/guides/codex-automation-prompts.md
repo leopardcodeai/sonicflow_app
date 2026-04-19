@@ -13,13 +13,21 @@ Arbeite streng ticket-driven für dieses Repository.
 Wenn gefunden: setze exakt diese Arbeit fort, beginne kein neues Ticket.
 
 2) Wenn keine laufende Arbeit existiert:
-- hole offene Issues im Status Todo
-- wenn keine Todo-Issues existieren: stoppe und reportiere kurz
-- priorisiere innerhalb der Todo-Issues nach:
-  a) mir (Codex) zugewiesen
+- prüfe zuerst offene Linear-Issues, die an `Codex` delegiert oder direkt an `Codex` zugewiesen sind
+- Assignment oder Delegation an `Codex` ist ein explizites Startsignal für den Worker
+- berücksichtige dabei nur Issues in `Todo`, `In Progress` oder `In Review`
+- validiere den Status von Kandidaten immer über die direkten Issue-Details; verlasse dich nicht nur auf Suchfilter
+- wenn ein Ticket explizit genannt wurde oder kürzlich in STATUS.md / Memory auftauchte, prüfe dieses Ticket direkt
+- wenn es passende `Codex`-Tickets gibt, bearbeite diese vor allen allgemeinen offenen Issues
+- wenn es keine passenden `Codex`-Tickets gibt, hole offene Issues in den Status `Todo`, `In Progress` oder `In Review`
+- Assignee ist außerhalb von `Codex`-Tickets niemals ein Ausschlusskriterium: nimm auch Tickets, die jemand anderem oder niemandem zugewiesen sind
+- wenn keine passenden Issues in `Todo`, `In Progress` oder `In Review` existieren: stoppe und reportiere kurz
+- priorisiere innerhalb dieser offenen Arbeits-States nach:
+  a) `Codex`-Delegation oder direkte `Codex`-Zuweisung
   b) höchste Priorität / Blocker
   c) klare Acceptance Criteria
   d) ohne zusätzliche Produktentscheidung direkt umsetzbar
+  e) kleinster sinnvoller, sauber abgrenzbarer Lieferumfang
 
 3) Parallele Arbeit ist erlaubt:
 - nutze Agents für unabhängige Tickets/Subtasks parallel
@@ -62,8 +70,9 @@ Linear Ticket -> feature/TICKET-ID-desc branch -> implementation -> tests -> PR 
 
 RULES:
 - Work only from Linear tickets (or PR review requests).
-- Parallel execution with agents is allowed for independent Todo tickets.
-- Never start from Backlog automatically. Work starts from Todo (or explicit user command).
+- If an issue is delegated or assigned to `Codex`, treat that as explicit pickup intent on the next automation run.
+- Parallel execution with agents is allowed for independent active tickets.
+- Never start from Backlog automatically. Work starts from `Todo`, `In Progress`, `In Review`, or explicit user command.
 - Keep STATUS.md current before ending a run.
 
 GIT:
