@@ -1,8 +1,6 @@
 name: Linear Done Auto-Merge
 
 on:
-  schedule:
-    - cron: "*/15 * * * *"
   workflow_dispatch:
 
 env:
