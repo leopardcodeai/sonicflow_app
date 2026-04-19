@@ -8,29 +8,37 @@ struct ModeCard: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
                 Text(mode.displayName)
                     .font(.title3.weight(.semibold))
-                    .foregroundStyle(.white)
+                    .foregroundStyle(BrandTokens.Neutral.fg)
                 Text("\(Int(mode.beatHz)) Hz")
                     .font(.caption.weight(.medium))
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(BrandTokens.Neutral.muted)
                 Text(mode.shortDescription)
                     .font(.caption)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(BrandTokens.Neutral.muted)
                     .lineLimit(1)
             }
             .frame(maxWidth: .infinity, minHeight: 94, alignment: .leading)
-            .padding(12)
-            .background(Color.white.opacity(0.06))
+            .padding(BrandTokens.Spacing.md)
+            .background(BrandTokens.Neutral.panel)
             .overlay(
-                RoundedRectangle(cornerRadius: 14)
+                RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
                     .stroke(
-                        isSelected ? mode.accentColor : Color.white.opacity(0.12),
+                        isSelected ? mode.accentColor : BrandTokens.Neutral.border,
                         lineWidth: isSelected ? 2 : 1
                     )
             )
-            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .clipShape(RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+            .shadow(
+                color: isSelected ? mode.accentColor : .clear,
+                radius: 24
+            )
+            .shadow(
+                color: isSelected ? mode.accentColor.opacity(0.3) : .clear,
+                radius: 64
+            )
         }
         .buttonStyle(.plain)
     }
