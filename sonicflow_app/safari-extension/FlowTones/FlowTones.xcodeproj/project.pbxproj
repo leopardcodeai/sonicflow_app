@@ -67,6 +67,8 @@
 		3294EA5A2F8E5D9400F4BA51 /* FlowMode+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3294EA6A2F8E5D9400F4BA51 /* FlowMode+UI.swift */; };
 		3294EA5B2F8E5D9400F4BA51 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3294EA6B2F8E5D9400F4BA51 /* Color+Hex.swift */; };
 		3294EA5C2F8E5D9400F4BA51 /* BeatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3294EA6C2F8E5D9400F4BA51 /* BeatEngine.swift */; };
+		3294EA702F8E5D9400F4BA51 /* BrandTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3294EA722F8E5D9400F4BA51 /* BrandTokens.swift */; };
+		3294EA712F8E5D9400F4BA51 /* LeopardBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3294EA732F8E5D9400F4BA51 /* LeopardBackgroundView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -156,6 +158,8 @@
 		3294EA6A2F8E5D9400F4BA51 /* FlowMode+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowMode+UI.swift"; sourceTree = "<group>"; };
 		3294EA6B2F8E5D9400F4BA51 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		3294EA6C2F8E5D9400F4BA51 /* BeatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatEngine.swift; sourceTree = "<group>"; };
+		3294EA722F8E5D9400F4BA51 /* BrandTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTokens.swift; sourceTree = "<group>"; };
+		3294EA732F8E5D9400F4BA51 /* LeopardBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeopardBackgroundView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -268,6 +272,8 @@
 				3294EA6A2F8E5D9400F4BA51 /* FlowMode+UI.swift */,
 				3294EA6B2F8E5D9400F4BA51 /* Color+Hex.swift */,
 				3294EA6C2F8E5D9400F4BA51 /* BeatEngine.swift */,
+				3294EA722F8E5D9400F4BA51 /* BrandTokens.swift */,
+				3294EA732F8E5D9400F4BA51 /* LeopardBackgroundView.swift */,
 				3294E9F12F8E5D9400F4BA51 /* Main.storyboard */,
 				3294E9F42F8E5D9400F4BA51 /* Info.plist */,
 			);
@@ -541,6 +547,8 @@
 				3294EA5A2F8E5D9400F4BA51 /* FlowMode+UI.swift in Sources */,
 				3294EA5B2F8E5D9400F4BA51 /* Color+Hex.swift in Sources */,
 				3294EA5C2F8E5D9400F4BA51 /* BeatEngine.swift in Sources */,
+				3294EA702F8E5D9400F4BA51 /* BrandTokens.swift in Sources */,
+				3294EA712F8E5D9400F4BA51 /* LeopardBackgroundView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
