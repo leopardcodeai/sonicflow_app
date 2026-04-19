@@ -4,8 +4,8 @@ Date: 2026-04-19
 
 ## Ticket
 
-- Active ticket: `SF-21`
-- Branch: `feature/SF-21-linear-github-process`
+- Active ticket: (none)
+- Last ticket: `SF-21` (merged via PR #21 into `main`, commit `1c979ce`)
 - Goal: end-to-end Linear-first engineering workflow with PR guards and automation.
 
 ## Done
@@ -29,7 +29,7 @@ Date: 2026-04-19
 
 - Ensure repo secret `LINEAR_API_TOKEN` is set in GitHub Actions.
 - Add `Preview` workflow state in Linear team (fallback currently uses `In Review`).
-- Merge workflow PR and validate first real ticket through the full state machine.
+- Validate first real ticket through the full state machine.
 
 ## Verification
 
@@ -41,6 +41,5 @@ Date: 2026-04-19
 
 ## Next Step
 
-- Commit + push latest workflow hardening changes.
-- Keep/update PR #21 (`[SF-21] ...`) until checks pass.
-- Keep ticket in `Preview` when PR is ready; merge path then drives `Done`.
+- Confirm GitHub Actions is able to talk to Linear (`LINEAR_API_TOKEN`).
+- Optionally add Linear status `Preview`, then run a full ticket cycle: `Todo` → `In Progress` → `In Review`/`Preview` → `Done`.
