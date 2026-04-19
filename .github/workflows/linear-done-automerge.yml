@@ -1,0 +1,21 @@
+name: Linear Done Auto-Merge
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+jobs:
+  automerge:
+    if: ${{ secrets.LINEAR_API_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v6
+      - name: Merge open PRs whose Linear ticket is Done
+        env:
+          LINEAR_API_TOKEN: ${{ secrets.LINEAR_API_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/linear/automerge_done_tickets.mjs

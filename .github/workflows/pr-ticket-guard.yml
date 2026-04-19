@@ -1,0 +1,71 @@
+name: PR Ticket Guard
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Validate Branch, Title, and Linear Link
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const branch = pr.head.ref;
+            const title = pr.title || "";
+            const body = pr.body || "";
+
+            const branchPattern = /^feature\/([A-Z]+-\d+)-[a-z0-9._-]+$/;
+            const titlePattern = /^\[([A-Z]+-\d+)\]\s+.+/;
+            const ticketPattern = /[A-Z]+-\d+/g;
+
+            const errors = [];
+
+            const branchMatch = branch.match(branchPattern);
+            const titleMatch = title.match(titlePattern);
+            const bodyTickets = (body.match(ticketPattern) || []);
+
+            if (!branchMatch) {
+              errors.push(
+                "Branch muss dem Format `feature/TICKET-ID-desc` entsprechen, z. B. `feature/SF-21-workflow`."
+              );
+            }
+
+            if (!titleMatch) {
+              errors.push(
+                "PR-Titel muss mit `[TICKET-ID]` starten, z. B. `[SF-21] Implement workflow guards`."
+              );
+            }
+
+            const branchTicket = branchMatch ? branchMatch[1] : null;
+            const titleTicket = titleMatch ? titleMatch[1] : null;
+
+            if (branchTicket && titleTicket && branchTicket !== titleTicket) {
+              errors.push(
+                `Ticket-ID mismatch: Branch hat \`${branchTicket}\`, Titel hat \`${titleTicket}\`.`
+              );
+            }
+
+            const requiredTicket = titleTicket || branchTicket;
+            if (!requiredTicket) {
+              errors.push("Konnte keine Ticket-ID aus Branch oder Titel extrahieren.");
+            } else if (!body.includes(requiredTicket)) {
+              errors.push(
+                `PR-Body muss die Ticket-ID \`${requiredTicket}\` enthalten (inkl. Linear-Link).`
+              );
+            }
+
+            if (!/linear\.app\//i.test(body)) {
+              errors.push("PR-Body muss einen Linear-Link enthalten.");
+            }
+
+            if (errors.length > 0) {
+              core.setFailed(errors.join("\n"));
+              return;
+            }
+
+            core.notice(`PR-Guard erfolgreich: ${requiredTicket}`);

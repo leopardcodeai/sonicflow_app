@@ -1,23 +1,47 @@
-# Project Status Snapshot
+# STATUS
 
 Date: 2026-04-19
 
-## Current State
+## Ticket
 
-- Monorepo structure is active across shared cores (`core-js`, `core-swift`, `core-android`) and platform runtimes (Chrome, Safari/macOS, iOS, Android).
-- Documentation has been reorganized under root `docs/` with architecture, guides, graphics, and reports sections.
-- Cross-platform warning audit is available through `./scripts/check_warnings.sh` and `make verify`.
+- Active ticket: `SF-21`
+- Branch: `codex/repo-structure-readme-graphics` (to migrate to `feature/SF-21-...`)
+- Goal: end-to-end Linear-first engineering workflow with PR guards and automation.
 
-## Verification Baseline (This Snapshot)
+## Done
 
-- `core-js` tests: passing
-- `chrome-extension` build: passing
-- `core-swift` tests: passing
-- `ios-app` build: passing
-- `safari-extension` macOS build: passing
-- `android-app` build: requires Java/SDK prerequisites in local environment
+- Added PR governance:
+  - `.github/workflows/pr-ticket-guard.yml`
+  - `.github/PULL_REQUEST_TEMPLATE.md`
+- Added Linear sync automation:
+  - `.github/workflows/linear-pr-sync.yml`
+  - `scripts/linear/pr_state_sync.mjs`
+- Added auto-merge by Linear `Done`:
+  - `.github/workflows/linear-done-automerge.yml`
+  - `scripts/linear/automerge_done_tickets.mjs`
+- Added process docs:
+  - `docs/guides/linear-github-process.md`
+  - `docs/guides/codex-automation-prompts.md`
+- Updated docs index + README links.
+- Updated CI branch pattern toward `feature/**`.
 
-## Next Recommended Work
+## Open
 
-- Keep docs and architecture diagrams in sync with future platform changes.
-- Continue Android verification on machines with configured Java + Android SDK.
+- Create/use canonical `feature/SF-21-...` branch for strict compliance with new guard.
+- Ensure repo secret `LINEAR_API_TOKEN` is set in GitHub Actions.
+- Add `Preview` workflow state in Linear team (fallback currently uses `In Review`).
+- Merge workflow PR and validate first real ticket through the full state machine.
+
+## Verification
+
+- `node scripts/linear/pr_state_sync.mjs` (graceful skip without token): ✅
+- `node scripts/linear/automerge_done_tickets.mjs` (graceful skip without token/context): ✅
+- `make test-core-js`: ✅
+- `make test-core-swift`: ✅
+- `make verify`: ✅ (including Android build in this environment)
+
+## Next Step
+
+- Commit + push workflow automation changes.
+- Open/update PR with `[SF-21]` title on `feature/SF-21-...` branch.
+- Keep ticket in `Preview` when PR is ready; merge path then drives `Done`.

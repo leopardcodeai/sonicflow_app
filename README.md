@@ -106,6 +106,8 @@ The warning audit runs cross-platform checks and skips Android only when SDK/Jav
 - [Architecture details](docs/architecture/system-overview.md)
 - [Structure walkthrough](docs/guides/project-structure.md)
 - [Team workflow](docs/guides/github-workflow.md)
+- [Linear + GitHub process automation](docs/guides/linear-github-process.md)
+- [Codex automation prompts/instructions](docs/guides/codex-automation-prompts.md)
 - [Historical execution notes](docs/reports/execution-log.md)
 - [Current status snapshot](STATUS.md)
 
