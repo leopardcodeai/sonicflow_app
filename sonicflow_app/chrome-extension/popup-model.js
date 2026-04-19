@@ -4,28 +4,28 @@ export const MODES = [
     name: "Focus",
     beatHz: 40,
     description: "Sharpens attention for deep work.",
-    color: "#378ADD"
+    color: "var(--mode-focus)"
   },
   {
     id: "flow",
     name: "Flow",
     beatHz: 10,
     description: "Balances calm and creative momentum.",
-    color: "#7F77DD"
+    color: "var(--mode-flow)"
   },
   {
     id: "meditation",
     name: "Meditation",
     beatHz: 6,
     description: "Soft theta pacing for inward focus.",
-    color: "#1D9E75"
+    color: "var(--mode-meditation)"
   },
   {
     id: "sleep",
     name: "Sleep",
     beatHz: 2,
     description: "Slow down gently toward rest.",
-    color: "#534AB7"
+    color: "var(--mode-sleep)"
   }
 ];
 

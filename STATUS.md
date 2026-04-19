@@ -4,43 +4,39 @@ Date: 2026-04-19
 
 ## Ticket
 
-- Active ticket: `SF-21`
-- Branch: `feature/SF-21-linear-github-process`
-- Goal: end-to-end Linear-first engineering workflow with PR guards and automation.
+- Active ticket: `SF-23`
+- Parent ticket: `SF-22` (Leopard Look redesign)
+- Branch: `feature/SF-23-brand-foundation`
+- Goal: establish the shared Leopard AI brand foundation consumed by follow-up platform tickets.
 
 ## Done
 
-- Added PR governance:
-  - `.github/workflows/pr-ticket-guard.yml`
-  - `.github/PULL_REQUEST_TEMPLATE.md`
-- Added Linear sync automation:
-  - `.github/workflows/linear-pr-sync.yml`
-  - `scripts/linear/pr_state_sync.mjs`
-- Added auto-merge by Linear `Done`:
-  - `.github/workflows/linear-done-automerge.yml`
-  - `scripts/linear/automerge_done_tickets.mjs`
-- Added process docs:
-  - `docs/guides/linear-github-process.md`
-  - `docs/guides/codex-automation-prompts.md`
-- Updated docs index + README links.
-- Updated CI branch pattern toward `feature/**`.
+### SF-23 — brand foundation
+- `brand/tokens.json` — canonical source of truth (chakra palette, mode-to-chakra mapping, neutral surfaces, accents, typography, radius, spacing, elevation, leopard parameters).
+- `brand/BRAND.md` — human-readable guidelines (identity, mode↔chakra, leopard pattern rules, logo/clearspace, glow formula, do/don't).
+- `brand/generated/` — deterministic per-platform outputs:
+  - `tokens.css` (CSS custom properties)
+  - `BrandTokens.swift` (Swift enum tree)
+  - `BrandTokens.kt` (Kotlin object tree)
+  - `README.md` (do-not-edit notice, regen command)
+- `scripts/brand/generate-tokens.mjs` — idempotent generator, verified byte-identical on repeated runs.
+- `docs/guides/codex-automation-prompts.md` — worker prompt hardened to re-check active `Todo` / `In Progress` / `In Review` issues directly from Linear issue details.
 
-## Open
+## Verification (this session)
 
-- Ensure repo secret `LINEAR_API_TOKEN` is set in GitHub Actions.
-- Add `Preview` workflow state in Linear team (fallback currently uses `In Review`).
-- Merge workflow PR and validate first real ticket through the full state machine.
+- `node scripts/brand/generate-tokens.mjs` → byte-identical twice. ✅
+- `cd sonicflow_app/core-js && npm test` → 5/5 pass. ✅
+- `cd sonicflow_app/chrome-extension && npm test` → 10/10 pass. ✅
+- `./scripts/check_warnings.sh` → blocked in `core_swift` by sandboxed Swift toolchain cache access (`sandbox_apply: Operation not permitted`), not by an SF-23 code failure.
 
-## Verification
+## Open / Flags
 
-- `node scripts/linear/pr_state_sync.mjs` (graceful skip without token): ✅
-- `node scripts/linear/automerge_done_tickets.mjs` (graceful skip without token/context): ✅
-- `make test-core-js`: ✅
-- `make test-core-swift`: ✅
-- `make verify`: ✅ (including Android build in this environment)
+- `SF-24` through `SF-29` remain follow-up tickets that consume this foundation and should be split into their own branches/PRs after SF-23 is pushed.
+- GitHub PR listing/comment inspection is currently blocked from this sandbox (`api.github.com` unreachable).
+- Prefer moving `SF-23` to `Preview` if that Linear state exists; otherwise use `In Review`.
 
 ## Next Step
 
-- Commit + push latest workflow hardening changes.
-- Keep/update PR #21 (`[SF-21] ...`) until checks pass.
-- Keep ticket in `Preview` when PR is ready; merge path then drives `Done`.
+- Commit and push SF-23 branch contents.
+- Open PR titled `[SF-23] ...` with the Linear link and the verification notes above.
+- Move the ticket to `Preview` / `In Review`, then start the next platform slice on its own branch.
