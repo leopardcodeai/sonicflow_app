@@ -8,15 +8,22 @@ Dieses Projekt arbeitet ticket-driven:
 
 1. Neue Tickets landen in `Backlog` und bleiben dort.
 2. Nur manuell (oder auf Aufforderung) nach `Todo` verschieben.
-3. Codex arbeitet nur `Todo`-Tickets ab (ein Ticket gleichzeitig).
-4. Für jedes Ticket:
+3. Codex arbeitet nur `Todo`-Tickets ab.
+4. Parallele Arbeit ist erlaubt, wenn sie über Agents organisiert ist:
+   - nur unabhängige Tickets parallel
+   - pro Ticket eigener Branch + PR
+   - klare Ticket-Zuordnung in jedem Commit/PR
+5. Für jedes Ticket:
    - Branch: `feature/TICKET-ID-desc`
    - PR-Titel: `[TICKET-ID] ...`
    - PR-Body enthält Linear-Link
-5. Fertige Umsetzung:
+6. PR-Status-Logik:
+   - Draft PR -> Ticket `In Progress`
+   - Ready for review -> Ticket `Preview` (Fallback: `In Review`)
+7. Fertige Umsetzung:
    - Ticket auf `Preview` (Fallback: `In Review`, wenn `Preview` nicht existiert)
    - PR ist ready to merge
-6. Abschlusspfade:
+8. Abschlusspfade:
    - PR wird gemerged -> Ticket wird automatisch `Done`
    - Ticket wird manuell `Done` -> Automation merged den offenen PR
 

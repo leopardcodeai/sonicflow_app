@@ -21,13 +21,10 @@ jobs:
 
             const branchPattern = /^feature\/([A-Z]+-\d+)-[a-z0-9._-]+$/;
             const titlePattern = /^\[([A-Z]+-\d+)\]\s+.+/;
-            const ticketPattern = /[A-Z]+-\d+/g;
-
             const errors = [];
 
             const branchMatch = branch.match(branchPattern);
             const titleMatch = title.match(titlePattern);
-            const bodyTickets = (body.match(ticketPattern) || []);
 
             if (!branchMatch) {
               errors.push(
@@ -61,6 +58,18 @@ jobs:
 
             if (!/linear\.app\//i.test(body)) {
               errors.push("PR-Body muss einen Linear-Link enthalten.");
+            }
+
+            if (requiredTicket) {
+              const linearLinkContainsTicket = new RegExp(
+                `linear\\.app\\/[^\\s)]*${requiredTicket}`,
+                "i"
+              ).test(body);
+              if (!linearLinkContainsTicket) {
+                errors.push(
+                  `Linear-Link im PR-Body muss auf das Ticket \`${requiredTicket}\` verweisen.`
+                );
+              }
             }
 
             if (errors.length > 0) {

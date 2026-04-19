@@ -92,6 +92,19 @@ make verify
 
 The warning audit runs cross-platform checks and skips Android only when SDK/Java prerequisites are not configured locally.
 
+## Workflow (Linear-First)
+
+1. Move ticket from `Backlog` to `Todo` (manual/explicit).
+2. Create branch `feature/TICKET-ID-desc`.
+3. Implement and verify (`make test-*`, `make verify`).
+4. Open PR with title `[TICKET-ID] ...` and Linear link in PR body.
+5. Set PR ready for review -> ticket moves to `Preview` (or `In Review` fallback).
+6. Merge path:
+   - PR merge -> ticket `Done`
+   - ticket `Done` -> automation merges open PR
+
+Parallel work is supported via agents for independent tickets, with one branch/PR per ticket.
+
 ## Beat Mode Reference
 
 | Mode | Frequency | Typical intent |

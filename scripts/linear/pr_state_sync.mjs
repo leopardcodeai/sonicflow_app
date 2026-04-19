@@ -62,10 +62,28 @@ async function linearGraphQL(query, variables = {}) {
   return payload.data;
 }
 
-async function getIssueByIdentifier(identifier) {
-  const query = `
-    query($identifier: String!) {
-      issues(filter: { identifier: { eq: $identifier } }, first: 1) {
+async function getIssueByTicketKey(ticketKey) {
+  // Prefer direct lookup by issue key; fallback to identifier filter for compatibility.
+  const byIdQuery = `
+    query($ticketKey: String!) {
+      issue(id: $ticketKey) {
+        id
+        identifier
+        team {
+          key
+        }
+        state {
+          id
+          name
+          type
+        }
+      }
+    }
+  `;
+
+  const fallbackQuery = `
+    query($ticketKey: String!) {
+      issues(filter: { identifier: { eq: $ticketKey } }, first: 1) {
         nodes {
           id
           identifier
@@ -82,9 +100,15 @@ async function getIssueByIdentifier(identifier) {
     }
   `;
 
-  const data = await linearGraphQL(query, { identifier });
-  const issue = data.issues?.nodes?.[0];
-  return issue || null;
+  try {
+    const direct = await linearGraphQL(byIdQuery, { ticketKey });
+    if (direct.issue) return direct.issue;
+  } catch (error) {
+    console.log(`Direkter Issue-Lookup fehlgeschlagen, fallback aktiv: ${error.message}`);
+  }
+
+  const fallback = await linearGraphQL(fallbackQuery, { ticketKey });
+  return fallback.issues?.nodes?.[0] || null;
 }
 
 async function getTeamStates(teamKey) {
@@ -140,7 +164,7 @@ async function main() {
     return;
   }
 
-  const issue = await getIssueByIdentifier(ticketKey);
+  const issue = await getIssueByTicketKey(ticketKey);
   if (!issue) {
     console.log(`Linear-Issue ${ticketKey} nicht gefunden. Überspringe.`);
     return;
@@ -152,14 +176,20 @@ async function main() {
     return;
   }
 
+  const inProgressState = findState(states, ["In Progress"], "started");
+  const previewState = findState(states, ["Preview", "In Review"], "started");
+  const doneState = findState(states, ["Done"], "completed");
+
   let targetState = null;
 
   if (["opened", "reopened", "synchronize"].includes(action)) {
-    targetState = findState(states, ["In Progress"], "started");
+    targetState = pr.draft ? inProgressState : previewState;
   } else if (action === "ready_for_review") {
-    targetState = findState(states, ["Preview", "In Review"], "started");
+    targetState = previewState;
+  } else if (action === "converted_to_draft") {
+    targetState = inProgressState;
   } else if (action === "closed" && pr.merged === true) {
-    targetState = findState(states, ["Done"], "completed");
+    targetState = doneState;
   } else {
     console.log(`Aktion ${action} triggert keinen State-Wechsel.`);
     return;
@@ -168,6 +198,13 @@ async function main() {
   if (!targetState) {
     console.log("Kein passender Ziel-State gefunden. Überspringe.");
     return;
+  }
+
+  const currentStateName = issue.state?.name?.toLowerCase() || "";
+  if (currentStateName === "backlog" && action !== "closed") {
+    throw new Error(
+      `Issue ${ticketKey} ist noch in Backlog. Bitte zuerst manuell nach Todo verschieben.`
+    );
   }
 
   if (issue.state?.id === targetState.id) {

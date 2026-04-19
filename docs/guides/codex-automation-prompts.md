@@ -13,14 +13,18 @@ Arbeite streng ticket-driven für dieses Repository.
 Wenn gefunden: setze exakt diese Arbeit fort, beginne kein neues Ticket.
 
 2) Wenn keine laufende Arbeit existiert:
-- hole offene Issues und wähle genau ein Ticket in dieser Reihenfolge:
+- hole offene Issues im Status Todo
+- wenn keine Todo-Issues existieren: stoppe und reportiere kurz
+- priorisiere innerhalb der Todo-Issues nach:
   a) mir (Codex) zugewiesen
-  b) Status Todo
-  c) höchste Priorität / Blocker
-  d) klare Acceptance Criteria
-  e) ohne zusätzliche Produktentscheidung direkt umsetzbar
+  b) höchste Priorität / Blocker
+  c) klare Acceptance Criteria
+  d) ohne zusätzliche Produktentscheidung direkt umsetzbar
 
-3) Arbeite immer nur an einem Ticket gleichzeitig.
+3) Parallele Arbeit ist erlaubt:
+- nutze Agents für unabhängige Tickets/Subtasks parallel
+- pro Ticket eigener Branch + PR + STATUS-Block
+- niemals Backlog-Tickets automatisch starten
 
 4) Vor Codeänderungen:
 - fasse Ticketziel, Ist-Stand und Plan kurz zusammen
@@ -58,7 +62,7 @@ Linear Ticket -> feature/TICKET-ID-desc branch -> implementation -> tests -> PR 
 
 RULES:
 - Work only from Linear tickets (or PR review requests).
-- One active ticket at a time.
+- Parallel execution with agents is allowed for independent Todo tickets.
 - Never start from Backlog automatically. Work starts from Todo (or explicit user command).
 - Keep STATUS.md current before ending a run.
 

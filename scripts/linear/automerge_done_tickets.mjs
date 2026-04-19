@@ -55,12 +55,22 @@ async function githubApi(path, options = {}) {
   return response;
 }
 
-async function getIssueState(identifier) {
-  const query = `
-    query($identifier: String!) {
-      issues(filter: { identifier: { eq: $identifier } }, first: 1) {
+async function getIssueState(ticketKey) {
+  const byIdQuery = `
+    query($ticketKey: String!) {
+      issue(id: $ticketKey) {
+        state {
+          name
+          type
+        }
+      }
+    }
+  `;
+
+  const fallbackQuery = `
+    query($ticketKey: String!) {
+      issues(filter: { identifier: { eq: $ticketKey } }, first: 1) {
         nodes {
-          identifier
           state {
             name
             type
@@ -69,16 +79,38 @@ async function getIssueState(identifier) {
       }
     }
   `;
-  const data = await linearGraphQL(query, { identifier });
-  return data.issues?.nodes?.[0]?.state || null;
+
+  try {
+    const direct = await linearGraphQL(byIdQuery, { ticketKey });
+    if (direct.issue?.state) return direct.issue.state;
+  } catch (error) {
+    console.log(`Direkter Issue-Lookup fehlgeschlagen, fallback aktiv: ${error.message}`);
+  }
+
+  const fallback = await linearGraphQL(fallbackQuery, { ticketKey });
+  return fallback.issues?.nodes?.[0]?.state || null;
 }
 
 async function listOpenPullRequests() {
-  const response = await githubApi(`/repos/${owner}/${repo}/pulls?state=open&per_page=100`);
-  if (!response.ok) {
-    throw new Error(`GitHub PR-List fehlgeschlagen: HTTP ${response.status}`);
+  const all = [];
+  let page = 1;
+
+  while (true) {
+    const response = await githubApi(
+      `/repos/${owner}/${repo}/pulls?state=open&per_page=100&page=${page}`
+    );
+    if (!response.ok) {
+      throw new Error(`GitHub PR-List fehlgeschlagen: HTTP ${response.status}`);
+    }
+
+    const chunk = await response.json();
+    all.push(...chunk);
+
+    if (chunk.length < 100) break;
+    page += 1;
   }
-  return response.json();
+
+  return all;
 }
 
 async function mergePullRequest(number) {

@@ -5,7 +5,7 @@ Date: 2026-04-19
 ## Ticket
 
 - Active ticket: `SF-21`
-- Branch: `codex/repo-structure-readme-graphics` (to migrate to `feature/SF-21-...`)
+- Branch: `feature/SF-21-linear-github-process`
 - Goal: end-to-end Linear-first engineering workflow with PR guards and automation.
 
 ## Done
@@ -27,7 +27,6 @@ Date: 2026-04-19
 
 ## Open
 
-- Create/use canonical `feature/SF-21-...` branch for strict compliance with new guard.
 - Ensure repo secret `LINEAR_API_TOKEN` is set in GitHub Actions.
 - Add `Preview` workflow state in Linear team (fallback currently uses `In Review`).
 - Merge workflow PR and validate first real ticket through the full state machine.
@@ -42,6 +41,6 @@ Date: 2026-04-19
 
 ## Next Step
 
-- Commit + push workflow automation changes.
-- Open/update PR with `[SF-21]` title on `feature/SF-21-...` branch.
+- Commit + push latest workflow hardening changes.
+- Keep/update PR #21 (`[SF-21] ...`) until checks pass.
 - Keep ticket in `Preview` when PR is ready; merge path then drives `Done`.
