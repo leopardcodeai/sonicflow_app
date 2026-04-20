@@ -22,6 +22,9 @@ test("popup model exposes all four beat modes and defaults", () => {
 });
 
 test("popup markup contains the expected control surface anchors", () => {
+  assert.match(popupMarkup, /assets\/leopard_wallpaper\.png/);
+  assert.match(popupMarkup, /id="hero-art"/);
+  assert.match(popupMarkup, /assets\/bowl_hero\.png/);
   assert.match(popupMarkup, /id="mode-grid"/);
   assert.match(popupMarkup, /id="volume-slider"/);
   assert.match(popupMarkup, /id="duration-value"/);

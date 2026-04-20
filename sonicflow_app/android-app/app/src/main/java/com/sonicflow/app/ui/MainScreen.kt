@@ -3,14 +3,17 @@ package com.sonicflow.app.ui
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -21,7 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sonicflow.app.R
 import com.sonicflow.app.brand.BrandTokens
 import com.sonicflow.app.ui.components.LeopardBackground
 import com.sonicflow.app.ui.components.ModeCard
@@ -62,6 +69,39 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
                     )
                 }
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.sm.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.bowl_hero),
+                    contentDescription = "Golden singing bowl",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(RoundedCornerShape(24.dp))
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.xs.dp)
+                ) {
+                    Text(
+                        text = "FlowTones Runtime",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = BrandTokens.Accent.gold
+                    )
+                    Text(
+                        text = "${currentMode.label} session",
+                        style = MaterialTheme.typography.titleLarge,
+                        color = BrandTokens.Neutral.fg
+                    )
+                    Text(
+                        text = "Leopard-backed ambience with preset-driven pulse shaping and timed playback.",
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
 
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),

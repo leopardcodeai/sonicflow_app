@@ -28,8 +28,9 @@
         position: fixed;
         inset: 0;
         z-index: -1;
-        background-color: var(--leopard-base);
         background-image:
+          linear-gradient(180deg, rgba(9, 9, 11, 0.42), rgba(9, 9, 11, 0.78)),
+          url("./assets/leopard_wallpaper.png"),
           radial-gradient(circle at 12% 18%, var(--leopard-spot) 0 6px, var(--leopard-ring) 7px 10px, transparent 11px),
           radial-gradient(circle at 78% 10%, var(--leopard-spot) 0 8px, var(--leopard-ring) 9px 13px, transparent 14px),
           radial-gradient(circle at 42% 34%, var(--leopard-spot) 0 5px, var(--leopard-ring) 6px 9px, transparent 10px),
@@ -42,10 +43,10 @@
           radial-gradient(circle at 32% 14%, var(--leopard-spot) 0 5px, var(--leopard-ring) 6px 9px, transparent 10px),
           radial-gradient(circle at 70% 50%, var(--leopard-spot) 0 6px, var(--leopard-ring) 7px 10px, transparent 11px),
           radial-gradient(circle at 16% 38%, var(--leopard-spot) 0 7px, var(--leopard-ring) 8px 12px, transparent 13px);
-        background-size: 180px 180px, 220px 220px, 160px 160px, 200px 200px,
+        background-size: cover, cover, 180px 180px, 220px 220px, 160px 160px, 200px 200px,
                          190px 190px, 230px 230px, 170px 170px, 210px 210px,
                          175px 175px, 205px 205px, 195px 195px, 185px 185px;
-        background-position: 0 0, 40px 10px, 80px 40px, 20px 80px,
+        background-position: center, center, 0 0, 40px 10px, 80px 40px, 20px 80px,
                              60px 100px, 100px 60px, 10px 130px, 70px 140px,
                              120px 20px, 150px 90px, 40px 160px, 130px 150px;
         opacity: var(--leopard-opacity);
@@ -62,7 +63,9 @@
 
       .hero {
         display: grid;
-        gap: var(--space-xs);
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: var(--space-sm);
+        align-items: center;
       }
 
       .header {
@@ -127,6 +130,15 @@
       .hero-copy {
         font-size: 13px;
         line-height: 1.5;
+      }
+
+      .hero-art {
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius: 22px;
+        border: 1px solid var(--neutral-border);
+        box-shadow: var(--elev-gold);
       }
 
       .grid {
@@ -223,9 +235,12 @@
         </div>
       </div>
       <div class="panel hero">
-        <span class="eyebrow">FlowTones Runtime</span>
-        <strong id="hero-title">Focus Primer</strong>
-        <p class="hero-copy" id="hero-description">Preset-first sessions with ambient texture, pulse shaping, and browser-safe layering.</p>
+        <img class="hero-art" id="hero-art" src="./assets/bowl_hero.png" alt="Golden singing bowl with flowing rainbow energy">
+        <div>
+          <span class="eyebrow">FlowTones Runtime</span>
+          <strong id="hero-title">Focus Primer</strong>
+          <p class="hero-copy" id="hero-description">Preset-first sessions with ambient texture, pulse shaping, and browser-safe layering.</p>
+        </div>
       </div>
       <div class="panel">
         <div class="grid" id="mode-grid"></div>

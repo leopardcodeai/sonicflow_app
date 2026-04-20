@@ -130,22 +130,46 @@ struct ContentView: View {
     }
 
     private func header(for screenState: FlowScreenState) -> some View {
-        HStack {
-            Text("SonicFlow")
-                .font(.largeTitle.weight(.bold))
-                .foregroundStyle(BrandTokens.Neutral.fg)
-            Spacer()
-            HStack(spacing: BrandTokens.Spacing.sm) {
-                Circle()
-                    .fill(audioManager.isPlaying ? BrandTokens.Accent.success : BrandTokens.Neutral.muted)
-                    .frame(width: 10, height: 10)
-                Text(screenState.statusLabel)
-                    .font(.footnote.weight(.medium))
+        HStack(alignment: .top, spacing: BrandTokens.Spacing.md) {
+            Image("BowlHero")
+                .resizable()
+                .scaledToFill()
+                .frame(width: 72, height: 72)
+                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                        .stroke(BrandTokens.Neutral.border, lineWidth: 1)
+                )
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                Text("FlowTones Runtime")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(BrandTokens.Accent.gold)
+                    .textCase(.uppercase)
+
+                HStack {
+                    Text("SonicFlow")
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+                    Spacer()
+                    HStack(spacing: BrandTokens.Spacing.sm) {
+                        Circle()
+                            .fill(audioManager.isPlaying ? BrandTokens.Accent.success : BrandTokens.Neutral.muted)
+                            .frame(width: 10, height: 10)
+                        Text(screenState.statusLabel)
+                            .font(.footnote.weight(.medium))
+                            .foregroundStyle(BrandTokens.Neutral.muted)
+                    }
+                    .padding(.horizontal, BrandTokens.Spacing.md)
+                    .padding(.vertical, BrandTokens.Spacing.sm)
+                    .background(BrandTokens.Neutral.panel, in: Capsule())
+                }
+
+                Text("\(screenState.selectedMode.displayName) session with Leopard-backed ambience, pulse shaping, and timed playback.")
+                    .font(.subheadline)
                     .foregroundStyle(BrandTokens.Neutral.muted)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.horizontal, BrandTokens.Spacing.md)
-            .padding(.vertical, BrandTokens.Spacing.sm)
-            .background(BrandTokens.Neutral.panel, in: Capsule())
         }
     }
 }
