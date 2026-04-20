@@ -13,11 +13,13 @@ The generated Xcode project, paths, and schemes still use `FlowTones` internally
 1. Install and build the shared extension assets:
    - `cd sonicflow_app/chrome-extension`
    - `npm ci`
-   - `npm run build`
+   - `npx esbuild content_script.js --bundle --outfile=dist/content_script.js`
 2. Open `sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj`
 3. Select either the `FlowTones (iOS)` or `FlowTones (macOS)` app target and a simulator/device
 4. Build and run from Xcode
 5. When Safari opens, enable the SonicFlow extension in Safari settings
+
+You can also let the repo prepare those shared resources for you with `make mac` from the repository root.
 
 ## Enable Unsigned Extensions
 

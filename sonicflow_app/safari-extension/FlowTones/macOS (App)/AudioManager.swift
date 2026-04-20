@@ -12,12 +12,20 @@ enum AudioSource: String, CaseIterable {
 
 class AudioManager: ObservableObject {
     @Published var isPlaying = false
-    @Published var currentMode: FlowMode = .focus
+    @Published var currentMode: FlowMode = .focus {
+        didSet {
+            ambientMix = Self.defaultAmbientMix(for: currentMode)
+            pulseDepth = Self.defaultPulseDepth(for: currentMode)
+        }
+    }
     @Published var beatVolume: Double = 0.15 {
         didSet {
             beatMixerNode.volume = Float(beatVolume)
         }
     }
+    @Published var durationMinutes: Int = 25
+    @Published var ambientMix: Double = AudioManager.defaultAmbientMix(for: .focus)
+    @Published var pulseDepth: Double = AudioManager.defaultPulseDepth(for: .focus)
     @Published var selectedSource: AudioSource = .system {
         didSet {
             guard isPlaying else { return }
@@ -100,7 +108,16 @@ class AudioManager: ObservableObject {
             return "Stopped"
         }
 
-        return "Active – \(currentMode.displayName) \(Int(currentMode.beatHz))Hz"
+        return "Active – \(currentMode.displayName) \(durationMinutes) min"
+    }
+
+    var selectedFileLabel: String {
+        switch selectedSource {
+        case .system:
+            return "System layer"
+        case .file:
+            return "File layer"
+        }
     }
 
     private func startIfNeeded() {
@@ -175,7 +192,8 @@ class AudioManager: ObservableObject {
                 envelope = 1.0
             }
             let am = 0.5 + 0.5 * sin(beatPhase)
-            let sample = Float(sin(carrierPhase) * am * envelope)
+            let shapedAmplitude = 0.5 + (0.5 * am * pulseDepth)
+            let sample = Float(sin(carrierPhase) * shapedAmplitude * envelope)
 
             interleaved[frame * 2] = sample
             interleaved[(frame * 2) + 1] = sample
@@ -261,6 +279,32 @@ class AudioManager: ObservableObject {
             return nil
         }
         return pcmBuffer
+    }
+
+    private static func defaultAmbientMix(for mode: FlowMode) -> Double {
+        switch mode {
+        case .focus:
+            return 0.45
+        case .flow:
+            return 0.55
+        case .meditation:
+            return 0.68
+        case .sleep:
+            return 0.78
+        }
+    }
+
+    private static func defaultPulseDepth(for mode: FlowMode) -> Double {
+        switch mode {
+        case .focus:
+            return 0.95
+        case .flow:
+            return 0.78
+        case .meditation:
+            return 0.62
+        case .sleep:
+            return 0.46
+        }
     }
 }
 
