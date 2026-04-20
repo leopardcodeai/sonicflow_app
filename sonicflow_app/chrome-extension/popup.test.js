@@ -11,8 +11,14 @@ test("popup model exposes all four beat modes and defaults", () => {
     MODES.map((mode) => mode.id),
     ["focus", "flow", "meditation", "sleep"]
   );
-  assert.equal(DEFAULT_SETTINGS.mode, "focus");
-  assert.equal(DEFAULT_SETTINGS.volume, 15);
+  assert.deepEqual(DEFAULT_SETTINGS, {
+    mode: "focus",
+    volume: 15,
+    active: false,
+    durationMinutes: 25,
+    ambientMix: 45,
+    pulseDepth: 95
+  });
 });
 
 test("popup markup contains the expected control surface anchors", () => {

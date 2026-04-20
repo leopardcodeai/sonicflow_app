@@ -1,5 +1,5 @@
 import XCTest
-@testable import FlowTones
+@testable import SonicFlow
 
 final class AudioManagerTests: XCTestCase {
     func testInitialStateUsesFocusModeAndQuietBeatLayer() {

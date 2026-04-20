@@ -12,6 +12,8 @@
 		36A82B9CFF8B30CD420584F9 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC7669FF33C48DCF081937A /* ContentView.swift */; };
 		3FFEA8A01131A9DB3E53641B /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3D934AE70BF018F4267AB9C /* AudioManager.swift */; };
 		48B66FE39CA63EB3CC265130 /* FlowTonesCore in Frameworks */ = {isa = PBXBuildFile; productRef = B2F1F5A942642AC052287FC9 /* FlowTonesCore */; };
+		4D46997A796D8C1FC00CD213 /* FlowToneSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED17CF35A1B9D8FB4E4F5B4 /* FlowToneSettingsTests.swift */; };
+		5AB7CDEF1234567890ABCDEF /* FlowToneSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB7CDEF1234567890ABCDE0 /* FlowToneSettings.swift */; };
 		6DA50076CA5A138502CC4EA6 /* BrandTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B13AA5EF0B6E625B7A6812 /* BrandTokens.swift */; };
 		6E79005DF663AB0765163A8B /* FilePickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE3023DC3FD6AFBCD6789B7 /* FilePickerButton.swift */; };
 		95A046C7C1FB0B1A33D4A8B1 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A426767C4B6FBD933A517C98 /* Color+Hex.swift */; };
@@ -39,6 +41,8 @@
 		1BC2333107C0768B07D49F2C /* FlowModePresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowModePresentationTests.swift; sourceTree = "<group>"; };
 		23386D9E63A3B395D2BF3C6C /* core-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "core-swift"; path = "../core-swift"; sourceTree = SOURCE_ROOT; };
 		3488844973DB8E46F8C1562D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		4ED17CF35A1B9D8FB4E4F5B4 /* FlowToneSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowToneSettingsTests.swift; sourceTree = "<group>"; };
+		5AB7CDEF1234567890ABCDE0 /* FlowToneSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowToneSettings.swift; sourceTree = "<group>"; };
 		78B31A9687B8413CF704A5C4 /* ModeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCard.swift; sourceTree = "<group>"; };
 		887C5C269DC105E72DD64832 /* AudioManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManagerTests.swift; sourceTree = "<group>"; };
 		9A8C72E5470FAF528C2F24ED /* FlowMode+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowMode+UI.swift"; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 			children = (
 				887C5C269DC105E72DD64832 /* AudioManagerTests.swift */,
 				1BC2333107C0768B07D49F2C /* FlowModePresentationTests.swift */,
+				4ED17CF35A1B9D8FB4E4F5B4 /* FlowToneSettingsTests.swift */,
 			);
 			path = FlowTonesTests;
 			sourceTree = "<group>";
@@ -110,6 +115,7 @@
 				ACC7669FF33C48DCF081937A /* ContentView.swift */,
 				FBE3023DC3FD6AFBCD6789B7 /* FilePickerButton.swift */,
 				9A8C72E5470FAF528C2F24ED /* FlowMode+UI.swift */,
+				5AB7CDEF1234567890ABCDE0 /* FlowToneSettings.swift */,
 				FD162B330961300D3CC40AE4 /* FlowTonesApp.swift */,
 				3488844973DB8E46F8C1562D /* Info.plist */,
 				A974ACFCA791728F213C0069 /* LeopardBackgroundView.swift */,
@@ -205,6 +211,7 @@
 			files = (
 				EAECC5895A18B3939F0D1997 /* AudioManagerTests.swift in Sources */,
 				A9368263684F5005EDF108F2 /* FlowModePresentationTests.swift in Sources */,
+				4D46997A796D8C1FC00CD213 /* FlowToneSettingsTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +225,7 @@
 				36A82B9CFF8B30CD420584F9 /* ContentView.swift in Sources */,
 				6E79005DF663AB0765163A8B /* FilePickerButton.swift in Sources */,
 				E612FFB78E2FD21E605AF239 /* FlowMode+UI.swift in Sources */,
+				5AB7CDEF1234567890ABCDEF /* FlowToneSettings.swift in Sources */,
 				AEA7607A13B811027BBF21A9 /* FlowTonesApp.swift in Sources */,
 				A5229688C5C0BA7C78FD1612 /* LeopardBackgroundView.swift in Sources */,
 				ACCB5F27E0A112D6B2750981 /* ModeCard.swift in Sources */,
@@ -250,7 +258,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowTones.app/FlowTones";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
 			};
 			name = Debug;
 		};
@@ -424,7 +432,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FlowTones.app/FlowTones";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
 			};
 			name = Release;
 		};

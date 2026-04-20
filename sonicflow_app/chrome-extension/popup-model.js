@@ -32,5 +32,8 @@ export const MODES = [
 export const DEFAULT_SETTINGS = {
   mode: "focus",
   volume: 15,
-  active: false
+  active: false,
+  durationMinutes: 25,
+  ambientMix: 45,
+  pulseDepth: 95
 };
