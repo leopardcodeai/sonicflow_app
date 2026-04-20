@@ -60,6 +60,11 @@
         z-index: 1;
       }
 
+      .hero {
+        display: grid;
+        gap: var(--space-xs);
+      }
+
       .header {
         display: flex;
         justify-content: space-between;
@@ -111,6 +116,19 @@
         color: var(--neutral-muted);
       }
 
+      .eyebrow {
+        color: var(--accent-gold);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
       .grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -153,6 +171,11 @@
       .slider-row {
         display: grid;
         gap: var(--space-sm);
+      }
+
+      .stack {
+        display: grid;
+        gap: var(--space-md);
       }
 
       .slider-meta {
@@ -199,15 +222,43 @@
           <span id="status-text">Off</span>
         </div>
       </div>
+      <div class="panel hero">
+        <span class="eyebrow">FlowTones Runtime</span>
+        <strong id="hero-title">Focus Primer</strong>
+        <p class="hero-copy" id="hero-description">Preset-first sessions with ambient texture, pulse shaping, and browser-safe layering.</p>
+      </div>
       <div class="panel">
         <div class="grid" id="mode-grid"></div>
       </div>
-      <div class="panel slider-row">
-        <div class="slider-meta">
-          <strong>Beat volume</strong>
-          <span id="volume-value">15</span>
+      <div class="panel stack">
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong>Beat volume</strong>
+            <span id="volume-value">15</span>
+          </div>
+          <input id="volume-slider" type="range" min="0" max="100" value="15">
         </div>
-        <input id="volume-slider" type="range" min="0" max="100" value="15">
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong>Duration</strong>
+            <span id="duration-value">25 min</span>
+          </div>
+          <input id="duration-slider" type="range" min="5" max="60" step="5" value="25">
+        </div>
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong>Ambient mix</strong>
+            <span id="ambient-value">45%</span>
+          </div>
+          <input id="ambient-slider" type="range" min="20" max="100" step="1" value="45">
+        </div>
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong>Pulse depth</strong>
+            <span id="pulse-value">95%</span>
+          </div>
+          <input id="pulse-slider" type="range" min="20" max="100" step="1" value="95">
+        </div>
       </div>
       <div class="panel">
         <p id="page-message">Checking current tab for YouTube or SoundCloud media...</p>

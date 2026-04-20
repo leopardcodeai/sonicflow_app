@@ -67,17 +67,39 @@ function renderModeGrid(settings) {
   }
 }
 
+function updateHero(settings) {
+  const heroTitle = document.querySelector("#hero-title");
+  const heroDescription = document.querySelector("#hero-description");
+  const activeMode = MODES.find((mode) => mode.id === settings.mode) ?? MODES[0];
+
+  heroTitle.textContent = `${activeMode.name} Session`;
+  heroDescription.textContent = `${activeMode.description} ${settings.durationMinutes} minute browser-safe layer with ${settings.ambientMix}% ambience and ${settings.pulseDepth}% pulse depth.`;
+}
+
 function renderState(settings, tabState) {
   const dot = document.querySelector("#status-dot");
   const statusText = document.querySelector("#status-text");
   const pageMessage = document.querySelector("#page-message");
   const volumeValue = document.querySelector("#volume-value");
   const volumeSlider = document.querySelector("#volume-slider");
+  const durationValue = document.querySelector("#duration-value");
+  const durationSlider = document.querySelector("#duration-slider");
+  const ambientValue = document.querySelector("#ambient-value");
+  const ambientSlider = document.querySelector("#ambient-slider");
+  const pulseValue = document.querySelector("#pulse-value");
+  const pulseSlider = document.querySelector("#pulse-slider");
   const toggleButton = document.querySelector("#toggle-button");
 
   renderModeGrid(settings);
+  updateHero(settings);
   volumeSlider.value = String(settings.volume);
   volumeValue.textContent = String(settings.volume);
+  durationSlider.value = String(settings.durationMinutes);
+  durationValue.textContent = `${settings.durationMinutes} min`;
+  ambientSlider.value = String(settings.ambientMix);
+  ambientValue.textContent = `${settings.ambientMix}%`;
+  pulseSlider.value = String(settings.pulseDepth);
+  pulseValue.textContent = `${settings.pulseDepth}%`;
 
   if (!tabState) {
     statusText.textContent = "Unavailable";
@@ -116,6 +138,27 @@ async function bootstrap() {
 
   document.querySelector("#volume-slider").addEventListener("input", async (event) => {
     settings.volume = Number(event.target.value);
+    await persistSettings(settings);
+    await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
+  document.querySelector("#duration-slider").addEventListener("input", async (event) => {
+    settings.durationMinutes = Number(event.target.value);
+    await persistSettings(settings);
+    await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
+  document.querySelector("#ambient-slider").addEventListener("input", async (event) => {
+    settings.ambientMix = Number(event.target.value);
+    await persistSettings(settings);
+    await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
+  document.querySelector("#pulse-slider").addEventListener("input", async (event) => {
+    settings.pulseDepth = Number(event.target.value);
     await persistSettings(settings);
     await pushStateToTab(settings).catch(() => null);
     renderState(settings, tabState);
