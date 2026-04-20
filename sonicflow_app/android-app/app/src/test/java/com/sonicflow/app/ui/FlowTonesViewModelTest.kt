@@ -23,12 +23,15 @@ class FlowTonesViewModelTest {
     val mainDispatcherRule = MainDispatcherRule()
 
     @Test
-    fun `startSession forwards mode volume and file to controller and flips isActive`() = runTest {
+    fun `startSession forwards full FlowTones session settings to controller and flips isActive`() = runTest {
         val controller = FakeController()
         val viewModel = FlowTonesViewModel(controller)
 
         viewModel.onModeSelected(FlowMode.MEDITATION)
         viewModel.onBeatVolumeChanged(0.25f)
+        viewModel.onDurationMinutesChanged(35)
+        viewModel.onAmbientMixChanged(0.64f)
+        viewModel.onPulseDepthChanged(0.58f)
         viewModel.onFileSelected("content://demo/file.mp3")
         viewModel.startSession()
 
@@ -36,6 +39,9 @@ class FlowTonesViewModelTest {
             SessionCommand.Start(
                 mode = FlowMode.MEDITATION,
                 beatVolume = 0.25f,
+                durationMinutes = 35,
+                ambientMix = 0.64f,
+                pulseDepth = 0.58f,
                 selectedFile = "content://demo/file.mp3"
             ),
             controller.lastCommand
@@ -92,6 +98,9 @@ class FlowTonesViewModelTest {
                     state.value = state.value.copy(
                         mode = command.mode,
                         beatVolume = command.beatVolume,
+                        durationMinutes = command.durationMinutes,
+                        ambientMix = command.ambientMix,
+                        pulseDepth = command.pulseDepth,
                         selectedFile = command.selectedFile,
                         isActive = true
                     )

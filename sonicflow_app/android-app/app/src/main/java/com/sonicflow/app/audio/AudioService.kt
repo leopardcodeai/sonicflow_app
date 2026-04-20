@@ -61,6 +61,9 @@ class AudioService : Service() {
                 val started = startSession(
                     mode = parseMode(intent.getStringExtra(EXTRA_MODE)),
                     beatVolume = intent.getFloatExtra(EXTRA_BEAT_VOLUME, DEFAULT_BEAT_VOLUME),
+                    durationMinutes = intent.getIntExtra(EXTRA_DURATION_MINUTES, DEFAULT_DURATION_MINUTES),
+                    ambientMix = intent.getFloatExtra(EXTRA_AMBIENT_MIX, DEFAULT_AMBIENT_MIX),
+                    pulseDepth = intent.getFloatExtra(EXTRA_PULSE_DEPTH, DEFAULT_PULSE_DEPTH),
                     selectedFile = intent.getStringExtra(EXTRA_SELECTED_FILE)
                 )
                 if (!started) {
@@ -75,13 +78,23 @@ class AudioService : Service() {
         return START_STICKY
     }
 
-    fun startSession(mode: FlowMode, beatVolume: Float, selectedFile: String?): Boolean {
+    fun startSession(
+        mode: FlowMode,
+        beatVolume: Float,
+        durationMinutes: Int,
+        ambientMix: Float,
+        pulseDepth: Float,
+        selectedFile: String?
+    ): Boolean {
         val focusResult = audioManager.requestAudioFocus(audioFocusRequest)
         if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             currentSessionState = SessionState(
                 mode = mode,
                 isActive = false,
                 beatVolume = beatVolume.coerceIn(0f, 1f),
+                durationMinutes = durationMinutes,
+                ambientMix = ambientMix.coerceIn(0.2f, 1f),
+                pulseDepth = pulseDepth.coerceIn(0.2f, 1f),
                 selectedFile = selectedFile
             )
             return false
@@ -97,6 +110,9 @@ class AudioService : Service() {
             mode = mode,
             isActive = true,
             beatVolume = normalizedVolume,
+            durationMinutes = durationMinutes,
+            ambientMix = ambientMix.coerceIn(0.2f, 1f),
+            pulseDepth = pulseDepth.coerceIn(0.2f, 1f),
             selectedFile = selectedFile
         )
         return true
@@ -209,23 +225,35 @@ class AudioService : Service() {
         private const val SAMPLE_RATE = 44_100
         private const val LOOP_SECONDS = 30
         private const val DEFAULT_BEAT_VOLUME = 0.15f
+        private const val DEFAULT_DURATION_MINUTES = 25
+        private const val DEFAULT_AMBIENT_MIX = 0.45f
+        private const val DEFAULT_PULSE_DEPTH = 0.95f
 
         const val ACTION_START = "com.sonicflow.app.audio.START"
         const val ACTION_STOP = "com.sonicflow.app.audio.STOP"
         const val EXTRA_MODE = "mode"
         const val EXTRA_BEAT_VOLUME = "beatVolume"
+        const val EXTRA_DURATION_MINUTES = "durationMinutes"
+        const val EXTRA_AMBIENT_MIX = "ambientMix"
+        const val EXTRA_PULSE_DEPTH = "pulseDepth"
         const val EXTRA_SELECTED_FILE = "selectedFile"
 
         fun buildStartIntent(
             context: Context,
             mode: FlowMode,
             beatVolume: Float,
+            durationMinutes: Int,
+            ambientMix: Float,
+            pulseDepth: Float,
             selectedFile: String?
         ): Intent {
             return Intent(context, AudioService::class.java).apply {
                 action = ACTION_START
                 putExtra(EXTRA_MODE, mode.name)
                 putExtra(EXTRA_BEAT_VOLUME, beatVolume)
+                putExtra(EXTRA_DURATION_MINUTES, durationMinutes)
+                putExtra(EXTRA_AMBIENT_MIX, ambientMix)
+                putExtra(EXTRA_PULSE_DEPTH, pulseDepth)
                 putExtra(EXTRA_SELECTED_FILE, selectedFile)
             }
         }

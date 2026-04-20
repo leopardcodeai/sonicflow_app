@@ -44,6 +44,9 @@ class AudioServiceController @Inject constructor(
                     context,
                     command.mode,
                     command.beatVolume,
+                    command.durationMinutes,
+                    command.ambientMix,
+                    command.pulseDepth,
                     command.selectedFile
                 )
                 context.startForegroundService(intent)
@@ -51,6 +54,9 @@ class AudioServiceController @Inject constructor(
                     mode = command.mode,
                     isActive = false,
                     beatVolume = command.beatVolume,
+                    durationMinutes = command.durationMinutes,
+                    ambientMix = command.ambientMix,
+                    pulseDepth = command.pulseDepth,
                     selectedFile = command.selectedFile
                 )
             }

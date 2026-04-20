@@ -30,6 +30,15 @@ class FlowTonesViewModel @Inject constructor(
     private val mutableBeatVolume = MutableStateFlow(0.15f)
     val beatVolume: StateFlow<Float> = mutableBeatVolume.asStateFlow()
 
+    private val mutableDurationMinutes = MutableStateFlow(25)
+    val durationMinutes: StateFlow<Int> = mutableDurationMinutes.asStateFlow()
+
+    private val mutableAmbientMix = MutableStateFlow(0.45f)
+    val ambientMix: StateFlow<Float> = mutableAmbientMix.asStateFlow()
+
+    private val mutablePulseDepth = MutableStateFlow(0.95f)
+    val pulseDepth: StateFlow<Float> = mutablePulseDepth.asStateFlow()
+
     private val mutableSelectedFile = MutableStateFlow<String?>(null)
     val selectedFile: StateFlow<String?> = mutableSelectedFile.asStateFlow()
 
@@ -42,6 +51,9 @@ class FlowTonesViewModel @Inject constructor(
                 mutableCurrentMode.value = session.mode
                 mutableIsActive.value = session.isActive
                 mutableBeatVolume.value = session.beatVolume
+                mutableDurationMinutes.value = session.durationMinutes
+                mutableAmbientMix.value = session.ambientMix
+                mutablePulseDepth.value = session.pulseDepth
                 mutableSelectedFile.value = session.selectedFile
             }
         }
@@ -59,6 +71,18 @@ class FlowTonesViewModel @Inject constructor(
         mutableBeatVolume.value = volume.coerceIn(0f, 1f)
     }
 
+    fun onDurationMinutesChanged(minutes: Int) {
+        mutableDurationMinutes.value = minutes.coerceIn(5, 60)
+    }
+
+    fun onAmbientMixChanged(value: Float) {
+        mutableAmbientMix.value = value.coerceIn(0.2f, 1f)
+    }
+
+    fun onPulseDepthChanged(value: Float) {
+        mutablePulseDepth.value = value.coerceIn(0.2f, 1f)
+    }
+
     fun onFileSelected(file: String?) {
         mutableSelectedFile.value = file
     }
@@ -68,6 +92,9 @@ class FlowTonesViewModel @Inject constructor(
             SessionCommand.Start(
                 mode = currentMode.value,
                 beatVolume = beatVolume.value,
+                durationMinutes = durationMinutes.value,
+                ambientMix = ambientMix.value,
+                pulseDepth = pulseDepth.value,
                 selectedFile = selectedFile.value
             )
         )
