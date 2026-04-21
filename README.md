@@ -104,6 +104,7 @@ make help
 make chrome
 make ios
 make mac
+make mac-smoke
 make android
 make verify
 ```
@@ -119,6 +120,7 @@ make verify
 - Chrome popup upgrade slice: `cd sonicflow_app/chrome-extension && node --test popup.test.js`
 - Android session model slice: `cd sonicflow_app/android-app && ./gradlew --console=plain :app:testDebugUnitTest --tests 'com.sonicflow.app.ui.FlowTonesViewModelTest'`
 - iOS compile gate for FlowTones UI/runtime slices: `xcodebuild build-for-testing -project sonicflow_app/ios-app/FlowTones.xcodeproj -scheme FlowTones -destination 'platform=iOS Simulator,id=FBAF6087-CB95-4D6D-B304-99A2F6A21440'`
+- macOS menu-bar smoke gate: `make mac-smoke`
 
 The warning audit runs cross-platform checks and skips Android only when SDK/Java prerequisites are not configured locally.
 

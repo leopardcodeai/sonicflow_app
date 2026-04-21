@@ -1,4 +1,4 @@
-.PHONY: help chrome safari ios mac android test-core-js test-core-swift test-chrome verify clean-dist chrome-build-assets
+.PHONY: help chrome safari ios mac mac-smoke android test-core-js test-core-swift test-chrome verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
 SAFARI_PROJECT := sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj
@@ -14,6 +14,7 @@ help:
 	@echo "  make safari          Open Safari extension Xcode project"
 	@echo "  make ios             Build iOS app for simulator"
 	@echo "  make mac             Build macOS app target"
+	@echo "  make mac-smoke       Build and launch the macOS menu-bar app"
 	@echo "  make android         Build Android debug APK"
 	@echo "  make test-core-js    Run JS core tests"
 	@echo "  make test-core-swift Run Swift core tests"
@@ -38,6 +39,9 @@ ios:
 
 mac: chrome-build-assets
 	xcodebuild -project $(SAFARI_PROJECT) -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx CODE_SIGNING_ALLOWED=NO build
+
+mac-smoke:
+	./scripts/mac_smoke.sh
 
 android:
 	@if [ -x $(ANDROID_APP_DIR)/gradlew ]; then \
