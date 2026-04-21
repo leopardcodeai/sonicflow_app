@@ -1,4 +1,4 @@
-.PHONY: help chrome safari ios mac android test-core-js test-core-swift test-chrome verify clean-dist
+.PHONY: help chrome safari ios mac mac-smoke android test-core-js test-core-swift test-chrome verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
 SAFARI_PROJECT := sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj
@@ -14,6 +14,7 @@ help:
 	@echo "  make safari          Open Safari extension Xcode project"
 	@echo "  make ios             Build iOS app for simulator"
 	@echo "  make mac             Build macOS app target"
+	@echo "  make mac-smoke       Build and launch the macOS menu-bar app"
 	@echo "  make android         Build Android debug APK"
 	@echo "  make test-core-js    Run JS core tests"
 	@echo "  make test-core-swift Run Swift core tests"
@@ -21,9 +22,11 @@ help:
 	@echo "  make verify          Run warning audit across supported platforms"
 	@echo "  make clean-dist      Remove dist artifacts"
 
-chrome:
+chrome-build-assets:
 	cd $(CHROME_DIR) && npm ci
-	cd $(CHROME_DIR) && npm run build
+	cd $(CHROME_DIR) && npx esbuild content_script.js --bundle --outfile=dist/content_script.js
+
+chrome: chrome-build-assets
 	$(MAKE) clean-dist
 	mkdir -p $(DIST_CHROME)
 	rsync -a --delete --exclude node_modules --exclude package-lock.json --exclude '*.test.js' $(CHROME_DIR)/ $(DIST_CHROME)/
@@ -34,8 +37,11 @@ safari:
 ios:
 	xcodebuild -project $(IOS_PROJECT) -scheme FlowTones -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 
-mac:
+mac: chrome-build-assets
 	xcodebuild -project $(SAFARI_PROJECT) -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx CODE_SIGNING_ALLOWED=NO build
+
+mac-smoke:
+	./scripts/mac_smoke.sh
 
 android:
 	@if [ -x $(ANDROID_APP_DIR)/gradlew ]; then \

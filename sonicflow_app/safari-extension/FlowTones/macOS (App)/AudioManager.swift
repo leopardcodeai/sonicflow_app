@@ -10,14 +10,129 @@ enum AudioSource: String, CaseIterable {
     case file
 }
 
+enum MacFlowTonePreset: String, CaseIterable, Identifiable {
+    case focus
+    case flow
+    case meditation
+    case sleep
+
+    var id: String { rawValue }
+
+    init(mode: FlowMode) {
+        switch mode {
+        case .focus: self = .focus
+        case .flow: self = .flow
+        case .meditation: self = .meditation
+        case .sleep: self = .sleep
+        }
+    }
+
+    var mode: FlowMode {
+        switch self {
+        case .focus: return .focus
+        case .flow: return .flow
+        case .meditation: return .meditation
+        case .sleep: return .sleep
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .focus: return "Focus"
+        case .flow: return "Flow"
+        case .meditation: return "Meditation"
+        case .sleep: return "Sleep"
+        }
+    }
+
+    var summary: String {
+        switch self {
+        case .focus: return "Gamma lift for intense study and deep concentration."
+        case .flow: return "Alpha pulse for smooth, creative momentum."
+        case .meditation: return "Theta drift for spacious stillness and breathwork."
+        case .sleep: return "Delta wash for slow unwinding and soft rest."
+        }
+    }
+
+    var beatFrequencyHz: Double { mode.beatHz }
+
+    var carrierFrequencyHz: Double {
+        switch self {
+        case .focus, .flow:
+            return 200
+        case .meditation:
+            return 180
+        case .sleep:
+            return 150
+        }
+    }
+
+    var defaultAmbientMix: Double {
+        switch self {
+        case .focus: return 0.45
+        case .flow: return 0.55
+        case .meditation: return 0.68
+        case .sleep: return 0.78
+        }
+    }
+
+    var defaultPulseDepth: Double {
+        switch self {
+        case .focus: return 0.95
+        case .flow: return 0.78
+        case .meditation: return 0.62
+        case .sleep: return 0.46
+        }
+    }
+}
+
+struct MacFlowToneExample: Identifiable, Equatable {
+    let id: String
+    let title: String
+    let subtitle: String
+    let preset: MacFlowTonePreset
+    let durationMinutes: Int
+
+    static let starterPack: [MacFlowToneExample] = [
+        MacFlowToneExample(
+            id: "focus-primer",
+            title: "Focus Primer",
+            subtitle: "5 min gamma warmup",
+            preset: .focus,
+            durationMinutes: 5
+        ),
+        MacFlowToneExample(
+            id: "flow-reset",
+            title: "Flow Reset",
+            subtitle: "5 min alpha reset",
+            preset: .flow,
+            durationMinutes: 5
+        ),
+        MacFlowToneExample(
+            id: "night-drift",
+            title: "Night Drift",
+            subtitle: "5 min delta wind-down",
+            preset: .sleep,
+            durationMinutes: 5
+        )
+    ]
+}
+
 class AudioManager: ObservableObject {
     @Published var isPlaying = false
-    @Published var currentMode: FlowMode = .focus
+    @Published var currentMode: FlowMode = .focus {
+        didSet {
+            applyPreset(MacFlowTonePreset(mode: currentMode), preserveDuration: true)
+        }
+    }
     @Published var beatVolume: Double = 0.15 {
         didSet {
             beatMixerNode.volume = Float(beatVolume)
         }
     }
+    @Published var durationMinutes: Int = 25
+    @Published var ambientMix: Double = MacFlowTonePreset.focus.defaultAmbientMix
+    @Published var pulseDepth: Double = MacFlowTonePreset.focus.defaultPulseDepth
     @Published var selectedSource: AudioSource = .system {
         didSet {
             guard isPlaying else { return }
@@ -52,6 +167,10 @@ class AudioManager: ObservableObject {
     init() {
         configureEngine()
         refreshSystemAudioPermission()
+    }
+
+    var currentPreset: MacFlowTonePreset {
+        MacFlowTonePreset(mode: currentMode)
     }
 
     func togglePlayback() {
@@ -100,7 +219,22 @@ class AudioManager: ObservableObject {
             return "Stopped"
         }
 
-        return "Active – \(currentMode.displayName) \(Int(currentMode.beatHz))Hz"
+        return "Active • \(currentPreset.displayName) • \(durationMinutes) min"
+    }
+
+    var selectedFileLabel: String {
+        switch selectedSource {
+        case .system:
+            return "System layer"
+        case .file:
+            return "File layer"
+        }
+    }
+
+    func applyExample(_ example: MacFlowToneExample) {
+        durationMinutes = example.durationMinutes
+        currentMode = example.preset.mode
+        applyPreset(example.preset, preserveDuration: true)
     }
 
     private func startIfNeeded() {
@@ -159,8 +293,9 @@ class AudioManager: ObservableObject {
     }
 
     private func renderBeatFrames(frameCount: Int, sampleRate: Double) -> [Float] {
-        let beatHz = currentMode.beatHz
-        let carrierHz = currentMode.carrierHz
+        let preset = currentPreset
+        let beatHz = preset.beatFrequencyHz
+        let carrierHz = preset.carrierFrequencyHz
         let carrierIncrement = (2.0 * Double.pi * carrierHz) / sampleRate
         let beatIncrement = (2.0 * Double.pi * beatHz) / sampleRate
 
@@ -175,7 +310,8 @@ class AudioManager: ObservableObject {
                 envelope = 1.0
             }
             let am = 0.5 + 0.5 * sin(beatPhase)
-            let sample = Float(sin(carrierPhase) * am * envelope)
+            let shapedAmplitude = 0.5 + (0.5 * am * pulseDepth)
+            let sample = Float(sin(carrierPhase) * shapedAmplitude * envelope)
 
             interleaved[frame * 2] = sample
             interleaved[(frame * 2) + 1] = sample
@@ -261,6 +397,14 @@ class AudioManager: ObservableObject {
             return nil
         }
         return pcmBuffer
+    }
+
+    private func applyPreset(_ preset: MacFlowTonePreset, preserveDuration: Bool) {
+        ambientMix = preset.defaultAmbientMix
+        pulseDepth = preset.defaultPulseDepth
+        if !preserveDuration {
+            durationMinutes = 25
+        }
     }
 }
 

@@ -6,6 +6,9 @@ sealed interface SessionCommand {
     data class Start(
         val mode: FlowMode,
         val beatVolume: Float,
+        val durationMinutes: Int,
+        val ambientMix: Float,
+        val pulseDepth: Float,
         val selectedFile: String?
     ) : SessionCommand
 

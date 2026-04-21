@@ -5,6 +5,20 @@ SonicFlow is a cross-platform audio project that overlays entrainment-style beat
 Public product name: `SonicFlow`  
 Legacy internal codename still present in paths/schemes/packages: `FlowTones`
 
+## FlowTones Runtime Upgrade
+
+SonicFlow is in the middle of adopting the newer standalone `FlowTones` runtime model reviewed from:
+
+- `Sound-Healing-Assistant-iOS/SoundHealingAssistant/Sources/FlowTones`
+- upstream module snapshot reviewed at commit `b0cabeed37e06c5ee38b648003f45f9a45f4edd9`
+
+The key runtime concepts now shaping this repo are:
+
+- preset-first sessions
+- richer session settings including `durationMinutes`, `ambientMix`, and `pulseDepth`
+- ambient-layer and renderer/cache concepts on native platforms where support is real
+- FlowTones-style UI direction layered with SonicFlow Leopard branding
+
 ## Architecture (Visual)
 
 ```mermaid
@@ -54,13 +68,26 @@ soundhealing_sonicflow/
 
 ## Platform Capability
 
-| Platform | Audio source path | System audio capture |
-|---|---|---|
-| Chrome extension | Web tab audio via content script + shared JS beat engine | No |
-| Safari extension (iOS/macOS) | Web extension runtime audio context | No dedicated system capture path |
-| iOS app | Local file + generated beat layer | No |
-| macOS app | Local file + generated beat layer | Partial/limited |
-| Android app | Local session/service + generated beat layer | No |
+| Platform | Runtime/UI status | Audio source path | System audio capture | Notes |
+|---|---|---|---|---|
+| Chrome extension | FlowTones-style popup with preset-first controls, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe shell only. No native render/export promises. |
+| Safari extension (web shell) | Leopard-backed FlowTones-style wrapper messaging | Web extension runtime shell | No dedicated system capture path | Mirrors product language, but native-only features belong in the app targets. |
+| iOS app | Native FlowTones settings model plus upgraded screen state and advanced controls | Local file + generated beat layer | No | Closest parity target for the standalone FlowTones runtime. |
+| macOS app | Leopard-native menu-bar popover with starter sessions, preset metadata, and advanced controls | Local file + generated beat layer | Partial/limited | Native app now mirrors the preset-first FlowTones direction more closely than the Safari web shell. |
+| Android app | FlowTones-style session model in ViewModel/service path plus advanced controls in Compose | Local session/service + generated beat layer | No | Duration, ambient mix, and pulse depth currently travel as session metadata; synthesis parity is still incremental. |
+
+## Brand Asset Usage
+
+The upgraded FlowTones direction keeps the SonicFlow Leopard identity through shared repo assets:
+
+- Leopard wallpaper source: `brand/assets/wallpapers/leopard_wallpaper.png`
+- Singing-bowl hero/icon source: `brand/assets/icons/a_premium_ultra_modern_high_definition_vector_icon_of_a_golden_tibetan_singing_bowl._the_bowl_is_minimalist_with_sleek_sharp_edges_and_a_subtle_metallic_gradient._a_smooth_flowing_and_vibrant_rainbow_energy_swirl_rises_elegantly_from_the_bowl._sev….png`
+
+Usage guidelines in the current rollout:
+
+- native app surfaces should use the Leopard wallpaper as the atmospheric backdrop, cropped as needed
+- browser shells should stay visually aligned with Leopard branding without implying native-only capabilities
+- the singing-bowl art is intended for hero/icon contexts, not as a substitute for every in-app illustration
 
 ## Quick Start
 
@@ -77,6 +104,7 @@ make help
 make chrome
 make ios
 make mac
+make mac-smoke
 make android
 make verify
 ```
@@ -89,6 +117,10 @@ make verify
 - JS core tests: `make test-core-js`
 - Swift core tests: `make test-core-swift`
 - Chrome extension tests: `make test-chrome`
+- Chrome popup upgrade slice: `cd sonicflow_app/chrome-extension && node --test popup.test.js`
+- Android session model slice: `cd sonicflow_app/android-app && ./gradlew --console=plain :app:testDebugUnitTest --tests 'com.sonicflow.app.ui.FlowTonesViewModelTest'`
+- iOS compile gate for FlowTones UI/runtime slices: `xcodebuild build-for-testing -project sonicflow_app/ios-app/FlowTones.xcodeproj -scheme FlowTones -destination 'platform=iOS Simulator,id=FBAF6087-CB95-4D6D-B304-99A2F6A21440'`
+- macOS menu-bar smoke gate: `make mac-smoke`
 
 The warning audit runs cross-platform checks and skips Android only when SDK/Java prerequisites are not configured locally.
 
@@ -128,3 +160,6 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 
 - iOS and Android targets do not implement Spotify/system-output capture in this repository.
 - Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
+- Browser shells expose FlowTones-style controls, but they do not yet offer native offline render/export or cache flows.
+- Android currently carries `durationMinutes`, `ambientMix`, and `pulseDepth` through the session model and UI, but the underlying audio engine is not yet feature-parity with the Apple-native runtime.
+- The iOS targeted simulator `test` action can still be sticky in local CLI runs even when `build-for-testing` succeeds; use the compile gate above as the current reliable verification baseline for new iOS slices.

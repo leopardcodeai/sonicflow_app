@@ -4,7 +4,15 @@ import Foundation
 
 final class AudioManager: ObservableObject {
     @Published var isPlaying = false
-    @Published var currentMode: FlowMode = .focus
+    @Published var currentMode: FlowMode = .focus {
+        didSet {
+            sessionSettings = sessionSettings.applyingPreset(
+                FlowTonePreset(mode: currentMode),
+                preserveDuration: true
+            )
+        }
+    }
+    @Published var sessionSettings = FlowToneSettings.standard(for: FlowTonePreset.focus)
     @Published var beatVolume: Double = 0.15 {
         didSet {
             beatMixerNode.volume = Float(beatVolume)
@@ -24,6 +32,23 @@ final class AudioManager: ObservableObject {
 
     func togglePlayback() {
         isPlaying.toggle()
+    }
+
+    func updateDuration(_ minutes: Int) {
+        sessionSettings.durationMinutes = max(5, min(60, minutes))
+    }
+
+    func updateAmbientMix(_ value: Double) {
+        sessionSettings.ambientMix = value
+    }
+
+    func updatePulseDepth(_ value: Double) {
+        sessionSettings.pulseDepth = value
+    }
+
+    func applyExample(_ example: FlowToneExample) {
+        sessionSettings = example.settings
+        currentMode = example.settings.mode
     }
 
     func configureSession() {

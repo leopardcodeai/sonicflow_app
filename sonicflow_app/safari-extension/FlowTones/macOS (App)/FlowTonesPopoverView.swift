@@ -1,3 +1,4 @@
+import AppKit
 import SwiftUI
 
 struct FlowTonesPopoverView: View {
@@ -8,6 +9,7 @@ struct FlowTonesPopoverView: View {
         repeating: GridItem(.flexible(), spacing: BrandTokens.Spacing.sm),
         count: 2
     )
+    private let starterColumns = [GridItem(.flexible(), spacing: BrandTokens.Spacing.sm)]
 
     var body: some View {
         ZStack {
@@ -17,65 +19,236 @@ struct FlowTonesPopoverView: View {
             LeopardBackgroundView()
                 .ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
-                Text("SonicFlow")
-                    .font(.title3.weight(.bold))
-                    .foregroundStyle(BrandTokens.Neutral.fg)
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
+                    hero
 
-                LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.sm) {
-                    ForEach(FlowMode.allCases, id: \.self) { mode in
-                        ModeCard(mode: mode, isSelected: mode == audioManager.currentMode) {
-                            audioManager.currentMode = mode
+                    statusStrip
+
+                    starterSessionsPanel
+
+                    LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.sm) {
+                        ForEach(FlowMode.allCases, id: \.self) { mode in
+                            ModeCard(mode: mode, isSelected: mode == audioManager.currentMode) {
+                                audioManager.currentMode = mode
+                            }
                         }
                     }
+
+                    controlPanel
+
+                    sourceSection
+
+                    atmospherePanel
+
+                    sourceStatus
+
+                    Button(audioManager.isPlaying ? "Pause" : "Start") {
+                        audioManager.togglePlayback()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(audioManager.currentMode.accentColor)
                 }
-
-                Picker("Source", selection: $audioManager.selectedSource) {
-                    Text("System audio").tag(AudioSource.system)
-                    Text("File").tag(AudioSource.file)
-                }
-                .pickerStyle(.segmented)
-
-                sourceSection
-
-                VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
-                    Text("Beat volume")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(BrandTokens.Neutral.muted)
-                    Slider(value: $audioManager.beatVolume, in: 0...1)
-                        .tint(audioManager.currentMode.accentColor)
-                }
-
-                HStack(spacing: BrandTokens.Spacing.sm) {
-                    Image(systemName: "waveform")
-                        .foregroundStyle(
-                            audioManager.isPlaying
-                                ? BrandTokens.Accent.success
-                                : BrandTokens.Neutral.muted
+                .padding(BrandTokens.Spacing.md)
+                .background(
+                    RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                        .fill(BrandTokens.Neutral.panel)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                                .stroke(BrandTokens.Neutral.border, lineWidth: 1)
                         )
-                    Text(audioManager.statusText)
+                )
+                .padding(BrandTokens.Spacing.sm)
+            }
+        }
+        .frame(width: 360, height: 620)
+    }
+
+    private var hero: some View {
+        HStack(alignment: .top, spacing: BrandTokens.Spacing.sm) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .interpolation(.high)
+                .frame(width: 52, height: 52)
+                .clipShape(RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+                .overlay(
+                    RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                        .stroke(BrandTokens.Neutral.border, lineWidth: 1)
+                )
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                Text("FlowTones Runtime")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(BrandTokens.Accent.gold)
+                    .textCase(.uppercase)
+                Text("SonicFlow")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(BrandTokens.Neutral.fg)
+                Text("\(audioManager.currentPreset.displayName) preset with Leopard-backed ambience, starter sessions, and native routing.")
+                    .font(.caption)
+                    .foregroundStyle(BrandTokens.Neutral.muted)
+            }
+        }
+    }
+
+    private var statusStrip: some View {
+        HStack {
+            Label(audioManager.statusText, systemImage: audioManager.isPlaying ? "waveform.circle.fill" : "waveform.circle")
+                .font(.caption)
+                .foregroundStyle(audioManager.isPlaying ? BrandTokens.Accent.success : BrandTokens.Neutral.muted)
+            Spacer()
+            Text("\(Int(audioManager.currentPreset.beatFrequencyHz)) Hz • \(Int(audioManager.currentPreset.carrierFrequencyHz)) Hz")
+                .font(.caption.weight(.medium))
+                .foregroundStyle(audioManager.currentMode.accentColor)
+        }
+        .padding(BrandTokens.Spacing.sm)
+        .background(BrandTokens.Neutral.panel.opacity(0.88), in: RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+    }
+
+    private var starterSessionsPanel: some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Text("Starter Sessions")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(BrandTokens.Neutral.muted)
+
+            LazyVGrid(columns: starterColumns, spacing: BrandTokens.Spacing.sm) {
+                ForEach(MacFlowToneExample.starterPack) { example in
+                    Button {
+                        audioManager.applyExample(example)
+                    } label: {
+                        HStack(alignment: .top, spacing: BrandTokens.Spacing.sm) {
+                            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                                Text(example.title)
+                                    .font(.headline)
+                                    .foregroundStyle(BrandTokens.Neutral.fg)
+                                Text(example.subtitle)
+                                    .font(.caption)
+                                    .foregroundStyle(BrandTokens.Neutral.muted)
+                            }
+
+                            Spacer()
+
+                            Text("\(example.durationMinutes) min")
+                                .font(.caption.weight(.medium))
+                                .foregroundStyle(example.preset.mode.accentColor)
+                        }
+                        .padding(BrandTokens.Spacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                                .fill(BrandTokens.Neutral.panel.opacity(0.9))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                                        .stroke(example.preset.mode.accentColor.opacity(0.35), lineWidth: 1)
+                                )
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
+    private var controlPanel: some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            HStack {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                    Text(audioManager.currentPreset.displayName)
+                        .font(.headline)
+                        .foregroundStyle(audioManager.currentMode.accentColor)
+                    Text(audioManager.currentPreset.summary)
                         .font(.caption)
                         .foregroundStyle(BrandTokens.Neutral.muted)
                 }
-
-                Button(audioManager.isPlaying ? "Pause" : "Start") {
-                    audioManager.togglePlayback()
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(audioManager.currentMode.accentColor)
+                Spacer()
             }
-            .padding(BrandTokens.Spacing.md)
-            .background(
-                RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
-                    .fill(BrandTokens.Neutral.panel)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
-                            .stroke(BrandTokens.Neutral.border, lineWidth: 1)
-                    )
-            )
-            .padding(BrandTokens.Spacing.sm)
+
+            Picker("Source", selection: $audioManager.selectedSource) {
+                Text("System audio").tag(AudioSource.system)
+                Text("File").tag(AudioSource.file)
+            }
+            .pickerStyle(.segmented)
+
+            HStack {
+                Text("Duration")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(BrandTokens.Neutral.muted)
+                Spacer()
+                Stepper(value: $audioManager.durationMinutes, in: 5...60, step: 5) {
+                    Text("\(audioManager.durationMinutes) min")
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+                }
+            }
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
+                Text("Beat volume")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(BrandTokens.Neutral.muted)
+                Slider(value: $audioManager.beatVolume, in: 0...1)
+                    .tint(audioManager.currentMode.accentColor)
+            }
         }
-        .frame(width: 300, height: 400)
+        .padding(BrandTokens.Spacing.md)
+        .background(BrandTokens.Neutral.panel.opacity(0.9), in: RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+    }
+
+    private var atmospherePanel: some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Text("Atmosphere")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(BrandTokens.Neutral.muted)
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
+                HStack {
+                    Text("Ambient mix")
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
+                    Spacer()
+                    Text("\(Int(audioManager.ambientMix * 100))%")
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+                }
+                Slider(value: $audioManager.ambientMix, in: 0.2...1)
+                    .tint(audioManager.currentMode.accentColor)
+            }
+
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
+                HStack {
+                    Text("Pulse depth")
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
+                    Spacer()
+                    Text("\(Int(audioManager.pulseDepth * 100))%")
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+                }
+                Slider(value: $audioManager.pulseDepth, in: 0.2...1)
+                    .tint(audioManager.currentMode.accentColor)
+            }
+        }
+        .padding(BrandTokens.Spacing.md)
+        .background(BrandTokens.Neutral.panel.opacity(0.9), in: RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+    }
+
+    private var sourceStatus: some View {
+        HStack(spacing: BrandTokens.Spacing.sm) {
+            Image(systemName: audioManager.selectedSource == .system ? "macwindow.on.rectangle" : "music.note")
+                .foregroundStyle(audioManager.currentMode.accentColor)
+            Text(sourceStatusText)
+                .font(.caption)
+                .foregroundStyle(BrandTokens.Neutral.muted)
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+    }
+
+    private var sourceStatusText: String {
+        if audioManager.selectedSource == .file, let selectedFileURL = playerManager.selectedFileURL {
+            return selectedFileURL.lastPathComponent
+        }
+
+        return audioManager.selectedFileLabel
     }
 
     @ViewBuilder

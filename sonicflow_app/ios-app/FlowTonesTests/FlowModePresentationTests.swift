@@ -1,5 +1,5 @@
 import XCTest
-@testable import FlowTones
+@testable import SonicFlow
 import FlowTonesCore
 
 final class FlowModePresentationTests: XCTestCase {
