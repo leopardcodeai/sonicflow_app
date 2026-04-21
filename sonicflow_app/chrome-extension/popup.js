@@ -1,5 +1,5 @@
 import { extensionApi } from "./browser-polyfill.js";
-import { DEFAULT_SETTINGS, MODES } from "./popup-model.js";
+import { DEFAULT_SETTINGS, EXAMPLES, MODES } from "./popup-model.js";
 
 async function queryActiveTabState() {
   const { tabId } = await extensionApi.runtime.sendMessage({
@@ -67,6 +67,26 @@ function renderModeGrid(settings) {
   }
 }
 
+function renderExamples(settings) {
+  const exampleGrid = document.querySelector("#example-grid");
+  exampleGrid.replaceChildren();
+
+  for (const example of EXAMPLES) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = `mode-card${settings.durationMinutes === example.durationMinutes && settings.mode === example.mode ? " active" : ""}`;
+    button.dataset.example = example.id;
+    const mode = MODES.find((entry) => entry.id === example.mode) ?? MODES[0];
+    button.style.setProperty("--mode-color", mode.color);
+    button.innerHTML = `
+      <strong>${example.title}</strong>
+      <small>${example.subtitle}</small>
+      <span>${example.durationMinutes} min</span>
+    `;
+    exampleGrid.append(button);
+  }
+}
+
 function updateHero(settings) {
   const heroTitle = document.querySelector("#hero-title");
   const heroDescription = document.querySelector("#hero-description");
@@ -91,6 +111,7 @@ function renderState(settings, tabState) {
   const toggleButton = document.querySelector("#toggle-button");
 
   renderModeGrid(settings);
+  renderExamples(settings);
   updateHero(settings);
   volumeSlider.value = String(settings.volume);
   volumeValue.textContent = String(settings.volume);
@@ -131,6 +152,26 @@ async function bootstrap() {
     }
 
     settings.mode = button.dataset.mode;
+    await persistSettings(settings);
+    await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
+  document.querySelector("#example-grid").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-example]");
+    if (!button) {
+      return;
+    }
+
+    const example = EXAMPLES.find((entry) => entry.id === button.dataset.example);
+    if (!example) {
+      return;
+    }
+
+    settings.mode = example.mode;
+    settings.durationMinutes = example.durationMinutes;
+    settings.ambientMix = example.ambientMix;
+    settings.pulseDepth = example.pulseDepth;
     await persistSettings(settings);
     await pushStateToTab(settings).catch(() => null);
     renderState(settings, tabState);

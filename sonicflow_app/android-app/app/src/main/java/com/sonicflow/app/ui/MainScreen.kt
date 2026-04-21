@@ -103,6 +103,29 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
                 }
             }
 
+            Column(
+                verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.xs.dp)
+            ) {
+                Text("Starter Sessions", style = MaterialTheme.typography.titleMedium, color = BrandTokens.Neutral.fg)
+                FlowToneExample.starterPack.forEach { example ->
+                    Button(
+                        onClick = { viewModel.applyExample(example) },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column {
+                                Text(example.title)
+                                Text(example.subtitle, color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
+                            }
+                            Text("${example.durationMinutes} min")
+                        }
+                    }
+                }
+            }
+
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.sm.dp),

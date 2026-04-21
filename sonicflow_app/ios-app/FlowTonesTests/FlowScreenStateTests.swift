@@ -6,14 +6,14 @@ final class FlowScreenStateTests: XCTestCase {
     func testDefaultFlowStateShowsAdvancedControls() {
         let state = FlowScreenState(
             isPlaying: false,
-            mode: .flow,
-            settings: .standard(for: .flow, durationMinutes: 25),
+            mode: FlowMode.flow,
+            settings: .standard(for: FlowTonePreset.flow, durationMinutes: 25),
             selectedFileName: nil
         )
 
         XCTAssertEqual(state.statusLabel, "Off")
         XCTAssertEqual(state.transportLabel, "Play")
-        XCTAssertEqual(state.selectedMode, .flow)
+        XCTAssertEqual(state.selectedMode, FlowMode.flow)
         XCTAssertEqual(state.durationLabel, "25 min")
         XCTAssertTrue(state.showsAdvancedControls)
     }
@@ -21,8 +21,8 @@ final class FlowScreenStateTests: XCTestCase {
     func testActiveStatePreservesPickedFileName() {
         let state = FlowScreenState(
             isPlaying: true,
-            mode: .sleep,
-            settings: .standard(for: .sleep, durationMinutes: 5),
+            mode: FlowMode.sleep,
+            settings: .standard(for: FlowTonePreset.sleep, durationMinutes: 5),
             selectedFileName: "night-rain.m4a"
         )
 

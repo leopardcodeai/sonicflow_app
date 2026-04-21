@@ -87,6 +87,13 @@ class FlowTonesViewModel @Inject constructor(
         mutableSelectedFile.value = file
     }
 
+    fun applyExample(example: FlowToneExample) {
+        mutableCurrentMode.value = example.preset.mode
+        mutableDurationMinutes.value = example.durationMinutes
+        mutableAmbientMix.value = example.ambientMix
+        mutablePulseDepth.value = example.pulseDepth
+    }
+
     fun startSession() {
         controller.send(
             SessionCommand.Start(

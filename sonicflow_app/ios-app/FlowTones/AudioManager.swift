@@ -6,10 +6,13 @@ final class AudioManager: ObservableObject {
     @Published var isPlaying = false
     @Published var currentMode: FlowMode = .focus {
         didSet {
-            sessionSettings = .standard(for: currentMode, durationMinutes: sessionSettings.durationMinutes)
+            sessionSettings = sessionSettings.applyingPreset(
+                FlowTonePreset(mode: currentMode),
+                preserveDuration: true
+            )
         }
     }
-    @Published var sessionSettings = FlowToneSettings.standard(for: .focus)
+    @Published var sessionSettings = FlowToneSettings.standard(for: FlowTonePreset.focus)
     @Published var beatVolume: Double = 0.15 {
         didSet {
             beatMixerNode.volume = Float(beatVolume)
@@ -41,6 +44,11 @@ final class AudioManager: ObservableObject {
 
     func updatePulseDepth(_ value: Double) {
         sessionSettings.pulseDepth = value
+    }
+
+    func applyExample(_ example: FlowToneExample) {
+        sessionSettings = example.settings
+        currentMode = example.settings.mode
     }
 
     func configureSession() {

@@ -87,6 +87,19 @@ class FlowTonesViewModelTest {
         assertEquals(FlowMode.SLEEP, viewModel.currentMode.value)
     }
 
+    @Test
+    fun `applyExample loads starter session settings immediately`() = runTest {
+        val controller = FakeController()
+        val viewModel = FlowTonesViewModel(controller)
+
+        viewModel.applyExample(FlowToneExample.starterPack.last())
+
+        assertEquals(FlowMode.SLEEP, viewModel.currentMode.value)
+        assertEquals(5, viewModel.durationMinutes.value)
+        assertEquals(0.78f, viewModel.ambientMix.value)
+        assertEquals(0.46f, viewModel.pulseDepth.value)
+    }
+
     private class FakeController : FlowTonesSessionController {
         override val state = MutableStateFlow(SessionState())
         var lastCommand: SessionCommand? = null

@@ -27,6 +27,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
                     header(for: screenState)
+                    starterPack
 
                     LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.md) {
                         ForEach(FlowMode.allCases, id: \.self) { mode in
@@ -169,6 +170,48 @@ struct ContentView: View {
                     .font(.subheadline)
                     .foregroundStyle(BrandTokens.Neutral.muted)
                     .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+    }
+
+    private var starterPack: some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Text("Starter Sessions")
+                .font(.headline)
+                .foregroundStyle(BrandTokens.Neutral.fg)
+
+            ForEach(FlowToneExample.starterPack) { example in
+                Button {
+                    audioManager.applyExample(example)
+                } label: {
+                    HStack(alignment: .top, spacing: BrandTokens.Spacing.sm) {
+                        Image(systemName: example.settings.preset.icon)
+                            .foregroundStyle(example.settings.mode.accentColor)
+                            .frame(width: 24)
+
+                        VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                            Text(example.title)
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(BrandTokens.Neutral.fg)
+                            Text(example.subtitle)
+                                .font(.caption)
+                                .foregroundStyle(BrandTokens.Neutral.muted)
+                        }
+
+                        Spacer()
+
+                        Text("\(example.settings.durationMinutes) min")
+                            .font(.caption.weight(.medium))
+                            .foregroundStyle(example.settings.mode.accentColor)
+                    }
+                    .padding(BrandTokens.Spacing.md)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(BrandTokens.Neutral.panel.opacity(0.9))
+                    )
+                }
+                .buttonStyle(.plain)
             }
         }
     }
