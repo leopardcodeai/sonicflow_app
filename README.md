@@ -73,7 +73,7 @@ soundhealing_sonicflow/
 | Chrome extension | FlowTones-style popup with preset-first controls, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe shell only. No native render/export promises. |
 | Safari extension (web shell) | Leopard-backed FlowTones-style wrapper messaging | Web extension runtime shell | No dedicated system capture path | Mirrors product language, but native-only features belong in the app targets. |
 | iOS app | Native FlowTones settings model plus upgraded screen state and advanced controls | Local file + generated beat layer | No | Closest parity target for the standalone FlowTones runtime. |
-| macOS app | Leopard-native wrapper/popover path, partial parity target | Local file + generated beat layer | Partial/limited | Native app can support more than the Safari web shell. |
+| macOS app | Leopard-native menu-bar popover with starter sessions, preset metadata, and advanced controls | Local file + generated beat layer | Partial/limited | Native app now mirrors the preset-first FlowTones direction more closely than the Safari web shell. |
 | Android app | FlowTones-style session model in ViewModel/service path plus advanced controls in Compose | Local session/service + generated beat layer | No | Duration, ambient mix, and pulse depth currently travel as session metadata; synthesis parity is still incremental. |
 
 ## Brand Asset Usage

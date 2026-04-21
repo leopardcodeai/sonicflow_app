@@ -13,7 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.setActivationPolicy(.accessory)
 
         popover.behavior = .transient
-        popover.contentSize = NSSize(width: 320, height: 470)
+        popover.contentSize = NSSize(width: 360, height: 620)
         popover.contentViewController = NSHostingController(
             rootView: FlowTonesPopoverView(
                 audioManager: audioManager,

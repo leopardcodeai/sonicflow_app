@@ -9,6 +9,7 @@ struct FlowTonesPopoverView: View {
         repeating: GridItem(.flexible(), spacing: BrandTokens.Spacing.sm),
         count: 2
     )
+    private let starterColumns = [GridItem(.flexible(), spacing: BrandTokens.Spacing.sm)]
 
     var body: some View {
         ZStack {
@@ -18,45 +19,49 @@ struct FlowTonesPopoverView: View {
             LeopardBackgroundView()
                 .ignoresSafeArea()
 
-            VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
-                hero
+            ScrollView(showsIndicators: false) {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
+                    hero
 
-                statusStrip
+                    statusStrip
 
-                LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.sm) {
-                    ForEach(FlowMode.allCases, id: \.self) { mode in
-                        ModeCard(mode: mode, isSelected: mode == audioManager.currentMode) {
-                            audioManager.currentMode = mode
+                    starterSessionsPanel
+
+                    LazyVGrid(columns: columns, spacing: BrandTokens.Spacing.sm) {
+                        ForEach(FlowMode.allCases, id: \.self) { mode in
+                            ModeCard(mode: mode, isSelected: mode == audioManager.currentMode) {
+                                audioManager.currentMode = mode
+                            }
                         }
                     }
+
+                    controlPanel
+
+                    sourceSection
+
+                    atmospherePanel
+
+                    sourceStatus
+
+                    Button(audioManager.isPlaying ? "Pause" : "Start") {
+                        audioManager.togglePlayback()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(audioManager.currentMode.accentColor)
                 }
-
-                controlPanel
-
-                sourceSection
-
-                atmospherePanel
-
-                sourceStatus
-
-                Button(audioManager.isPlaying ? "Pause" : "Start") {
-                    audioManager.togglePlayback()
-                }
-                .buttonStyle(.borderedProminent)
-                .tint(audioManager.currentMode.accentColor)
+                .padding(BrandTokens.Spacing.md)
+                .background(
+                    RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                        .fill(BrandTokens.Neutral.panel)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
+                                .stroke(BrandTokens.Neutral.border, lineWidth: 1)
+                        )
+                )
+                .padding(BrandTokens.Spacing.sm)
             }
-            .padding(BrandTokens.Spacing.md)
-            .background(
-                RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
-                    .fill(BrandTokens.Neutral.panel)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: BrandTokens.Radius.lg)
-                            .stroke(BrandTokens.Neutral.border, lineWidth: 1)
-                    )
-            )
-            .padding(BrandTokens.Spacing.sm)
         }
-        .frame(width: 320, height: 470)
+        .frame(width: 360, height: 620)
     }
 
     private var hero: some View {
@@ -79,7 +84,7 @@ struct FlowTonesPopoverView: View {
                 Text("SonicFlow")
                     .font(.title2.weight(.bold))
                     .foregroundStyle(BrandTokens.Neutral.fg)
-                Text("\(audioManager.currentMode.displayName) session with Leopard-backed ambience, pulse shaping, and native routing.")
+                Text("\(audioManager.currentPreset.displayName) preset with Leopard-backed ambience, starter sessions, and native routing.")
                     .font(.caption)
                     .foregroundStyle(BrandTokens.Neutral.muted)
             }
@@ -92,7 +97,7 @@ struct FlowTonesPopoverView: View {
                 .font(.caption)
                 .foregroundStyle(audioManager.isPlaying ? BrandTokens.Accent.success : BrandTokens.Neutral.muted)
             Spacer()
-            Text("\(Int(audioManager.currentMode.beatHz)) Hz")
+            Text("\(Int(audioManager.currentPreset.beatFrequencyHz)) Hz • \(Int(audioManager.currentPreset.carrierFrequencyHz)) Hz")
                 .font(.caption.weight(.medium))
                 .foregroundStyle(audioManager.currentMode.accentColor)
         }
@@ -100,8 +105,64 @@ struct FlowTonesPopoverView: View {
         .background(BrandTokens.Neutral.panel.opacity(0.88), in: RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
     }
 
+    private var starterSessionsPanel: some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Text("Starter Sessions")
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(BrandTokens.Neutral.muted)
+
+            LazyVGrid(columns: starterColumns, spacing: BrandTokens.Spacing.sm) {
+                ForEach(MacFlowToneExample.starterPack) { example in
+                    Button {
+                        audioManager.applyExample(example)
+                    } label: {
+                        HStack(alignment: .top, spacing: BrandTokens.Spacing.sm) {
+                            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                                Text(example.title)
+                                    .font(.headline)
+                                    .foregroundStyle(BrandTokens.Neutral.fg)
+                                Text(example.subtitle)
+                                    .font(.caption)
+                                    .foregroundStyle(BrandTokens.Neutral.muted)
+                            }
+
+                            Spacer()
+
+                            Text("\(example.durationMinutes) min")
+                                .font(.caption.weight(.medium))
+                                .foregroundStyle(example.preset.mode.accentColor)
+                        }
+                        .padding(BrandTokens.Spacing.md)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(
+                            RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                                .fill(BrandTokens.Neutral.panel.opacity(0.9))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                                        .stroke(example.preset.mode.accentColor.opacity(0.35), lineWidth: 1)
+                                )
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+
     private var controlPanel: some View {
         VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            HStack {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                    Text(audioManager.currentPreset.displayName)
+                        .font(.headline)
+                        .foregroundStyle(audioManager.currentMode.accentColor)
+                    Text(audioManager.currentPreset.summary)
+                        .font(.caption)
+                        .foregroundStyle(BrandTokens.Neutral.muted)
+                }
+                Spacer()
+            }
+
             Picker("Source", selection: $audioManager.selectedSource) {
                 Text("System audio").tag(AudioSource.system)
                 Text("File").tag(AudioSource.file)
