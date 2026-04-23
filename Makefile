@@ -1,4 +1,4 @@
-.PHONY: help chrome safari ios mac mac-smoke android test-core-js test-core-swift test-chrome verify clean-dist chrome-build-assets
+.PHONY: help chrome safari ios mac mac-smoke android test test-core-js test-core-swift test-chrome test-android test-ios verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
 SAFARI_PROJECT := sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj
@@ -16,9 +16,12 @@ help:
 	@echo "  make mac             Build macOS app target"
 	@echo "  make mac-smoke       Build and launch the macOS menu-bar app"
 	@echo "  make android         Build Android debug APK"
+	@echo "  make test            Run focused test suites across configured platforms"
 	@echo "  make test-core-js    Run JS core tests"
 	@echo "  make test-core-swift Run Swift core tests"
 	@echo "  make test-chrome     Run Chrome extension tests"
+	@echo "  make test-android    Run Android unit tests when SDK/Java are configured"
+	@echo "  make test-ios        Run iOS app tests when a simulator is available"
 	@echo "  make verify          Run warning audit across supported platforms"
 	@echo "  make clean-dist      Remove dist artifacts"
 
@@ -62,6 +65,18 @@ test-core-swift:
 
 test-chrome:
 	cd $(CHROME_DIR) && npm ci && npm test
+
+test-android:
+	@if [ -x $(ANDROID_APP_DIR)/gradlew ] && { [ -n "$${ANDROID_HOME:-$${ANDROID_SDK_ROOT:-}}" ] || [ -f $(ANDROID_APP_DIR)/local.properties ]; } && command -v java >/dev/null 2>&1; then \
+		cd $(ANDROID_APP_DIR) && ./gradlew testDebugUnitTest; \
+	else \
+		echo 'Skipping Android unit tests because Android SDK/Java are not configured.'; \
+	fi
+
+test-ios:
+	./scripts/check_warnings.sh --ios-tests
+
+test: test-core-js test-core-swift test-chrome test-android test-ios
 
 verify:
 	./scripts/check_warnings.sh
