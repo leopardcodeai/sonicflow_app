@@ -106,6 +106,7 @@ make ios
 make mac
 make mac-smoke
 make android
+make test
 make verify
 ```
 
@@ -113,16 +114,19 @@ make verify
 
 ## Development Checks
 
-- Full warning audit: `make verify`
+- Fast cross-platform unit checks: `make test`
+- Full merge gate with warning audit: `make verify`
 - JS core tests: `make test-core-js`
 - Swift core tests: `make test-core-swift`
 - Chrome extension tests: `make test-chrome`
+- Android unit tests: `make test-android`
+- iOS app tests: `make test-ios`
 - Chrome popup upgrade slice: `cd sonicflow_app/chrome-extension && node --test popup.test.js`
 - Android session model slice: `cd sonicflow_app/android-app && ./gradlew --console=plain :app:testDebugUnitTest --tests 'com.sonicflow.app.ui.FlowTonesViewModelTest'`
-- iOS compile gate for FlowTones UI/runtime slices: `xcodebuild build-for-testing -project sonicflow_app/ios-app/FlowTones.xcodeproj -scheme FlowTones -destination 'platform=iOS Simulator,id=FBAF6087-CB95-4D6D-B304-99A2F6A21440'`
+- iOS focused test gate: `make test-ios`
 - macOS menu-bar smoke gate: `make mac-smoke`
 
-The warning audit runs cross-platform checks and skips Android only when SDK/Java prerequisites are not configured locally.
+The warning audit runs cross-platform tests/builds and skips Android only when SDK/Java prerequisites are not configured locally. iOS app tests run when a compatible simulator destination is available.
 
 ## Workflow (Linear-First)
 
@@ -162,4 +166,3 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 - Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
 - Browser shells expose FlowTones-style controls, but they do not yet offer native offline render/export or cache flows.
 - Android currently carries `durationMinutes`, `ambientMix`, and `pulseDepth` through the session model and UI, but the underlying audio engine is not yet feature-parity with the Apple-native runtime.
-- The iOS targeted simulator `test` action can still be sticky in local CLI runs even when `build-for-testing` succeeds; use the compile gate above as the current reliable verification baseline for new iOS slices.
