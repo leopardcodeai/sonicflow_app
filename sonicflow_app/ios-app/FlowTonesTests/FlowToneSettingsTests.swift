@@ -38,4 +38,17 @@ final class FlowToneSettingsTests: XCTestCase {
 
         XCTAssertEqual(lhs.cacheKey, rhs.cacheKey)
     }
+
+    func testBrainFmParitySessionTaxonomyMapsActivitiesAndTimers() {
+        XCTAssertEqual(SessionProductMode.allCases, [.focus, .relax, .sleep, .meditate])
+        XCTAssertEqual(SessionActivity.allCases.count, 15)
+
+        XCTAssertEqual(SessionActivity.creativeFlow.productMode, .focus)
+        XCTAssertEqual(SessionActivity.creativeFlow.engineMode, .flow)
+        XCTAssertEqual(SessionActivity.creativeFlow.defaultTimer, .pomodoro)
+        XCTAssertEqual(SessionActivity.windDown.productMode, .sleep)
+        XCTAssertEqual(SessionActivity.windDown.defaultTimer, .infiniteSleep)
+        XCTAssertEqual(SessionTimer.pomodoro.durationMinutes, 25)
+        XCTAssertNil(SessionTimer.infiniteSleep.durationMinutes)
+    }
 }

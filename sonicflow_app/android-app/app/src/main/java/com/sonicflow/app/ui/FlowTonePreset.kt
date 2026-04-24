@@ -47,3 +47,40 @@ enum class FlowTonePreset(
         fun from(mode: FlowMode): FlowTonePreset = entries.first { it.mode == mode }
     }
 }
+
+enum class SessionProductMode {
+    FOCUS,
+    RELAX,
+    SLEEP,
+    MEDITATE
+}
+
+enum class SessionTimer(val durationMinutes: Int?) {
+    POMODORO(25),
+    SHORT(5),
+    STANDARD(25),
+    POWER_NAP(20),
+    INFINITE_SLEEP(null)
+}
+
+enum class SessionActivity(
+    val productMode: SessionProductMode,
+    val engineMode: FlowMode,
+    val defaultTimer: SessionTimer
+) {
+    DEEP_WORK(SessionProductMode.FOCUS, FlowMode.FOCUS, SessionTimer.POMODORO),
+    CREATIVE_FLOW(SessionProductMode.FOCUS, FlowMode.FLOW, SessionTimer.POMODORO),
+    LIGHT_WORK(SessionProductMode.FOCUS, FlowMode.FLOW, SessionTimer.STANDARD),
+    LEARNING(SessionProductMode.FOCUS, FlowMode.FOCUS, SessionTimer.POMODORO),
+    MOTIVATION(SessionProductMode.FOCUS, FlowMode.FOCUS, SessionTimer.SHORT),
+    UNWIND(SessionProductMode.RELAX, FlowMode.FLOW, SessionTimer.STANDARD),
+    DESTRESS(SessionProductMode.RELAX, FlowMode.MEDITATION, SessionTimer.STANDARD),
+    RECHARGE(SessionProductMode.RELAX, FlowMode.FLOW, SessionTimer.SHORT),
+    CHILL(SessionProductMode.RELAX, FlowMode.FLOW, SessionTimer.STANDARD),
+    DEEP_SLEEP(SessionProductMode.SLEEP, FlowMode.SLEEP, SessionTimer.INFINITE_SLEEP),
+    WIND_DOWN(SessionProductMode.SLEEP, FlowMode.SLEEP, SessionTimer.INFINITE_SLEEP),
+    POWER_NAP(SessionProductMode.SLEEP, FlowMode.SLEEP, SessionTimer.POWER_NAP),
+    GUIDED_SLEEP(SessionProductMode.SLEEP, FlowMode.SLEEP, SessionTimer.INFINITE_SLEEP),
+    GUIDED_MEDITATION(SessionProductMode.MEDITATE, FlowMode.MEDITATION, SessionTimer.STANDARD),
+    UNGUIDED_MEDITATION(SessionProductMode.MEDITATE, FlowMode.MEDITATION, SessionTimer.STANDARD)
+}

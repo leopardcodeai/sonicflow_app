@@ -85,3 +85,98 @@ enum FlowTonePreset: String, CaseIterable, Codable, Identifiable, Sendable {
         }
     }
 }
+
+enum SessionProductMode: String, CaseIterable, Codable, Identifiable, Sendable {
+    case focus
+    case relax
+    case sleep
+    case meditate
+
+    var id: String { rawValue }
+}
+
+enum SessionTimer: String, CaseIterable, Codable, Identifiable, Sendable {
+    case pomodoro
+    case short
+    case standard
+    case powerNap
+    case infiniteSleep
+
+    var id: String { rawValue }
+
+    var durationMinutes: Int? {
+        switch self {
+        case .pomodoro:
+            return 25
+        case .short:
+            return 5
+        case .standard:
+            return 25
+        case .powerNap:
+            return 20
+        case .infiniteSleep:
+            return nil
+        }
+    }
+}
+
+enum SessionActivity: String, CaseIterable, Codable, Identifiable, Sendable {
+    case deepWork
+    case creativeFlow
+    case lightWork
+    case learning
+    case motivation
+    case unwind
+    case destress
+    case recharge
+    case chill
+    case deepSleep
+    case windDown
+    case powerNap
+    case guidedSleep
+    case guidedMeditation
+    case unguidedMeditation
+
+    var id: String { rawValue }
+
+    var productMode: SessionProductMode {
+        switch self {
+        case .deepWork, .creativeFlow, .lightWork, .learning, .motivation:
+            return .focus
+        case .unwind, .destress, .recharge, .chill:
+            return .relax
+        case .deepSleep, .windDown, .powerNap, .guidedSleep:
+            return .sleep
+        case .guidedMeditation, .unguidedMeditation:
+            return .meditate
+        }
+    }
+
+    var engineMode: FlowMode {
+        switch self {
+        case .deepWork, .learning, .motivation:
+            return .focus
+        case .creativeFlow, .lightWork, .unwind, .recharge, .chill:
+            return .flow
+        case .destress, .guidedMeditation, .unguidedMeditation:
+            return .meditation
+        case .deepSleep, .windDown, .powerNap, .guidedSleep:
+            return .sleep
+        }
+    }
+
+    var defaultTimer: SessionTimer {
+        switch self {
+        case .deepWork, .creativeFlow, .learning:
+            return .pomodoro
+        case .motivation, .recharge:
+            return .short
+        case .powerNap:
+            return .powerNap
+        case .deepSleep, .windDown, .guidedSleep:
+            return .infiniteSleep
+        case .lightWork, .unwind, .destress, .chill, .guidedMeditation, .unguidedMeditation:
+            return .standard
+        }
+    }
+}

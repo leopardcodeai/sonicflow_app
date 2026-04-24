@@ -1,5 +1,15 @@
 import { extensionApi } from "./browser-polyfill.js";
-import { DEFAULT_SETTINGS, EXAMPLES, MODES, OVERLAY_SOURCES, resolveOverlayStatus } from "./popup-model.js";
+import {
+  DEFAULT_SETTINGS,
+  EXAMPLES,
+  MODES,
+  OVERLAY_SOURCES,
+  SESSION_ACTIVITIES,
+  resolveOverlayStatus,
+  resolveSessionActivity,
+  resolveSessionPlan,
+  resolveSessionTimer
+} from "./popup-model.js";
 
 async function queryActiveTabState() {
   const { tabId } = await extensionApi.runtime.sendMessage({
@@ -87,13 +97,36 @@ function renderExamples(settings) {
   }
 }
 
+function renderActivitySelector(settings) {
+  const activitySelect = document.querySelector("#activity-select");
+  const activityTimer = document.querySelector("#activity-timer");
+  activitySelect.replaceChildren();
+
+  for (const activity of SESSION_ACTIVITIES) {
+    const option = document.createElement("option");
+    option.value = activity.id;
+    option.textContent = activity.label;
+    activitySelect.append(option);
+  }
+
+  const activity = resolveSessionActivity(settings.activityId ?? DEFAULT_SETTINGS.activityId);
+  const timer = resolveSessionTimer(settings.timerId ?? activity.defaultTimer);
+  activitySelect.value = activity.id;
+  activityTimer.textContent = timer.durationMinutes === null
+    ? `${timer.label} · plays until stopped`
+    : `${timer.label} · ${timer.durationMinutes} min`;
+}
+
 function updateHero(settings) {
   const heroTitle = document.querySelector("#hero-title");
   const heroDescription = document.querySelector("#hero-description");
   const activeMode = MODES.find((mode) => mode.id === settings.mode) ?? MODES[0];
+  const durationLabel = settings.durationMinutes === null
+    ? "open-ended"
+    : `${settings.durationMinutes} minute`;
 
   heroTitle.textContent = `${activeMode.name} Session`;
-  heroDescription.textContent = `${activeMode.description} ${settings.durationMinutes} minute browser-safe layer with ${settings.ambientMix}% ambience and ${settings.pulseDepth}% pulse depth.`;
+  heroDescription.textContent = `${activeMode.description} ${durationLabel} browser-safe layer with ${settings.ambientMix}% ambience and ${settings.pulseDepth}% pulse depth.`;
 }
 
 function renderOverlaySources(settings, tabState) {
@@ -134,12 +167,16 @@ function renderState(settings, tabState) {
 
   renderModeGrid(settings);
   renderExamples(settings);
+  renderActivitySelector(settings);
   renderOverlaySources(settings, tabState);
   updateHero(settings);
   volumeSlider.value = String(settings.volume);
   volumeValue.textContent = String(settings.volume);
-  durationSlider.value = String(settings.durationMinutes);
-  durationValue.textContent = `${settings.durationMinutes} min`;
+  durationSlider.disabled = settings.durationMinutes === null;
+  durationSlider.value = String(settings.durationMinutes ?? DEFAULT_SETTINGS.durationMinutes);
+  durationValue.textContent = settings.durationMinutes === null
+    ? "Until stopped"
+    : `${settings.durationMinutes} min`;
   ambientSlider.value = String(settings.ambientMix);
   ambientValue.textContent = `${settings.ambientMix}%`;
   pulseSlider.value = String(settings.pulseDepth);
@@ -199,6 +236,17 @@ async function bootstrap() {
     renderState(settings, tabState);
   });
 
+  document.querySelector("#activity-select").addEventListener("change", async (event) => {
+    const sessionPlan = resolveSessionPlan(event.target.value);
+    settings.activityId = sessionPlan.activityId;
+    settings.timerId = sessionPlan.timerId;
+    settings.mode = sessionPlan.engineMode;
+    settings.durationMinutes = sessionPlan.durationMinutes;
+    await persistSettings(settings);
+    await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
   document.querySelector("#overlay-source-list").addEventListener("click", async (event) => {
     const button = event.target.closest("[data-overlay-source]");
     if (!button) {
@@ -219,6 +267,7 @@ async function bootstrap() {
 
   document.querySelector("#duration-slider").addEventListener("input", async (event) => {
     settings.durationMinutes = Number(event.target.value);
+    settings.timerId = "standard";
     await persistSettings(settings);
     await pushStateToTab(settings).catch(() => null);
     renderState(settings, tabState);

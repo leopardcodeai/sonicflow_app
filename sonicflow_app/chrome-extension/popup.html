@@ -185,6 +185,17 @@
         gap: var(--space-sm);
       }
 
+      .activity-select {
+        width: 100%;
+        margin-top: var(--space-sm);
+        border: 1px solid var(--neutral-border);
+        border-radius: var(--radius-md);
+        padding: 10px 12px;
+        color: var(--neutral-fg);
+        background: rgba(12, 12, 14, 0.82);
+        font: inherit;
+      }
+
       .overlay-source-list {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -292,6 +303,12 @@
       </div>
       <div class="panel">
         <div class="grid" id="mode-grid"></div>
+      </div>
+      <div class="panel" id="activity-panel">
+        <strong>Activity</strong>
+        <p>Choose a one-click session path. Flow now powers Creative Flow inside Focus.</p>
+        <select class="activity-select" id="activity-select" aria-label="Session activity"></select>
+        <p id="activity-timer">Pomodoro · 25 min</p>
       </div>
       <div class="panel" id="overlay-mode-panel">
         <strong>Overlay Mode</strong>

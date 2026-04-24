@@ -22,4 +22,21 @@ class FlowModeUiTest {
         assertTrue(FlowMode.MEDITATION.accentColor.startsWith("#"))
         assertTrue(FlowMode.SLEEP.accentColor.startsWith("#"))
     }
+
+    @Test
+    fun `session taxonomy maps activities timers and existing engine modes`() {
+        assertEquals(
+            listOf(SessionProductMode.FOCUS, SessionProductMode.RELAX, SessionProductMode.SLEEP, SessionProductMode.MEDITATE),
+            SessionProductMode.entries
+        )
+        assertEquals(15, SessionActivity.entries.size)
+
+        assertEquals(SessionProductMode.FOCUS, SessionActivity.CREATIVE_FLOW.productMode)
+        assertEquals(FlowMode.FLOW, SessionActivity.CREATIVE_FLOW.engineMode)
+        assertEquals(SessionTimer.POMODORO, SessionActivity.CREATIVE_FLOW.defaultTimer)
+        assertEquals(SessionProductMode.SLEEP, SessionActivity.WIND_DOWN.productMode)
+        assertEquals(SessionTimer.INFINITE_SLEEP, SessionActivity.WIND_DOWN.defaultTimer)
+        assertEquals(25, SessionTimer.POMODORO.durationMinutes)
+        assertEquals(null, SessionTimer.INFINITE_SLEEP.durationMinutes)
+    }
 }

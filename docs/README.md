@@ -4,6 +4,7 @@
 
 - `architecture/system-overview.md` — high-level component map and audio/runtime flow.
 - `architecture/modulation-engine.md` — intensity profile model plus IP and science-claim guardrails.
+- `architecture/session-taxonomy.md` — product modes, activities, Pomodoro defaults, and infinite sleep behavior.
 
 ## Guides
 
