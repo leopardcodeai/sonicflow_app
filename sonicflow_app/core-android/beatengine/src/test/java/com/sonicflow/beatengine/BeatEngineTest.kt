@@ -23,12 +23,80 @@ class BeatEngineTest {
     }
 
     @Test
+    fun `modulation programs expose parity taxonomy and intensity depths`() {
+        assertEquals(
+            listOf(ModulationProgram.FOCUS, ModulationProgram.RELAX, ModulationProgram.SLEEP, ModulationProgram.MEDITATE),
+            ModulationProgram.values().toList()
+        )
+        assertTrue(NeuralIntensity.LOW.modulationDepth < NeuralIntensity.MEDIUM.modulationDepth)
+        assertTrue(NeuralIntensity.MEDIUM.modulationDepth < NeuralIntensity.HIGH.modulationDepth)
+
+        assertEquals(10.0, ModulationProfile.program(ModulationProgram.RELAX, NeuralIntensity.MEDIUM).targetBeatHz, 0.0001)
+        assertEquals(6.0, ModulationProfile.program(ModulationProgram.MEDITATE, NeuralIntensity.HIGH).targetBeatHz, 0.0001)
+    }
+
+    @Test
     fun `generatePCM returns stereo interleaved 16-bit PCM with the expected length`() {
         val engine = BeatEngine()
 
         val pcm = engine.generatePCM(FlowMode.FOCUS, durationSeconds = 2.0, sampleRate = 100)
 
         assertEquals(2 * 100 * 2, pcm.size)
+    }
+
+    @Test
+    fun `intensity controls modulation depth`() {
+        val engine = BeatEngine()
+        val sampleRate = 1000
+        val low = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.FOCUS, NeuralIntensity.LOW),
+            durationSeconds = 12.0,
+            sampleRate = sampleRate
+        )
+        val high = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.FOCUS, NeuralIntensity.HIGH),
+            durationSeconds = 12.0,
+            sampleRate = sampleRate
+        )
+
+        assertTrue(peakChannel(high, 6 * sampleRate, sampleRate) > peakChannel(low, 6 * sampleRate, sampleRate) * 1.25)
+    }
+
+    @Test
+    fun `high intensity uses independent stereo modulation while staying bounded`() {
+        val engine = BeatEngine()
+        val sampleRate = 1000
+        val pcm = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.MEDITATE, NeuralIntensity.HIGH),
+            durationSeconds = 12.0,
+            sampleRate = sampleRate
+        )
+        var accumulatedDifference = 0
+        var peak = 0
+
+        for (frame in 6 * sampleRate until 7 * sampleRate) {
+            val left = pcm[frame * 2].toInt()
+            val right = pcm[frame * 2 + 1].toInt()
+            accumulatedDifference += kotlin.math.abs(left - right)
+            peak = maxOf(peak, kotlin.math.abs(left), kotlin.math.abs(right))
+        }
+
+        assertTrue(accumulatedDifference > 100)
+        assertTrue(peak <= (Short.MAX_VALUE * 0.120001).toInt())
+    }
+
+    @Test
+    fun `long rendered loops remain finite and fade to silence`() {
+        val engine = BeatEngine()
+        val pcm = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.MEDIUM),
+            durationSeconds = 60.0,
+            sampleRate = 200
+        )
+
+        assertEquals(0, pcm.first().toInt())
+        assertEquals(0, pcm.last().toInt())
+        assertTrue(pcm.maxOf { kotlin.math.abs(it.toInt()) } <= (Short.MAX_VALUE * 0.120001).toInt())
     }
 
     @Test
@@ -81,6 +149,14 @@ class BeatEngineTest {
         assertEquals(44100, player.lastSampleRate)
         assertTrue(player.stopCalled)
     }
+}
+
+private fun peakChannel(pcm: ShortArray, startFrame: Int, frameCount: Int): Int {
+    var peak = 0
+    for (frame in startFrame until startFrame + frameCount) {
+        peak = maxOf(peak, kotlin.math.abs(pcm[frame * 2].toInt()))
+    }
+    return peak
 }
 
 private class RecordingPcmPlayer : PcmPlayer {

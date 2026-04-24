@@ -11,21 +11,26 @@ class BeatEngine(
     private val player: PcmPlayer = AndroidAudioTrackPlayer()
 ) {
     fun generatePCM(mode: FlowMode, durationSeconds: Double, sampleRate: Int = DEFAULT_SAMPLE_RATE): ShortArray {
+        return generatePCM(ModulationProfile.legacy(mode), durationSeconds, sampleRate)
+    }
+
+    fun generatePCM(profile: ModulationProfile, durationSeconds: Double, sampleRate: Int = DEFAULT_SAMPLE_RATE): ShortArray {
         val totalFrames = max(0, floor(durationSeconds * sampleRate).toInt())
         val pcm = ShortArray(totalFrames * 2)
         val fadeFrames = min(floor(FADE_SECONDS * sampleRate).toInt(), totalFrames / 2)
 
         for (frame in 0 until totalFrames) {
             val timeSeconds = frame.toDouble() / sampleRate
-            val carrier = sin(2.0 * PI * mode.carrierHz * timeSeconds)
-            val modulation = 0.5 + 0.5 * sin(2.0 * PI * mode.beatHz * timeSeconds)
+            val carrier = sin(2.0 * PI * profile.carrierHz * timeSeconds)
+            val leftModulation = amplitudeModulation(profile, timeSeconds, phaseOffset = 0.0)
+            val rightModulation = amplitudeModulation(profile, timeSeconds, profile.stereoPhaseOffset)
             val envelope = envelopeAt(frame, totalFrames, fadeFrames)
-            val sample = carrier * modulation * AMPLITUDE * envelope
-            val pcmSample = (sample * Short.MAX_VALUE).roundToInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()
+            val leftSample = toPcmSample(carrier * leftModulation * AMPLITUDE * profile.outputGain * envelope)
+            val rightSample = toPcmSample(carrier * rightModulation * AMPLITUDE * profile.outputGain * envelope)
             val offset = frame * 2
 
-            pcm[offset] = pcmSample
-            pcm[offset + 1] = pcmSample
+            pcm[offset] = leftSample
+            pcm[offset + 1] = rightSample
         }
 
         return pcm
@@ -53,6 +58,18 @@ class BeatEngine(
         }
 
         return 1.0
+    }
+
+    private fun amplitudeModulation(profile: ModulationProfile, timeSeconds: Double, phaseOffset: Double): Double {
+        val lfo = 0.5 + 0.5 * sin((2.0 * PI * profile.targetBeatHz * timeSeconds) + phaseOffset)
+        return (1.0 - profile.modulationDepth) + (profile.modulationDepth * lfo)
+    }
+
+    private fun toPcmSample(sample: Double): Short {
+        return (sample * Short.MAX_VALUE)
+            .roundToInt()
+            .coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt())
+            .toShort()
     }
 
     private companion object {

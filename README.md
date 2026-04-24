@@ -153,6 +153,7 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 ## Documentation Map
 
 - [Architecture details](docs/architecture/system-overview.md)
+- [Modulation engine guardrails](docs/architecture/modulation-engine.md)
 - [Structure walkthrough](docs/guides/project-structure.md)
 - [Team workflow](docs/guides/github-workflow.md)
 - [Linear + GitHub process automation](docs/guides/linear-github-process.md)
