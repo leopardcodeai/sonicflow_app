@@ -6,29 +6,29 @@
 
 **Architecture:** Keep the implementation low-risk by refactoring existing SwiftUI files instead of adding new Xcode project files. Add small private SwiftUI subviews inside the current root view files, keep all existing audio/session state paths intact, and use token-backed colors plus material/glass-ready surfaces for the new hierarchy.
 
-**Tech Stack:** SwiftUI, FlowTonesCore, Xcode iOS/macOS targets, generated `BrandTokens`, local `make test-ios` and `make mac` verification.
+**Tech Stack:** SwiftUI, SonicFlowCore, Xcode iOS/macOS targets, generated `BrandTokens`, local `make test-ios` and `make mac` verification.
 
 ---
 
 ## File Map
 
-- Modify: `sonicflow_app/ios-app/FlowTones/FlowMode+UI.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/FlowMode+UI.swift`
   - Add mode ritual copy used by the hero.
-- Modify: `sonicflow_app/ios-app/FlowTonesTests/FlowModePresentationTests.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlowTests/FlowModePresentationTests.swift`
   - Lock the new ritual labels/summaries.
-- Modify: `sonicflow_app/ios-app/FlowTones/LeopardBackgroundView.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/LeopardBackgroundView.swift`
   - Make the leopard layer more cinematic while preserving text safety through gradients.
-- Modify: `sonicflow_app/ios-app/FlowTones/ModeCard.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/ModeCard.swift`
   - Make inactive modes more compact and the active mode more visibly selected.
-- Modify: `sonicflow_app/ios-app/FlowTones/ContentView.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/ContentView.swift`
   - Recompose the iOS screen around hero, visualizer, primary transport, mode selector, and compact controls.
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/FlowMode+UI.swift`
   - Mirror mode ritual copy for macOS.
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/LeopardBackgroundView.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/LeopardBackgroundView.swift`
   - Increase cinematic depth in the procedural macOS layer.
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/ModeCard.swift`
   - Make popover mode cards compact and active-state forward.
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/SonicFlowPopoverView.swift`
   - Recompose the popover around the same hero hierarchy at macOS density.
 
 No new Swift files are planned, which avoids manual `.pbxproj` edits.
@@ -38,13 +38,13 @@ No new Swift files are planned, which avoids manual `.pbxproj` edits.
 ### Task 1: Add Mode Ritual Presentation Contract
 
 **Files:**
-- Modify: `sonicflow_app/ios-app/FlowTones/FlowMode+UI.swift`
-- Modify: `sonicflow_app/ios-app/FlowTonesTests/FlowModePresentationTests.swift`
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/FlowMode+UI.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlowTests/FlowModePresentationTests.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/FlowMode+UI.swift`
 
 - [ ] **Step 1: Write the failing iOS presentation test**
 
-Add these assertions to `testFlowModePresentationValuesMatchDesignSpec()` in `sonicflow_app/ios-app/FlowTonesTests/FlowModePresentationTests.swift`:
+Add these assertions to `testFlowModePresentationValuesMatchDesignSpec()` in `sonicflow_app/ios-app/SonicFlowTests/FlowModePresentationTests.swift`:
 
 ```swift
 XCTAssertEqual(FlowMode.focus.ritualTitle, "Focus Ritual")
@@ -69,7 +69,7 @@ Expected: FAIL because `ritualTitle` and `ritualSummary` do not exist yet.
 
 - [ ] **Step 3: Add ritual copy to iOS FlowMode presentation**
 
-Add this extension content in `sonicflow_app/ios-app/FlowTones/FlowMode+UI.swift`:
+Add this extension content in `sonicflow_app/ios-app/SonicFlow/FlowMode+UI.swift`:
 
 ```swift
 var ritualTitle: String {
@@ -101,7 +101,7 @@ var ritualSummary: String {
 
 - [ ] **Step 4: Mirror ritual copy for macOS**
 
-Add the same `ritualTitle` and `ritualSummary` computed properties to `sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift`.
+Add the same `ritualTitle` and `ritualSummary` computed properties to `sonicflow_app/safari-extension/SonicFlow/macOS (App)/FlowMode+UI.swift`.
 
 - [ ] **Step 5: Run the focused passing test**
 
@@ -116,7 +116,7 @@ Expected: PASS.
 - [ ] **Step 6: Commit**
 
 ```sh
-git add sonicflow_app/ios-app/FlowTones/FlowMode+UI.swift sonicflow_app/ios-app/FlowTonesTests/FlowModePresentationTests.swift "sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowMode+UI.swift"
+git add sonicflow_app/ios-app/SonicFlow/FlowMode+UI.swift sonicflow_app/ios-app/SonicFlowTests/FlowModePresentationTests.swift "sonicflow_app/safari-extension/SonicFlow/macOS (App)/FlowMode+UI.swift"
 git commit -m "SF-32: add cinematic mode copy"
 ```
 
@@ -125,9 +125,9 @@ git commit -m "SF-32: add cinematic mode copy"
 ### Task 2: Build The iOS Cinematic Hero Surface
 
 **Files:**
-- Modify: `sonicflow_app/ios-app/FlowTones/LeopardBackgroundView.swift`
-- Modify: `sonicflow_app/ios-app/FlowTones/ModeCard.swift`
-- Modify: `sonicflow_app/ios-app/FlowTones/ContentView.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/LeopardBackgroundView.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/ModeCard.swift`
+- Modify: `sonicflow_app/ios-app/SonicFlow/ContentView.swift`
 
 - [ ] **Step 1: Strengthen the iOS leopard background safely**
 
@@ -318,7 +318,7 @@ Expected: PASS.
 - [ ] **Step 8: Commit**
 
 ```sh
-git add sonicflow_app/ios-app/FlowTones/ContentView.swift sonicflow_app/ios-app/FlowTones/LeopardBackgroundView.swift sonicflow_app/ios-app/FlowTones/ModeCard.swift
+git add sonicflow_app/ios-app/SonicFlow/ContentView.swift sonicflow_app/ios-app/SonicFlow/LeopardBackgroundView.swift sonicflow_app/ios-app/SonicFlow/ModeCard.swift
 git commit -m "SF-32: redesign iOS cinematic hero"
 ```
 
@@ -327,9 +327,9 @@ git commit -m "SF-32: redesign iOS cinematic hero"
 ### Task 3: Build The macOS Popover Parity
 
 **Files:**
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/LeopardBackgroundView.swift`
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift`
-- Modify: `sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/LeopardBackgroundView.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/ModeCard.swift`
+- Modify: `sonicflow_app/safari-extension/SonicFlow/macOS (App)/SonicFlowPopoverView.swift`
 
 - [ ] **Step 1: Increase macOS procedural leopard depth**
 
@@ -374,7 +374,7 @@ Update `ModeCard` to use `.thinMaterial`, tighter typography, and active glow:
 
 - [ ] **Step 3: Recompose macOS popover root order**
 
-In `FlowTonesPopoverView.swift`, reorder the main stack to:
+In `SonicFlowPopoverView.swift`, reorder the main stack to:
 
 ```swift
 hero
@@ -471,7 +471,7 @@ Expected: BUILD SUCCEEDED.
 - [ ] **Step 7: Commit**
 
 ```sh
-git add "sonicflow_app/safari-extension/FlowTones/macOS (App)/FlowTonesPopoverView.swift" "sonicflow_app/safari-extension/FlowTones/macOS (App)/LeopardBackgroundView.swift" "sonicflow_app/safari-extension/FlowTones/macOS (App)/ModeCard.swift"
+git add "sonicflow_app/safari-extension/SonicFlow/macOS (App)/SonicFlowPopoverView.swift" "sonicflow_app/safari-extension/SonicFlow/macOS (App)/LeopardBackgroundView.swift" "sonicflow_app/safari-extension/SonicFlow/macOS (App)/ModeCard.swift"
 git commit -m "SF-32: redesign macOS cinematic popover"
 ```
 

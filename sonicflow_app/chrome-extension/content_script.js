@@ -9,7 +9,7 @@ const state = {
   volume: 15
 };
 
-class FlowTonesScheduler {
+class SonicFlowScheduler {
   constructor() {
     this.engine = new BeatEngine();
     this.audioContext = null;
@@ -93,7 +93,7 @@ class FlowTonesScheduler {
   }
 }
 
-const scheduler = new FlowTonesScheduler();
+const scheduler = new SonicFlowScheduler();
 
 function findPrimaryMediaElement() {
   return document.querySelector("video, audio");

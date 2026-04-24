@@ -6,7 +6,6 @@ Version: 0.1.0 · Ticket: SF-23 · Parent: SF-22
 
 - **Company:** Leopard AI
 - **Flagship product:** SonicFlow
-- **Legacy codename in paths / schemes / packages:** FlowTones (do not surface in UI)
 - **Positioning:** Chakra-tuned audio layers that match the user's intended mind state — focus, flow, meditation, sleep.
 
 The brand is dark, warm, and quietly premium. Leopard pattern is a texture, never a character. Chakra colors carry meaning (mode semantics); gold carries identity.

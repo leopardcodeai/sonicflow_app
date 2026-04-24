@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 @Singleton
 class AudioServiceController @Inject constructor(
     @ApplicationContext private val context: Context
-) : FlowTonesSessionController {
+) : SonicFlowSessionController {
 
     private val mutableState = MutableStateFlow(SessionState())
     override val state: StateFlow<SessionState> = mutableState.asStateFlow()

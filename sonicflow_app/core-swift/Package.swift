@@ -3,24 +3,24 @@
 import PackageDescription
 
 let package = Package(
-    name: "FlowTonesCore",
+    name: "SonicFlowCore",
     platforms: [
         .iOS(.v16),
         .macOS(.v13)
     ],
     products: [
         .library(
-            name: "FlowTonesCore",
-            targets: ["FlowTonesCore"]
+            name: "SonicFlowCore",
+            targets: ["SonicFlowCore"]
         )
     ],
     targets: [
         .target(
-            name: "FlowTonesCore"
+            name: "SonicFlowCore"
         ),
         .testTarget(
-            name: "FlowTonesCoreTests",
-            dependencies: ["FlowTonesCore"]
+            name: "SonicFlowCoreTests",
+            dependencies: ["SonicFlowCore"]
         )
     ]
 )
