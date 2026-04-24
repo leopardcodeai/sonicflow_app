@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IOS_PROJECT="$ROOT_DIR/sonicflow_app/ios-app/FlowTones.xcodeproj"
-IOS_SCHEME="FlowTones"
+IOS_PROJECT="$ROOT_DIR/sonicflow_app/ios-app/SonicFlow.xcodeproj"
+IOS_SCHEME="SonicFlow"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
 
@@ -200,7 +200,7 @@ check_step ios_build
 
 run_ios_tests_if_available
 
-run_step mac_build xcodebuild -project "$ROOT_DIR/sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj" -scheme "FlowTones (macOS)" -configuration Debug -destination "generic/platform=macOS" CODE_SIGNING_ALLOWED=NO build
+run_step mac_build xcodebuild -project "$ROOT_DIR/sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj" -scheme "SonicFlow (macOS)" -configuration Debug -destination "generic/platform=macOS" CODE_SIGNING_ALLOWED=NO build
 check_step mac_build
 
 if [[ -z "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" && ! -f "$ROOT_DIR/sonicflow_app/android-app/local.properties" ]]; then

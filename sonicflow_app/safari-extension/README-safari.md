@@ -5,8 +5,7 @@
 Safari wrapper project for the SonicFlow Chrome extension, generated via `safari-web-extension-converter` and pointed at the shared extension sources in `../chrome-extension`.
 
 Public app name: `SonicFlow`.
-Legacy internal codename: `FlowTones`.
-The generated Xcode project, paths, and schemes still use `FlowTones` internally.
+The generated Xcode project, paths, and schemes now use `SonicFlow`.
 
 ## Build And Run
 
@@ -14,8 +13,8 @@ The generated Xcode project, paths, and schemes still use `FlowTones` internally
    - `cd sonicflow_app/chrome-extension`
    - `npm ci`
    - `npx esbuild content_script.js --bundle --outfile=dist/content_script.js`
-2. Open `sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj`
-3. Select either the `FlowTones (iOS)` or `FlowTones (macOS)` app target and a simulator/device
+2. Open `sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj`
+3. Select either the `SonicFlow (iOS)` or `SonicFlow (macOS)` app target and a simulator/device
 4. Build and run from Xcode
 5. When Safari opens, enable the SonicFlow extension in Safari settings
 

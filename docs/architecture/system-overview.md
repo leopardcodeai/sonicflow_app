@@ -8,7 +8,7 @@ This document explains how shared beat-generation cores map into each SonicFlow 
 flowchart TB
     subgraph Shared["Shared Beat Engines"]
         JS["core-js"]
-        SW["core-swift (FlowTonesCore)"]
+        SW["core-swift (SonicFlowCore)"]
         KT["core-android/beatengine"]
     end
 

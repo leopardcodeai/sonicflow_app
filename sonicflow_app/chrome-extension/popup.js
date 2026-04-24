@@ -28,14 +28,14 @@ async function queryActiveTabState() {
 }
 
 async function persistSettings(settings) {
-  await extensionApi.storage.local.set({ flowtonesSettings: settings });
+  await extensionApi.storage.local.set({ sonicflowSettings: settings });
 }
 
 async function loadStoredSettings() {
-  const stored = await extensionApi.storage.local.get("flowtonesSettings");
+  const stored = await extensionApi.storage.local.get("sonicflowSettings");
   return {
     ...DEFAULT_SETTINGS,
-    ...(stored.flowtonesSettings ?? {})
+    ...(stored.sonicflowSettings ?? {})
   };
 }
 

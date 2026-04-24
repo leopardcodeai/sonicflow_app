@@ -83,7 +83,7 @@ check_step android_build
 Add helper logic that uses `xcodebuild -showdestinations` to find an `iPhone 17 Pro` simulator if present, otherwise the first available iOS simulator. If no simulator exists, print a skip reason. When one exists, run:
 
 ```bash
-run_step ios_tests xcodebuild -project "$ROOT_DIR/sonicflow_app/ios-app/FlowTones.xcodeproj" -scheme FlowTones -configuration Debug -destination "$IOS_TEST_DESTINATION" CODE_SIGNING_ALLOWED=NO test
+run_step ios_tests xcodebuild -project "$ROOT_DIR/sonicflow_app/ios-app/SonicFlow.xcodeproj" -scheme SonicFlow -configuration Debug -destination "$IOS_TEST_DESTINATION" CODE_SIGNING_ALLOWED=NO test
 check_step ios_tests
 ```
 

@@ -1,7 +1,7 @@
 package com.sonicflow.app.di
 
 import com.sonicflow.app.audio.AudioServiceController
-import com.sonicflow.app.audio.FlowTonesSessionController
+import com.sonicflow.app.audio.SonicFlowSessionController
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ import javax.inject.Singleton
 abstract class AudioModule {
     @Binds
     @Singleton
-    abstract fun bindFlowTonesController(controller: AudioServiceController): FlowTonesSessionController
+    abstract fun bindSonicFlowController(controller: AudioServiceController): SonicFlowSessionController
 }

@@ -4,7 +4,7 @@
 
 Move the native SonicFlow experience from "dark cards on a leopard wallpaper" to a state-of-the-art **Cinematic Leopard Hero** interface for iOS and macOS.
 
-The redesign should feel more premium, more Apple-native, and more immediately branded while preserving the existing FlowTones session model and audio behavior.
+The redesign should feel more premium, more Apple-native, and more immediately branded while preserving the existing SonicFlow session model and audio behavior.
 
 ## Selected Direction
 
@@ -22,7 +22,7 @@ This direction intentionally prioritizes a memorable brand impression over a den
 
 ### iOS App
 
-Update `sonicflow_app/ios-app/FlowTones`:
+Update `sonicflow_app/ios-app/SonicFlow`:
 
 - `ContentView.swift`
 - `ModeCard.swift`
@@ -31,9 +31,9 @@ Update `sonicflow_app/ios-app/FlowTones`:
 
 ### macOS Menu-Bar App
 
-Update `sonicflow_app/safari-extension/FlowTones/macOS (App)`:
+Update `sonicflow_app/safari-extension/SonicFlow/macOS (App)`:
 
-- `FlowTonesPopoverView.swift`
+- `SonicFlowPopoverView.swift`
 - `ModeCard.swift`
 - `LeopardBackgroundView.swift`
 - new small SwiftUI helper views as needed
@@ -59,7 +59,7 @@ The hero should show:
 - active/off status
 - a short mode-specific sentence
 
-The legacy `FlowTones` name may remain as small runtime/context metadata, but it should not lead the UI.
+The legacy `SonicFlow` name may remain as small runtime/context metadata, but it should not lead the UI.
 
 ### Primary Action
 

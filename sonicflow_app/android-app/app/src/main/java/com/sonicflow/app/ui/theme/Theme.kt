@@ -5,7 +5,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import com.sonicflow.app.brand.BrandTokens
 
-private val FlowTonesDarkScheme = darkColorScheme(
+private val SonicFlowDarkScheme = darkColorScheme(
     primary = BrandTokens.Chakra.throat,
     onPrimary = BrandTokens.Neutral.fg,
     secondary = BrandTokens.Chakra.thirdEye,
@@ -24,9 +24,9 @@ private val FlowTonesDarkScheme = darkColorScheme(
 )
 
 @Composable
-fun FlowTonesTheme(content: @Composable () -> Unit) {
+fun SonicFlowTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = FlowTonesDarkScheme,
+        colorScheme = SonicFlowDarkScheme,
         content = content
     )
 }

@@ -1,8 +1,8 @@
 .PHONY: help chrome safari ios mac mac-smoke android web web-dev test test-core-js test-core-swift test-chrome test-web test-android test-ios verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
-SAFARI_PROJECT := sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj
-IOS_PROJECT := sonicflow_app/ios-app/FlowTones.xcodeproj
+SAFARI_PROJECT := sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj
+IOS_PROJECT := sonicflow_app/ios-app/SonicFlow.xcodeproj
 DIST_CHROME := dist/chrome
 ANDROID_APP_DIR := sonicflow_app/android-app
 CORE_JS_DIR := sonicflow_app/core-js
@@ -42,10 +42,10 @@ safari:
 	open -a Xcode $(SAFARI_PROJECT)
 
 ios:
-	xcodebuild -project $(IOS_PROJECT) -scheme FlowTones -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
+	xcodebuild -project $(IOS_PROJECT) -scheme SonicFlow -configuration Debug -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build
 
 mac: chrome-build-assets
-	xcodebuild -project $(SAFARI_PROJECT) -scheme 'FlowTones (macOS)' -configuration Debug -sdk macosx CODE_SIGNING_ALLOWED=NO build
+	xcodebuild -project $(SAFARI_PROJECT) -scheme 'SonicFlow (macOS)' -configuration Debug -sdk macosx CODE_SIGNING_ALLOWED=NO build
 
 mac-smoke:
 	./scripts/mac_smoke.sh

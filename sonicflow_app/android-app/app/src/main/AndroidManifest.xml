@@ -3,11 +3,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
 
     <application
-        android:name=".FlowTonesApplication"
+        android:name=".SonicFlowApplication"
         android:allowBackup="true"
         android:label="SonicFlow"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FlowTones">
+        android:theme="@style/Theme.SonicFlow">
         <service
             android:name=".audio.AudioService"
             android:enabled="true"

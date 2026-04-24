@@ -9,14 +9,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.sonicflow.app.ui.MainScreen
-import com.sonicflow.app.ui.FlowTonesViewModel
-import com.sonicflow.app.ui.theme.FlowTonesTheme
+import com.sonicflow.app.ui.SonicFlowViewModel
+import com.sonicflow.app.ui.theme.SonicFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: FlowTonesViewModel by viewModels()
+    private val viewModel: SonicFlowViewModel by viewModels()
 
     private val picker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         viewModel.onFileSelected(uri?.toString())
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            FlowTonesTheme {
+            SonicFlowTheme {
                 MainScreen(viewModel)
             }
         }

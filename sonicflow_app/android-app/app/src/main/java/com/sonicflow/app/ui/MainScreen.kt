@@ -37,7 +37,7 @@ import com.sonicflow.beatengine.FlowMode
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: FlowTonesViewModel) {
+fun MainScreen(viewModel: SonicFlowViewModel) {
     val currentMode by viewModel.currentMode.collectAsState()
     val isActive by viewModel.isActive.collectAsState()
     val beatVolume by viewModel.beatVolume.collectAsState()
@@ -89,7 +89,7 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
                     verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.xs.dp)
                 ) {
                     Text(
-                        text = "FlowTones Runtime",
+                        text = "SonicFlow Runtime",
                         style = MaterialTheme.typography.labelMedium,
                         color = BrandTokens.Accent.gold
                     )
@@ -109,7 +109,7 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
                 verticalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.xs.dp)
             ) {
                 Text("Starter Sessions", style = MaterialTheme.typography.titleMedium, color = BrandTokens.Neutral.fg)
-                FlowToneExample.starterPack.forEach { example ->
+                SonicFlowExample.starterPack.forEach { example ->
                     Button(
                         onClick = { viewModel.applyExample(example) },
                         modifier = Modifier.fillMaxWidth()

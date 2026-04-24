@@ -3,8 +3,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SAFARI_PROJECT="sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj"
-SAFARI_SCHEME="FlowTones (macOS)"
+SAFARI_PROJECT="sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj"
+SAFARI_SCHEME="SonicFlow (macOS)"
 
 cd "$ROOT_DIR"
 
