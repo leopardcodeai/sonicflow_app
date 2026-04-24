@@ -40,6 +40,8 @@ struct ContentView: View {
 
                     sessionPanel(for: screenState)
 
+                    overlayCapabilityNote(for: screenState)
+
                     starterPack
 
                     selectedSourceLabel(for: screenState)
@@ -256,6 +258,28 @@ struct ContentView: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(BrandTokens.Neutral.fg)
         }
+    }
+
+    private func overlayCapabilityNote(for screenState: FlowScreenState) -> some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Label(screenState.overlayModeTitle, systemImage: "rectangle.on.rectangle")
+                .font(.headline)
+                .foregroundStyle(BrandTokens.Neutral.fg)
+
+            Text(screenState.overlayModeStatus)
+                .font(.footnote)
+                .foregroundStyle(BrandTokens.Neutral.muted)
+                .fixedSize(horizontal: false, vertical: true)
+
+            metadataPill("Local file layer", tint: screenState.selectedMode.accentColor)
+        }
+        .padding(BrandTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cinematicGlass(
+            radius: 24,
+            tint: screenState.selectedMode.accentColor.opacity(0.07),
+            stroke: Color.white.opacity(0.12)
+        )
     }
 
     private var starterPack: some View {

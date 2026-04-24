@@ -88,6 +88,17 @@ class FlowTonesViewModelTest {
     }
 
     @Test
+    fun `overlay mode status is explicit about Android source capture limits`() = runTest {
+        val controller = FakeController()
+        val viewModel = FlowTonesViewModel(controller)
+
+        assertEquals(
+            "Overlay Mode: Android external app capture requires policy review; local sessions remain available.",
+            viewModel.overlayModeStatus.value
+        )
+    }
+
+    @Test
     fun `applyExample loads starter session settings immediately`() = runTest {
         val controller = FakeController()
         val viewModel = FlowTonesViewModel(controller)

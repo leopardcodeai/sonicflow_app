@@ -225,7 +225,7 @@ class AudioManager: ObservableObject {
     var selectedFileLabel: String {
         switch selectedSource {
         case .system:
-            return "System layer"
+            return "Overlay layer"
         case .file:
             return "File layer"
         }

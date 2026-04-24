@@ -42,6 +42,11 @@ class FlowTonesViewModel @Inject constructor(
     private val mutableSelectedFile = MutableStateFlow<String?>(null)
     val selectedFile: StateFlow<String?> = mutableSelectedFile.asStateFlow()
 
+    private val mutableOverlayModeStatus = MutableStateFlow(
+        "Overlay Mode: Android external app capture requires policy review; local sessions remain available."
+    )
+    val overlayModeStatus: StateFlow<String> = mutableOverlayModeStatus.asStateFlow()
+
     private val mutableFilePickerEvents = MutableSharedFlow<Unit>()
     val filePickerEvents: SharedFlow<Unit> = mutableFilePickerEvents.asSharedFlow()
 

@@ -1,5 +1,5 @@
 import { extensionApi } from "./browser-polyfill.js";
-import { DEFAULT_SETTINGS, EXAMPLES, MODES } from "./popup-model.js";
+import { DEFAULT_SETTINGS, EXAMPLES, MODES, OVERLAY_SOURCES, resolveOverlayStatus } from "./popup-model.js";
 
 async function queryActiveTabState() {
   const { tabId } = await extensionApi.runtime.sendMessage({
@@ -96,6 +96,28 @@ function updateHero(settings) {
   heroDescription.textContent = `${activeMode.description} ${settings.durationMinutes} minute browser-safe layer with ${settings.ambientMix}% ambience and ${settings.pulseDepth}% pulse depth.`;
 }
 
+function renderOverlaySources(settings, tabState) {
+  const sourceList = document.querySelector("#overlay-source-list");
+  const sourceStatus = document.querySelector("#overlay-source-status");
+  const overlayStatus = resolveOverlayStatus(tabState);
+
+  sourceList.replaceChildren();
+  for (const source of OVERLAY_SOURCES) {
+    const item = document.createElement("button");
+    item.type = "button";
+    item.className = `source-pill${settings.overlaySource === source.id ? " active" : ""}`;
+    item.dataset.overlaySource = source.id;
+    item.innerHTML = `
+      <span>${source.label}</span>
+      <small>${source.status}</small>
+    `;
+    item.title = source.description;
+    sourceList.append(item);
+  }
+
+  sourceStatus.textContent = overlayStatus.message;
+}
+
 function renderState(settings, tabState) {
   const dot = document.querySelector("#status-dot");
   const statusText = document.querySelector("#status-text");
@@ -112,6 +134,7 @@ function renderState(settings, tabState) {
 
   renderModeGrid(settings);
   renderExamples(settings);
+  renderOverlaySources(settings, tabState);
   updateHero(settings);
   volumeSlider.value = String(settings.volume);
   volumeValue.textContent = String(settings.volume);
@@ -124,19 +147,18 @@ function renderState(settings, tabState) {
 
   if (!tabState) {
     statusText.textContent = "Unavailable";
-    pageMessage.textContent = "Open a supported YouTube or SoundCloud tab first.";
+    pageMessage.textContent = resolveOverlayStatus(null).message;
     toggleButton.disabled = true;
     return;
   }
 
+  const overlayStatus = resolveOverlayStatus(tabState);
   dot.classList.toggle("active", settings.active);
   statusText.textContent = settings.active ? "Active" : "Off";
-  toggleButton.disabled = !tabState.pageHasAudioSource;
+  toggleButton.disabled = !overlayStatus.ready;
   toggleButton.classList.toggle("stop", settings.active);
   toggleButton.textContent = settings.active ? "Stop SonicFlow" : "Start SonicFlow";
-  pageMessage.textContent = tabState.pageHasAudioSource
-    ? "Media element detected. Ready to layer the selected mode."
-    : "Open YouTube or SoundCloud first.";
+  pageMessage.textContent = overlayStatus.message;
 }
 
 async function bootstrap() {
@@ -174,6 +196,17 @@ async function bootstrap() {
     settings.pulseDepth = example.pulseDepth;
     await persistSettings(settings);
     await pushStateToTab(settings).catch(() => null);
+    renderState(settings, tabState);
+  });
+
+  document.querySelector("#overlay-source-list").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-overlay-source]");
+    if (!button) {
+      return;
+    }
+
+    settings.overlaySource = button.dataset.overlaySource;
+    await persistSettings(settings);
     renderState(settings, tabState);
   });
 

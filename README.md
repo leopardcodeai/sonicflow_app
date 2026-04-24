@@ -70,11 +70,11 @@ soundhealing_sonicflow/
 
 | Platform | Runtime/UI status | Audio source path | System audio capture | Notes |
 |---|---|---|---|---|
-| Chrome extension | FlowTones-style popup with preset-first controls, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe shell only. No native render/export promises. |
+| Chrome extension | FlowTones-style popup with preset-first controls, Overlay Mode, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe overlay for tabs with media elements. No native render/export promises. |
 | Safari extension (web shell) | Leopard-backed FlowTones-style wrapper messaging | Web extension runtime shell | No dedicated system capture path | Mirrors product language, but native-only features belong in the app targets. |
-| iOS app | Native FlowTones settings model plus upgraded screen state and advanced controls | Local file + generated beat layer | No | Closest parity target for the standalone FlowTones runtime. |
-| macOS app | Leopard-native menu-bar popover with starter sessions, preset metadata, and advanced controls | Local file + generated beat layer | Partial/limited | Native app now mirrors the preset-first FlowTones direction more closely than the Safari web shell. |
-| Android app | FlowTones-style session model in ViewModel/service path plus advanced controls in Compose | Local session/service + generated beat layer | No | Duration, ambient mix, and pulse depth currently travel as session metadata; synthesis parity is still incremental. |
+| iOS app | Native FlowTones settings model plus upgraded screen state, Overlay Mode status, and advanced controls | Local file + generated beat layer | No | Spotify/YouTube system overlay is unavailable; picked files remain the local overlay path. |
+| macOS app | Leopard-native menu-bar popover with starter sessions, Overlay Mode, preset metadata, and advanced controls | Local file/system capture + generated beat layer | Partial/limited | Native app exposes permitted system overlay capture with file fallback. |
+| Android app | FlowTones-style session model in ViewModel/service path plus Overlay Mode status and advanced controls in Compose | Local session/service + generated beat layer | No | External app capture needs platform/store policy review; local sessions remain available. |
 
 ## Brand Asset Usage
 
@@ -163,7 +163,7 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 
 ## Known Limitations
 
-- iOS and Android targets do not implement Spotify/system-output capture in this repository.
+- iOS and Android targets do not implement Spotify/system-output capture in this repository; their Overlay Mode copy calls out local-session support and policy limits.
 - Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
 - Browser shells expose FlowTones-style controls, but they do not yet offer native offline render/export or cache flows.
 - Android currently carries `durationMinutes`, `ambientMix`, and `pulseDepth` through the session model and UI, but the underlying audio engine is not yet feature-parity with the Apple-native runtime.
