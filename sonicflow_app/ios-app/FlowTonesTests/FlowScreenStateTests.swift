@@ -15,6 +15,11 @@ final class FlowScreenStateTests: XCTestCase {
         XCTAssertEqual(state.transportLabel, "Play")
         XCTAssertEqual(state.selectedMode, FlowMode.flow)
         XCTAssertEqual(state.durationLabel, "25 min")
+        XCTAssertEqual(state.overlayModeTitle, "Overlay Mode")
+        XCTAssertEqual(
+            state.overlayModeStatus,
+            "iOS can layer SonicFlow under picked files. Spotify and YouTube system overlay are unavailable on iOS."
+        )
         XCTAssertTrue(state.showsAdvancedControls)
     }
 

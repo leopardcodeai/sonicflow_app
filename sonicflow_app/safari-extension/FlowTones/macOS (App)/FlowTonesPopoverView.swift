@@ -147,7 +147,7 @@ struct FlowTonesPopoverView: View {
             .tint(audioManager.currentMode.accentColor)
 
             Picker("Source", selection: $audioManager.selectedSource) {
-                Text("System").tag(AudioSource.system)
+                Text("Overlay").tag(AudioSource.system)
                 Text("File").tag(AudioSource.file)
             }
             .labelsHidden()
@@ -309,6 +309,10 @@ struct FlowTonesPopoverView: View {
 
     private var sourceCluster: some View {
         VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            Text("Overlay Mode")
+                .font(.headline)
+                .foregroundStyle(BrandTokens.Neutral.fg)
+
             sourceSection
 
             sourceStatus
@@ -326,7 +330,7 @@ struct FlowTonesPopoverView: View {
         switch audioManager.selectedSource {
         case .system:
             VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
-                Text(audioManager.canCaptureSystemAudio ? "System capture ready" : "System capture needs macOS 14.2")
+                Text(audioManager.canCaptureSystemAudio ? "macOS system overlay ready" : "Overlay capture needs macOS 14.2")
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(
                         audioManager.canCaptureSystemAudio
@@ -336,7 +340,7 @@ struct FlowTonesPopoverView: View {
                 Text("Permission: \(audioManager.systemAudioPermissionStatus)")
                     .font(.caption)
                     .foregroundStyle(BrandTokens.Neutral.muted)
-                Button("Start Capture") {
+                Button("Start Overlay Capture") {
                     audioManager.startSystemAudioCapture()
                 }
                 .buttonStyle(.bordered)

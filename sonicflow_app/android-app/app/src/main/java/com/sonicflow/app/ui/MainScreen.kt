@@ -45,6 +45,7 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
     val ambientMix by viewModel.ambientMix.collectAsState()
     val pulseDepth by viewModel.pulseDepth.collectAsState()
     val selectedFile by viewModel.selectedFile.collectAsState()
+    val overlayModeStatus by viewModel.overlayModeStatus.collectAsState()
 
     val accent = currentMode.modeColor
 
@@ -195,6 +196,12 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
             Button(onClick = viewModel::pickFile, modifier = Modifier.fillMaxWidth()) {
                 Text(if (selectedFile.isNullOrBlank()) "Pick file" else "Change file")
             }
+
+            AssistChip(
+                onClick = {},
+                label = { Text(overlayModeStatus) },
+                modifier = Modifier.fillMaxWidth()
+            )
 
             Button(
                 onClick = { if (isActive) viewModel.stopSession() else viewModel.startSession() },

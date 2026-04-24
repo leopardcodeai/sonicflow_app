@@ -67,8 +67,50 @@ export const EXAMPLES = [
   }
 ];
 
+export const OVERLAY_SOURCES = [
+  {
+    id: "browser-tab",
+    label: "Browser tab",
+    status: "Available",
+    description: "Layer SonicFlow under YouTube, SoundCloud, and pages with audio or video."
+  },
+  {
+    id: "macos-system",
+    label: "macOS system",
+    status: "Native app",
+    description: "Use the macOS app for permitted system audio capture."
+  },
+  {
+    id: "ios-local",
+    label: "iOS local",
+    status: "Local only",
+    description: "Picked files can layer with SonicFlow. Spotify and YouTube capture are unavailable."
+  },
+  {
+    id: "android-policy-review",
+    label: "Android",
+    status: "Policy review",
+    description: "External app capture needs platform and store policy review."
+  }
+];
+
+export function resolveOverlayStatus(tabState) {
+  if (tabState?.pageHasAudioSource) {
+    return {
+      ready: true,
+      message: "Overlay ready for this browser tab."
+    };
+  }
+
+  return {
+    ready: false,
+    message: "Open YouTube, SoundCloud, or another supported media tab first."
+  };
+}
+
 export const DEFAULT_SETTINGS = {
   mode: "focus",
+  overlaySource: "browser-tab",
   volume: 15,
   active: false,
   durationMinutes: 25,

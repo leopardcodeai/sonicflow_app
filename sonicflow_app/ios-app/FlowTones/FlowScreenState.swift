@@ -7,6 +7,8 @@ struct FlowScreenState: Equatable {
     let selectedMode: FlowMode
     let durationLabel: String
     let selectedFileLabel: String
+    let overlayModeTitle: String
+    let overlayModeStatus: String
     let ambientMixValue: Double
     let pulseDepthValue: Double
     let showsAdvancedControls: Bool
@@ -22,6 +24,8 @@ struct FlowScreenState: Equatable {
         selectedMode = mode
         durationLabel = "\(settings.durationMinutes) min"
         selectedFileLabel = selectedFileName ?? "No file selected"
+        overlayModeTitle = "Overlay Mode"
+        overlayModeStatus = "iOS can layer SonicFlow under picked files. Spotify and YouTube system overlay are unavailable on iOS."
         ambientMixValue = settings.ambientMix
         pulseDepthValue = settings.pulseDepth
         showsAdvancedControls = true
