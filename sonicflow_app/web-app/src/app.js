@@ -11,13 +11,30 @@ import {
   selectProductMode,
   setDurationMinutes
 } from "./sessionModel.js";
+import {
+  GENRES,
+  INTENSITIES,
+  createPersonalizationProfile,
+  deriveSessionDefaults,
+  updateProfilePreferences
+} from "./personalizationModel.js";
 
 const STORAGE_KEY = "sonicflowWebSession";
+const PROFILE_STORAGE_KEY = "sonicflowPersonalizationProfile";
+const QUIZ_STORAGE_KEY = "sonicflowPersonalizationAnswers";
 const CHUNK_SECONDS = 10;
 const SAMPLE_RATE = 44100;
+const DEFAULT_QUIZ_ANSWERS = {
+  focusPattern: "deep-work",
+  attentionSupport: "standard",
+  sensitivity: "balanced",
+  genre: "lo-fi"
+};
 
 const app = document.querySelector("#app");
 let player;
+let profile;
+let quizAnswers;
 let state;
 
 app.addEventListener("click", async (event) => {
@@ -69,6 +86,39 @@ app.addEventListener("input", async (event) => {
     state = { ...state, volume: Number(event.target.value) };
     player.updateVolume(state.volume);
     persistState();
+    render();
+  }
+});
+
+app.addEventListener("change", async (event) => {
+  if (event.target.matches("[data-quiz-answer]")) {
+    quizAnswers = {
+      ...quizAnswers,
+      [event.target.dataset.quizAnswer]: event.target.value
+    };
+    profile = createPersonalizationProfile(quizAnswers);
+    state = deriveSessionDefaults(state, profile);
+    await syncPlayback();
+    persistAll();
+    render();
+    return;
+  }
+
+  if (event.target.matches("[data-profile-genre]")) {
+    quizAnswers = { ...quizAnswers, genre: event.target.value };
+    profile = updateProfilePreferences(profile, { genre: event.target.value });
+    state = deriveSessionDefaults(state, profile);
+    await syncPlayback();
+    persistAll();
+    render();
+    return;
+  }
+
+  if (event.target.matches("[data-profile-intensity]")) {
+    profile = updateProfilePreferences(profile, { defaultIntensity: event.target.value });
+    state = deriveSessionDefaults(state, profile);
+    await syncPlayback();
+    persistAll();
     render();
   }
 });
@@ -155,6 +205,52 @@ function render() {
         </div>
       </div>
 
+      <div class="glass-panel profile-panel">
+        <div>
+          <p class="eyebrow">Personalization</p>
+          <strong>${formatNeurotype(profile.neurotype)}</strong>
+        </div>
+        <div class="profile-grid">
+          <label>
+            <span>Focus pattern</span>
+            <select data-quiz-answer="focusPattern">
+              ${option("deep-work", "Deep work", quizAnswers.focusPattern)}
+              ${option("distractible", "Distractible", quizAnswers.focusPattern)}
+              ${option("creative-block", "Creative block", quizAnswers.focusPattern)}
+              ${option("stress", "Stress", quizAnswers.focusPattern)}
+              ${option("low-energy", "Low energy", quizAnswers.focusPattern)}
+            </select>
+          </label>
+          <label>
+            <span>Attention support</span>
+            <select data-quiz-answer="attentionSupport">
+              ${option("standard", "Standard", quizAnswers.attentionSupport)}
+              ${option("adhd-self-reported", "ADHD self-reported", quizAnswers.attentionSupport)}
+            </select>
+          </label>
+          <label>
+            <span>Sensitivity</span>
+            <select data-quiz-answer="sensitivity">
+              ${option("gentle", "Gentle", quizAnswers.sensitivity)}
+              ${option("balanced", "Balanced", quizAnswers.sensitivity)}
+              ${option("strong", "Strong", quizAnswers.sensitivity)}
+            </select>
+          </label>
+          <label>
+            <span>Genre</span>
+            <select data-profile-genre>
+              ${GENRES.map((genre) => option(genre, formatGenre(genre), profile.genre)).join("")}
+            </select>
+          </label>
+          <label>
+            <span>Default intensity</span>
+            <select data-profile-intensity>
+              ${INTENSITIES.map((intensity) => option(intensity, intensity, profile.defaultIntensity)).join("")}
+            </select>
+          </label>
+        </div>
+      </div>
+
       <div class="glass-panel overlay-panel">
         <div>
           <p class="eyebrow">Overlay Mode</p>
@@ -173,14 +269,40 @@ function render() {
 function loadState() {
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "null");
-    return stored ? { ...createInitialSessionState(), ...stored, isPlaying: false } : createInitialSessionState();
+    return stored
+      ? { ...deriveSessionDefaults(createInitialSessionState(), profile), ...stored, isPlaying: false }
+      : deriveSessionDefaults(createInitialSessionState(), profile);
   } catch {
-    return createInitialSessionState();
+    return deriveSessionDefaults(createInitialSessionState(), profile);
   }
 }
 
-function persistState() {
+function loadQuizAnswers() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(QUIZ_STORAGE_KEY) ?? "null");
+    return stored ? { ...DEFAULT_QUIZ_ANSWERS, ...stored } : DEFAULT_QUIZ_ANSWERS;
+  } catch {
+    return DEFAULT_QUIZ_ANSWERS;
+  }
+}
+
+function loadProfile(answers) {
+  try {
+    const stored = JSON.parse(localStorage.getItem(PROFILE_STORAGE_KEY) ?? "null");
+    return stored ?? createPersonalizationProfile(answers);
+  } catch {
+    return createPersonalizationProfile(answers);
+  }
+}
+
+function persistAll() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...state, isPlaying: false }));
+  localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+  localStorage.setItem(QUIZ_STORAGE_KEY, JSON.stringify(quizAnswers));
+}
+
+function persistState() {
+  persistAll();
 }
 
 function formatCapability(capability) {
@@ -191,6 +313,24 @@ function formatCapability(capability) {
     return "Extension required";
   }
   return capability;
+}
+
+function formatGenre(genre) {
+  return genre
+    .split("-")
+    .map((part) => `${part[0].toUpperCase()}${part.slice(1)}`)
+    .join("-");
+}
+
+function formatNeurotype(neurotype) {
+  return neurotype
+    .split("-")
+    .map((part) => `${part[0].toUpperCase()}${part.slice(1)}`)
+    .join(" ");
+}
+
+function option(value, label, selectedValue) {
+  return `<option value="${value}" ${value === selectedValue ? "selected" : ""}>${label}</option>`;
 }
 
 function registerServiceWorker() {
@@ -303,6 +443,8 @@ player = new SonicFlowPlayer({
   }
 });
 
+quizAnswers = loadQuizAnswers();
+profile = loadProfile(quizAnswers);
 state = loadState();
 render();
 registerServiceWorker();
