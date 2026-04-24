@@ -16,5 +16,13 @@ final class FlowModePresentationTests: XCTestCase {
         XCTAssertEqual(FlowMode.sleep.displayName, "Sleep")
         XCTAssertEqual(FlowMode.sleep.accentColorHex, "#534AB7")
         XCTAssertEqual(FlowMode.sleep.shortDescription, "Delta deep rest")
+        XCTAssertEqual(FlowMode.focus.ritualTitle, "Focus Ritual")
+        XCTAssertEqual(FlowMode.flow.ritualTitle, "Flow Ritual")
+        XCTAssertEqual(FlowMode.meditation.ritualTitle, "Meditation Ritual")
+        XCTAssertEqual(FlowMode.sleep.ritualTitle, "Sleep Ritual")
+        XCTAssertEqual(FlowMode.focus.ritualSummary, "Gamma clarity for deep work and bright attention.")
+        XCTAssertEqual(FlowMode.flow.ritualSummary, "Alpha momentum for creative rhythm and smooth concentration.")
+        XCTAssertEqual(FlowMode.meditation.ritualSummary, "Theta spaciousness for breath, stillness, and recovery.")
+        XCTAssertEqual(FlowMode.sleep.ritualSummary, "Delta softness for slow unwinding and rest.")
     }
 }

@@ -6,19 +6,40 @@ struct LeopardBackgroundView: View {
             Image("LeopardWallpaper")
                 .resizable()
                 .scaledToFill()
-                .overlay(Color.black.opacity(0.38))
+                .saturation(1.16)
+                .contrast(1.08)
+                .overlay(Color.black.opacity(0.2))
 
-            Rectangle()
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color.black.opacity(0.08),
-                            Color.black.opacity(0.5)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
+            LinearGradient(
+                colors: [
+                    Color.black.opacity(0.05),
+                    BrandTokens.Neutral.ink.opacity(0.52),
+                    Color.black.opacity(0.82)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            RadialGradient(
+                colors: [
+                    BrandTokens.Accent.gold.opacity(0.26),
+                    Color.clear
+                ],
+                center: .topTrailing,
+                startRadius: 16,
+                endRadius: 320
+            )
+
+            RadialGradient(
+                colors: [
+                    BrandTokens.Mode.focus.opacity(0.18),
+                    Color.clear
+                ],
+                center: .bottomLeading,
+                startRadius: 12,
+                endRadius: 280
+            )
+            .blendMode(.screen)
         }
     }
 }

@@ -2,29 +2,69 @@ import SwiftUI
 
 /// Procedural leopard-print background layer.
 ///
-/// Generated from `BrandTokens.Leopard.*`. Deterministic spot placement — same
-/// layout every render, no motion. Always intended to sit BEHIND a blurred panel
-/// per brand rules (see `brand/BRAND.md`).
+/// Generated from `BrandTokens.Leopard.*`. Deterministic spot placement keeps
+/// the popover stable while the gradients preserve text contrast above it.
 struct LeopardBackgroundView: View {
     var body: some View {
-        Canvas { context, size in
-            let spots = LeopardBackgroundView.spots(in: size)
-            for spot in spots {
-                let rect = CGRect(
-                    x: spot.center.x - spot.radius,
-                    y: spot.center.y - spot.radius,
-                    width: spot.radius * 2,
-                    height: spot.radius * 2
-                )
-                context.fill(
-                    Path(ellipseIn: rect),
-                    with: .color(BrandTokens.Leopard.spot)
-                )
+        ZStack {
+            Canvas { context, size in
+                let spots = LeopardBackgroundView.spots(in: size)
+                for spot in spots {
+                    let ringRect = CGRect(
+                        x: spot.center.x - spot.radius,
+                        y: spot.center.y - spot.radius,
+                        width: spot.radius * 2,
+                        height: spot.radius * 2
+                    )
+                    let innerInset = spot.radius * 0.22
+                    let innerRect = ringRect.insetBy(dx: innerInset, dy: innerInset * 0.72)
+
+                    context.fill(
+                        Path(ellipseIn: ringRect),
+                        with: .color(BrandTokens.Leopard.ring.opacity(0.62))
+                    )
+                    context.fill(
+                        Path(ellipseIn: innerRect),
+                        with: .color(BrandTokens.Leopard.spot.opacity(0.82))
+                    )
+                }
             }
+            .opacity(0.32)
+            .blur(radius: BrandTokens.Leopard.blurRadius)
+            .blendMode(.screen)
+
+            LinearGradient(
+                colors: [
+                    Color.black.opacity(0.04),
+                    BrandTokens.Neutral.ink.opacity(0.52),
+                    Color.black.opacity(0.84)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            RadialGradient(
+                colors: [
+                    BrandTokens.Accent.gold.opacity(0.3),
+                    Color.clear
+                ],
+                center: .topTrailing,
+                startRadius: 18,
+                endRadius: 260
+            )
+
+            RadialGradient(
+                colors: [
+                    BrandTokens.Mode.focus.opacity(0.18),
+                    Color.clear
+                ],
+                center: .bottomLeading,
+                startRadius: 12,
+                endRadius: 240
+            )
+            .blendMode(.screen)
         }
         .background(BrandTokens.Leopard.base)
-        .opacity(BrandTokens.Leopard.opacity)
-        .blur(radius: BrandTokens.Leopard.blurRadius)
     }
 
     // MARK: - Deterministic spot layout

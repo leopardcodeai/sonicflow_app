@@ -27,6 +27,32 @@ extension FlowMode {
         }
     }
 
+    var ritualTitle: String {
+        switch self {
+        case .focus:
+            return "Focus Ritual"
+        case .flow:
+            return "Flow Ritual"
+        case .meditation:
+            return "Meditation Ritual"
+        case .sleep:
+            return "Sleep Ritual"
+        }
+    }
+
+    var ritualSummary: String {
+        switch self {
+        case .focus:
+            return "Gamma clarity for deep work and bright attention."
+        case .flow:
+            return "Alpha momentum for creative rhythm and smooth concentration."
+        case .meditation:
+            return "Theta spaciousness for breath, stillness, and recovery."
+        case .sleep:
+            return "Delta softness for slow unwinding and rest."
+        }
+    }
+
     var accentColor: Color {
         switch self {
         case .focus:
