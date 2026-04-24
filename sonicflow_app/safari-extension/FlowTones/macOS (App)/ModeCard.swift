@@ -7,9 +7,21 @@ struct ModeCard: View {
 
     var body: some View {
         Button(action: onTap) {
-            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs + 2) {
+                HStack {
+                    Circle()
+                        .fill(mode.accentColor)
+                        .frame(width: 7, height: 7)
+                    Spacer()
+                    if isSelected {
+                        Image(systemName: "checkmark.circle.fill")
+                            .font(.caption.weight(.bold))
+                            .foregroundStyle(mode.accentColor)
+                    }
+                }
+
                 Text(mode.displayName)
-                    .font(.headline)
+                    .font(.headline.weight(.semibold))
                     .foregroundStyle(BrandTokens.Neutral.fg)
                 Text("\(Int(mode.beatHz)) Hz")
                     .font(.caption.weight(.medium))
@@ -19,24 +31,24 @@ struct ModeCard: View {
                     .foregroundStyle(BrandTokens.Neutral.muted)
                     .lineLimit(1)
             }
-            .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
+            .frame(maxWidth: .infinity, minHeight: isSelected ? 92 : 76, alignment: .leading)
             .padding(BrandTokens.Spacing.md)
-            .background(BrandTokens.Neutral.panel)
+            .background(.thinMaterial, in: RoundedRectangle(cornerRadius: BrandTokens.Radius.lg, style: .continuous))
             .overlay(
-                RoundedRectangle(cornerRadius: BrandTokens.Radius.md)
+                RoundedRectangle(cornerRadius: BrandTokens.Radius.lg, style: .continuous)
                     .stroke(
-                        isSelected ? mode.accentColor : BrandTokens.Neutral.border,
+                        isSelected ? mode.accentColor : Color.white.opacity(0.14),
                         lineWidth: isSelected ? 2 : 1
                     )
             )
-            .clipShape(RoundedRectangle(cornerRadius: BrandTokens.Radius.md))
+            .clipShape(RoundedRectangle(cornerRadius: BrandTokens.Radius.lg, style: .continuous))
             .shadow(
-                color: isSelected ? mode.accentColor : Color.clear,
-                radius: isSelected ? 24 : 0
+                color: isSelected ? mode.accentColor.opacity(0.36) : .clear,
+                radius: 24
             )
             .shadow(
-                color: isSelected ? mode.accentColor.opacity(0.3) : Color.clear,
-                radius: isSelected ? 64 : 0
+                color: isSelected ? mode.accentColor.opacity(0.2) : .clear,
+                radius: 56
             )
         }
         .buttonStyle(.plain)
