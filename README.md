@@ -157,6 +157,7 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 - [Team workflow](docs/guides/github-workflow.md)
 - [Linear + GitHub process automation](docs/guides/linear-github-process.md)
 - [Codex automation prompts/instructions](docs/guides/codex-automation-prompts.md)
+- [Brain.fm parity gap audit](docs/competitive/brainfm-parity-gap-audit.md)
 - [Historical execution notes](docs/reports/execution-log.md)
 - [Current status snapshot](STATUS.md)
 
