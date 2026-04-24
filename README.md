@@ -71,6 +71,7 @@ soundhealing_sonicflow/
 | Platform | Runtime/UI status | Audio source path | System audio capture | Notes |
 |---|---|---|---|---|
 | Chrome extension | FlowTones-style popup with preset-first controls, Overlay Mode, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe overlay for tabs with media elements. No native render/export promises. |
+| Web app / PWA | Standalone SonicFlow sessions with Focus/Relax/Sleep/Meditate taxonomy, activity defaults, Pomodoro, infinite sleep, and intensity controls | Generated beat layer via shared JS beat engine | Browser-specific/extension-assisted | Browser app runs local generated sessions. Browser-tab overlay copy stays honest about extension/API permission limits. |
 | Safari extension (web shell) | Leopard-backed FlowTones-style wrapper messaging | Web extension runtime shell | No dedicated system capture path | Mirrors product language, but native-only features belong in the app targets. |
 | iOS app | Native FlowTones settings model plus upgraded screen state, Overlay Mode status, and advanced controls | Local file + generated beat layer | No | Spotify/YouTube system overlay is unavailable; picked files remain the local overlay path. |
 | macOS app | Leopard-native menu-bar popover with starter sessions, Overlay Mode, preset metadata, and advanced controls | Local file/system capture + generated beat layer | Partial/limited | Native app exposes permitted system overlay capture with file fallback. |
@@ -106,11 +107,13 @@ make ios
 make mac
 make mac-smoke
 make android
+make web-dev
 make test
 make verify
 ```
 
 `make chrome` copies unpacked extension artifacts to `dist/chrome/`.
+`make web-dev` serves the PWA at `http://localhost:53124/sonicflow_app/web-app/`.
 
 ## Development Checks
 
@@ -122,6 +125,7 @@ make verify
 - Android unit tests: `make test-android`
 - iOS app tests: `make test-ios`
 - Chrome popup upgrade slice: `cd sonicflow_app/chrome-extension && node --test popup.test.js`
+- Web app slice: `make test-web`
 - Android session model slice: `cd sonicflow_app/android-app && ./gradlew --console=plain :app:testDebugUnitTest --tests 'com.sonicflow.app.ui.FlowTonesViewModelTest'`
 - iOS focused test gate: `make test-ios`
 - macOS menu-bar smoke gate: `make mac-smoke`
@@ -168,4 +172,5 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 - iOS and Android targets do not implement Spotify/system-output capture in this repository; their Overlay Mode copy calls out local-session support and policy limits.
 - Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
 - Browser shells expose FlowTones-style controls, but they do not yet offer native offline render/export or cache flows.
+- Web Overlay Mode is capability-gated: standalone generated sessions work in the PWA, while browser-tab overlay may require the SonicFlow extension or browser-specific capture permissions.
 - Android currently carries `durationMinutes`, `ambientMix`, and `pulseDepth` through the session model and UI, but the underlying audio engine is not yet feature-parity with the Apple-native runtime.

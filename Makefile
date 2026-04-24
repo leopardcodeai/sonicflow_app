@@ -1,4 +1,4 @@
-.PHONY: help chrome safari ios mac mac-smoke android test test-core-js test-core-swift test-chrome test-android test-ios verify clean-dist chrome-build-assets
+.PHONY: help chrome safari ios mac mac-smoke android web web-dev test test-core-js test-core-swift test-chrome test-web test-android test-ios verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
 SAFARI_PROJECT := sonicflow_app/safari-extension/FlowTones/FlowTones.xcodeproj
@@ -7,6 +7,7 @@ DIST_CHROME := dist/chrome
 ANDROID_APP_DIR := sonicflow_app/android-app
 CORE_JS_DIR := sonicflow_app/core-js
 CORE_SWIFT_DIR := sonicflow_app/core-swift
+WEB_APP_DIR := sonicflow_app/web-app
 
 help:
 	@echo "SonicFlow monorepo targets:"
@@ -16,10 +17,13 @@ help:
 	@echo "  make mac             Build macOS app target"
 	@echo "  make mac-smoke       Build and launch the macOS menu-bar app"
 	@echo "  make android         Build Android debug APK"
+	@echo "  make web            Run web app tests"
+	@echo "  make web-dev        Start the local SonicFlow web app server"
 	@echo "  make test            Run focused test suites across configured platforms"
 	@echo "  make test-core-js    Run JS core tests"
 	@echo "  make test-core-swift Run Swift core tests"
 	@echo "  make test-chrome     Run Chrome extension tests"
+	@echo "  make test-web        Run web app tests"
 	@echo "  make test-android    Run Android unit tests when SDK/Java are configured"
 	@echo "  make test-ios        Run iOS app tests when a simulator is available"
 	@echo "  make verify          Run warning audit across supported platforms"
@@ -57,6 +61,11 @@ android:
 		exit 1; \
 	fi
 
+web: test-web
+
+web-dev:
+	npm --prefix $(WEB_APP_DIR) run dev
+
 test-core-js:
 	npm --prefix $(CORE_JS_DIR) test
 
@@ -65,6 +74,9 @@ test-core-swift:
 
 test-chrome:
 	cd $(CHROME_DIR) && npm ci && npm test
+
+test-web:
+	npm --prefix $(WEB_APP_DIR) test
 
 test-android:
 	@if [ -x $(ANDROID_APP_DIR)/gradlew ] && { [ -n "$${ANDROID_HOME:-$${ANDROID_SDK_ROOT:-}}" ] || [ -f $(ANDROID_APP_DIR)/local.properties ]; } && command -v java >/dev/null 2>&1; then \
@@ -76,7 +88,7 @@ test-android:
 test-ios:
 	./scripts/check_warnings.sh --ios-tests
 
-test: test-core-js test-core-swift test-chrome test-android test-ios
+test: test-core-js test-core-swift test-chrome test-web test-android test-ios
 
 verify:
 	./scripts/check_warnings.sh
