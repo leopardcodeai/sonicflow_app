@@ -24,9 +24,10 @@ class BeatEngine(
             val carrier = sin(2.0 * PI * profile.carrierHz * timeSeconds)
             val leftModulation = amplitudeModulation(profile, timeSeconds, phaseOffset = 0.0)
             val rightModulation = amplitudeModulation(profile, timeSeconds, profile.stereoPhaseOffset)
+            val spatialGains = spatialGains(profile, timeSeconds)
             val envelope = envelopeAt(frame, totalFrames, fadeFrames)
-            val leftSample = toPcmSample(carrier * leftModulation * AMPLITUDE * profile.outputGain * envelope)
-            val rightSample = toPcmSample(carrier * rightModulation * AMPLITUDE * profile.outputGain * envelope)
+            val leftSample = toPcmSample(carrier * leftModulation * AMPLITUDE * profile.outputGain * envelope * spatialGains.first)
+            val rightSample = toPcmSample(carrier * rightModulation * AMPLITUDE * profile.outputGain * envelope * spatialGains.second)
             val offset = frame * 2
 
             pcm[offset] = leftSample
@@ -63,6 +64,17 @@ class BeatEngine(
     private fun amplitudeModulation(profile: ModulationProfile, timeSeconds: Double, phaseOffset: Double): Double {
         val lfo = 0.5 + 0.5 * sin((2.0 * PI * profile.targetBeatHz * timeSeconds) + phaseOffset)
         return (1.0 - profile.modulationDepth) + (profile.modulationDepth * lfo)
+    }
+
+    private fun spatialGains(profile: ModulationProfile, timeSeconds: Double): Pair<Double, Double> {
+        val spatial = profile.sleepSpatialization
+        if (!spatial.enabled) {
+            return 1.0 to 1.0
+        }
+
+        val pan = spatial.panDepth * sin(2.0 * PI * spatial.rockingHz * timeSeconds)
+        val normalizer = 1.0 + spatial.panDepth
+        return ((1.0 - pan) / normalizer) to ((1.0 + pan) / normalizer)
     }
 
     private fun toPcmSample(sample: Double): Short {

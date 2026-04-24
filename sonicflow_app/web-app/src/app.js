@@ -5,10 +5,15 @@ import {
   SESSION_TIMERS
 } from "../../chrome-extension/popup-model.js";
 import {
+  createFeedbackEvent,
   createInitialSessionState,
+  resolveScienceClaim,
+  scoreAttentionTask,
   detectOverlayCapability,
   selectActivity,
   selectProductMode,
+  setResearchCondition,
+  setSleepSpatialization,
   setDurationMinutes
 } from "./sessionModel.js";
 import {
@@ -60,6 +65,52 @@ app.addEventListener("click", async (event) => {
   if (intensityButton) {
     state = { ...state, intensity: intensityButton.dataset.intensity };
     await syncPlayback();
+    persistState();
+    render();
+    return;
+  }
+
+  const spatializationButton = event.target.closest("[data-sleep-spatialization]");
+  if (spatializationButton) {
+    state = setSleepSpatialization(state, spatializationButton.dataset.sleepSpatialization);
+    await syncPlayback();
+    persistState();
+    render();
+    return;
+  }
+
+  const researchButton = event.target.closest("[data-research-condition]");
+  if (researchButton) {
+    state = setResearchCondition(state, researchButton.dataset.researchCondition);
+    await syncPlayback();
+    persistState();
+    render();
+    return;
+  }
+
+  const feedbackButton = event.target.closest("[data-feedback]");
+  if (feedbackButton) {
+    state = {
+      ...state,
+      lastFeedbackEvent: createFeedbackEvent(state, {
+        effectiveness: Number(feedbackButton.dataset.feedback),
+        calm: Number(feedbackButton.dataset.feedback)
+      })
+    };
+    persistState();
+    render();
+    return;
+  }
+
+  if (event.target.closest("[data-attention-check]")) {
+    state = {
+      ...state,
+      lastAttentionEvent: scoreAttentionTask(state, [
+        { correct: true, reactionMs: 410 },
+        { correct: true, reactionMs: 390 },
+        { correct: state.researchCondition !== "control", reactionMs: 520 }
+      ])
+    };
     persistState();
     render();
     return;
@@ -136,6 +187,7 @@ function render() {
   const activeTimer = SESSION_TIMERS[state.timerId];
   const engineMode = ENGINE_MODES[state.engineMode];
   const capability = detectOverlayCapability(window);
+  const scienceClaim = resolveScienceClaim({ requestedClaim: "efficacy", evidenceValidated: false });
   const elapsedSeconds = player.elapsedSeconds;
   const progress = state.durationMinutes === null
     ? 100
@@ -203,6 +255,13 @@ function render() {
             </button>
           `).join("")}
         </div>
+        <div class="intensity-row spatialization-row" aria-label="Sleep spatialization">
+          ${["off", "low", "medium", "high"].map((level) => `
+            <button type="button" class="${state.sleepSpatialization === level ? "active" : ""}" data-sleep-spatialization="${level}" ${state.productMode !== "sleep" ? "disabled" : ""}>
+              ${level}
+            </button>
+          `).join("")}
+        </div>
       </div>
 
       <div class="glass-panel profile-panel">
@@ -260,6 +319,27 @@ function render() {
         <div class="capability-grid">
           <span>Standalone <b>${capability.standaloneSessions}</b></span>
           <span>PWA <b>${capability.installablePwa}</b></span>
+        </div>
+      </div>
+
+      <div class="glass-panel research-panel">
+        <div>
+          <p class="eyebrow">Research gate</p>
+          <strong>${scienceClaim.allowed ? "Claim allowed" : "Claim blocked"}</strong>
+        </div>
+        <p>${scienceClaim.copy}</p>
+        <div class="intensity-row" aria-label="Research condition">
+          ${["modulated", "control"].map((condition) => `
+            <button type="button" class="${state.researchCondition === condition ? "active" : ""}" data-research-condition="${condition}">
+              ${condition}
+            </button>
+          `).join("")}
+        </div>
+        <div class="feedback-row" aria-label="Subjective efficacy feedback">
+          ${[1, 2, 3, 4, 5].map((rating) => `
+            <button type="button" data-feedback="${rating}">${rating}</button>
+          `).join("")}
+          <button type="button" data-attention-check>Focus check</button>
         </div>
       </div>
     </section>
@@ -391,7 +471,11 @@ class SonicFlowPlayer {
       this.sessionState.engineMode,
       CHUNK_SECONDS,
       SAMPLE_RATE,
-      { intensity: this.sessionState.intensity }
+      {
+        intensity: this.sessionState.intensity,
+        researchCondition: this.sessionState.researchCondition,
+        sleepSpatialization: this.sessionState.sleepSpatialization
+      }
     );
     const frameCount = pcm.length / 2;
     const buffer = this.audioContext.createBuffer(2, frameCount, SAMPLE_RATE);

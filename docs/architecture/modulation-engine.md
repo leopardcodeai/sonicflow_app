@@ -27,12 +27,45 @@ The shared low/medium/high intensity model controls:
 
 Default legacy rendering remains stereo-mirrored for backward compatibility. Profile-based rendering can use independent left/right amplitude modulation while staying bounded by the engine amplitude ceiling.
 
+## Sleep Spatialization
+
+Sleep profiles can add a slow stereo rocking layer that gently shifts gain between
+left and right channels without raising peak amplitude beyond the engine ceiling.
+The layer is sleep-only and has four explicit states:
+
+- off: no spatial movement
+- low: light movement for sensitive sessions
+- medium: default sleep movement
+- high: stronger rocking for headphone/speaker QA
+
+Non-sleep modes always resolve this layer to `off`, even if a caller asks for a
+sleep spatialization level.
+
+## Research Controls
+
+The engine and web app now expose a `modulated` vs `control` research condition.
+`control` sessions keep the same mode routing and carrier frequencies while
+setting modulation depth and stereo phase offset to zero. That gives analytics
+and future studies an unmodulated comparison path without changing the user flow.
+
+The web app can emit research-shaped events for:
+
+- session start/end metadata
+- subjective efficacy/calm feedback
+- lightweight attention checks with accuracy and mean correct reaction time
+
+Public-facing efficacy language remains blocked unless the claim is backed by
+validated evidence or a formal research partnership.
+
 ## Stability Guarantees
 
 Unit tests cover:
 
 - target beat/carrier frequencies
 - intensity ordering and modulation depth
+- sleep-only spatialization levels and bounded stereo rocking
+- control-session modulation disablement
+- subjective feedback, attention checks, and science-claim gating
 - fade-in/fade-out behavior
 - bounded high-intensity stereo output
 - long-session finite sample generation and silent loop endpoints

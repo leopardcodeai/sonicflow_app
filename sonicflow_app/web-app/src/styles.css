@@ -161,7 +161,8 @@ h1 {
 
 .taxonomy-panel,
 .controls-panel,
-.overlay-panel {
+.overlay-panel,
+.research-panel {
   padding: 14px;
 }
 
@@ -173,7 +174,8 @@ h1 {
 }
 
 .segmented button,
-.intensity-row button {
+.intensity-row button,
+.feedback-row button {
   min-height: 40px;
   border: 1px solid rgba(245, 247, 251, 0.12);
   border-radius: 8px;
@@ -187,6 +189,11 @@ h1 {
   background: var(--accent-gold);
   border-color: transparent;
   font-weight: 800;
+}
+
+.intensity-row button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .activity-list {
@@ -214,7 +221,8 @@ h1 {
 }
 
 .activity span,
-.overlay-panel p {
+.overlay-panel p,
+.research-panel p {
   color: rgba(245, 247, 251, 0.68);
 }
 
@@ -243,16 +251,28 @@ input[type="range"]:disabled {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.spatialization-row {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .overlay-panel,
-.profile-panel {
+.profile-panel,
+.research-panel {
   display: grid;
   gap: 14px;
 }
 
 .profile-panel strong,
-.overlay-panel strong {
+.overlay-panel strong,
+.research-panel strong {
   display: block;
   font-size: 1.35rem;
+}
+
+.feedback-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 7px;
 }
 
 .profile-grid {
@@ -300,6 +320,7 @@ select {
 
   .activity-list,
   .segmented,
+  .feedback-row,
   .profile-grid {
     grid-template-columns: 1fr;
   }
@@ -313,14 +334,16 @@ select {
   .transport,
   .activity,
   .segmented button,
-  .intensity-row button {
+  .intensity-row button,
+  .feedback-row button {
     transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
   }
 
   .transport:hover,
   .activity:hover,
   .segmented button:hover,
-  .intensity-row button:hover {
+  .intensity-row button:hover,
+  .feedback-row button:hover {
     transform: translateY(-1px);
   }
 }

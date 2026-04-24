@@ -36,14 +36,14 @@ Primary references:
 | Four functional modes | Focus, Flow, Meditation, Sleep exist across core JS, core Swift, iOS, macOS, Chrome, and Android surfaces. | Partial. Brain.fm names Relax instead of Flow; Flow is currently alpha productivity, not explicitly relaxation. |
 | Target frequency bands | Gamma 40 Hz, alpha 10 Hz, theta 6 Hz, delta 2 Hz are implemented in shared engines. | Partial. Bands exist, but there is no richer mode taxonomy or activity sub-mode mapping. |
 | Direct amplitude modulation | JS and Swift engines apply amplitude modulation to generated stereo PCM. | Partial. Current left/right channels are identical and simple sinusoidal modulation; no independent channel design, temporal patterning, frequency shaping, or sub-perceptual calibration. |
-| Session controls | Duration, ambient mix, pulse depth, beat volume, starter sessions, source/file controls exist in native surfaces. | Partial. No Pomodoro intervals, infinite sleep mode, session history, or efficacy feedback loop. |
+| Session controls | Duration, ambient mix, pulse depth, beat volume, starter sessions, source/file controls, Pomodoro, infinite sleep, and web feedback/check events exist. | Partial. Session history and aggregate reporting remain future work. |
 | External audio overlay | Chrome can layer over web-tab audio; macOS has partial system/source capture; iOS and Android do not yet expose a complete Spotify/YouTube overlay mode. | Partial. This should become a first-class "Overlay Mode" across platforms where OS rules allow it. |
 | Web app / PWA | Browser extension exists; standalone web app is tracked in Linear SF-34 but not implemented in the repo. | Missing. Needed for Brain.fm-style web availability and standalone browser sessions. |
 | Personalization | No onboarding quiz, neurotype, genre preference, or intensity defaults. | Missing. |
 | Genre/activity selection | Starter sessions exist; genres do not. | Missing for Brain.fm-level parity. |
 | Offline access | README explicitly says browser shells do not offer native offline render/export/cache flows. | Missing. Mobile offline should be prioritized before desktop offline. |
-| Sleep spatialization | No 3D rocking/cradling spatial effect. | Missing. |
-| Research validation | No placebo-control framework, attention task, EEG/fMRI partnership tracking, or claims gate. | Missing and should stay blocked from public claims until evidence exists. |
+| Sleep spatialization | Shared JS, Swift, and Kotlin cores expose sleep-only slow stereo rocking with off/low/medium/high levels and bounded output tests. | Partial. Needs platform UI rollout beyond the web app and speaker/headphone QA. |
+| Research validation | Web app exposes modulated/control sessions, subjective feedback, lightweight attention checks, and a public science-claim gate. | Partial. EEG/fMRI partnership tracking, aggregate reporting, and validated evidence are still missing. |
 | Platform coverage | Browser, iOS, macOS, Android exist. | Mostly present. Product depth varies by platform. |
 | Monetization | No subscription/paywall plan in app surfaces. | Missing, but not required before core functional parity. |
 
@@ -111,22 +111,22 @@ Mobile should support offline sessions first:
 
 Add a sleep-specific spatial layer:
 
-- slow stereo pan / 3D rocking profile
-- low-distraction movement curve
-- no abrupt dynamic shifts
-- speaker and headphone QA
-- disable/soften spatialization at low intensity
+- slow stereo pan / 3D rocking profile: implemented in shared JS, Swift, and Kotlin cores
+- low-distraction movement curve: implemented as slow 0.04 Hz rocking
+- no abrupt dynamic shifts: covered by bounded synthesis tests
+- speaker and headphone QA: still required
+- disable/soften spatialization at low intensity: supported through off/low/medium/high levels
 
 ### 6. Scientific Validation and Claims Gate
 
 Build the measurement layer before strong claims:
 
-- placebo/unmodulated control sessions
-- sustained-attention task integration
-- subjective efficacy feedback
+- placebo/unmodulated control sessions: implemented in shared engines/web model
+- sustained-attention task integration: lightweight web attention check implemented
+- subjective efficacy feedback: implemented in web model
 - anonymous aggregate reporting
 - formal research-partnership tracker
-- marketing copy gate: only claim what evidence supports
+- marketing copy gate: implemented as a blocked/validated/wellness claim resolver
 
 ### 7. External Audio Overlay Mode
 

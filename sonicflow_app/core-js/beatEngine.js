@@ -51,6 +51,29 @@ export const NEURAL_INTENSITIES = {
   }
 };
 
+export const SLEEP_SPATIALIZATION = {
+  off: {
+    enabled: false,
+    rockingHz: 0,
+    panDepth: 0
+  },
+  low: {
+    enabled: true,
+    rockingHz: 0.04,
+    panDepth: 0.12
+  },
+  medium: {
+    enabled: true,
+    rockingHz: 0.04,
+    panDepth: 0.28
+  },
+  high: {
+    enabled: true,
+    rockingHz: 0.04,
+    panDepth: 0.48
+  }
+};
+
 export const MODULATION_PROFILES = {
   focus: {
     mode: "focus",
@@ -83,24 +106,55 @@ function resolveMode(mode) {
 }
 
 export function resolveModulationProfile(programOrMode, intensity = "medium") {
+  const options = normalizeProfileOptions(intensity);
   const profile = MODULATION_PROFILES[programOrMode] ?? profileForMode(programOrMode);
-  const intensityProfile = NEURAL_INTENSITIES[intensity];
+  const intensityProfile = NEURAL_INTENSITIES[options.intensity];
 
   if (!profile) {
     throw new Error(`Unknown modulation profile: ${programOrMode}`);
   }
 
   if (!intensityProfile) {
-    throw new Error(`Unknown neural intensity: ${intensity}`);
+    throw new Error(`Unknown neural intensity: ${options.intensity}`);
   }
+
+  const researchCondition = options.researchCondition === "control" ? "control" : "modulated";
+  const modulationDepth = researchCondition === "control" ? 0 : intensityProfile.modulationDepth;
+  const stereoPhaseOffset = researchCondition === "control" ? 0 : intensityProfile.stereoPhaseOffset;
 
   return {
     ...profile,
-    intensity,
-    modulationDepth: intensityProfile.modulationDepth,
+    intensity: options.intensity,
+    researchCondition,
+    modulationDepth,
     outputGain: intensityProfile.outputGain,
-    stereoPhaseOffset: intensityProfile.stereoPhaseOffset
+    stereoPhaseOffset,
+    sleepSpatialization: resolveSleepSpatialization(profile.mode, options.sleepSpatialization)
   };
+}
+
+function normalizeProfileOptions(intensityOrOptions) {
+  if (typeof intensityOrOptions === "string") {
+    return {
+      intensity: intensityOrOptions,
+      researchCondition: "modulated",
+      sleepSpatialization: "off"
+    };
+  }
+
+  return {
+    intensity: intensityOrOptions?.intensity ?? "medium",
+    researchCondition: intensityOrOptions?.researchCondition ?? "modulated",
+    sleepSpatialization: intensityOrOptions?.sleepSpatialization ?? "off"
+  };
+}
+
+function resolveSleepSpatialization(mode, requestedLevel) {
+  if (mode !== "sleep") {
+    return SLEEP_SPATIALIZATION.off;
+  }
+
+  return SLEEP_SPATIALIZATION[requestedLevel] ?? SLEEP_SPATIALIZATION.off;
 }
 
 function profileForMode(mode) {
@@ -152,7 +206,7 @@ function envelopeAt(index, totalFrames, fadeFrames) {
 export class BeatEngine {
   generate(mode, durationSeconds, sampleRate = DEFAULT_SAMPLE_RATE, options = null) {
     const profile = options
-      ? resolveModulationProfile(mode, options.intensity ?? "medium")
+      ? resolveModulationProfile(mode, options)
       : legacyProfile(mode);
     const totalFrames = Math.max(0, Math.floor(durationSeconds * sampleRate));
     const interleaved = new Float32Array(totalFrames * 2);
@@ -163,11 +217,12 @@ export class BeatEngine {
       const carrier = Math.sin(2 * Math.PI * profile.carrierHz * time);
       const leftModulation = amplitudeModulation(profile, time, 0);
       const rightModulation = amplitudeModulation(profile, time, profile.stereoPhaseOffset);
+      const [leftSpatialGain, rightSpatialGain] = spatialGains(profile, time);
       const envelope = envelopeAt(frame, totalFrames, fadeFrames);
       const offset = frame * 2;
 
-      interleaved[offset] = carrier * leftModulation * DEFAULT_AMPLITUDE * profile.outputGain * envelope;
-      interleaved[offset + 1] = carrier * rightModulation * DEFAULT_AMPLITUDE * profile.outputGain * envelope;
+      interleaved[offset] = carrier * leftModulation * DEFAULT_AMPLITUDE * profile.outputGain * envelope * leftSpatialGain;
+      interleaved[offset + 1] = carrier * rightModulation * DEFAULT_AMPLITUDE * profile.outputGain * envelope * rightSpatialGain;
     }
 
     return interleaved;
@@ -177,4 +232,18 @@ export class BeatEngine {
 function amplitudeModulation(profile, time, phaseOffset) {
   const lfo = 0.5 + 0.5 * Math.sin((2 * Math.PI * profile.targetBeatHz * time) + phaseOffset);
   return (1 - profile.modulationDepth) + (profile.modulationDepth * lfo);
+}
+
+function spatialGains(profile, time) {
+  const spatial = profile.sleepSpatialization ?? SLEEP_SPATIALIZATION.off;
+  if (!spatial.enabled) {
+    return [1, 1];
+  }
+
+  const pan = spatial.panDepth * Math.sin(2 * Math.PI * spatial.rockingHz * time);
+  const normalizer = 1 + spatial.panDepth;
+  return [
+    (1 - pan) / normalizer,
+    (1 + pan) / normalizer
+  ];
 }

@@ -28,6 +28,29 @@ final class BeatEngineTests: XCTestCase {
         XCTAssertEqual(meditate.targetBeatHz, 6, accuracy: 0.0001)
     }
 
+    func testSleepSpatializationProfilesScaleRockingDepthByIntensity() {
+        let off = ModulationProfile.program(.sleep, intensity: .high, sleepSpatialization: .off)
+        let low = ModulationProfile.program(.sleep, intensity: .low, sleepSpatialization: .low)
+        let medium = ModulationProfile.program(.sleep, intensity: .medium, sleepSpatialization: .medium)
+        let high = ModulationProfile.program(.sleep, intensity: .high, sleepSpatialization: .high)
+        let focus = ModulationProfile.program(.focus, intensity: .high, sleepSpatialization: .high)
+
+        XCTAssertFalse(off.sleepSpatialization.enabled)
+        XCTAssertFalse(focus.sleepSpatialization.enabled)
+        XCTAssertLessThan(low.sleepSpatialization.panDepth, medium.sleepSpatialization.panDepth)
+        XCTAssertLessThan(medium.sleepSpatialization.panDepth, high.sleepSpatialization.panDepth)
+        XCTAssertEqual(high.sleepSpatialization.rockingHz, 0.04, accuracy: 0.0001)
+    }
+
+    func testControlConditionDisablesModulationWithoutChangingModeRouting() {
+        let control = ModulationProfile.program(.focus, intensity: .high, researchCondition: .control)
+
+        XCTAssertEqual(control.researchCondition, .control)
+        XCTAssertEqual(control.mode, .focus)
+        XCTAssertEqual(control.modulationDepth, 0, accuracy: 0.0001)
+        XCTAssertEqual(control.stereoPhaseOffset, 0, accuracy: 0.0001)
+    }
+
     func testGenerateProducesStereoPCMBufferWithExpectedFrameCount() throws {
         let engine = BeatEngine()
         let buffer = try engine.generate(mode: .focus, durationSeconds: 10, sampleRate: 1_000)
@@ -76,6 +99,27 @@ final class BeatEngineTests: XCTestCase {
 
         XCTAssertGreaterThan(accumulatedDifference, 0.01)
         XCTAssertLessThanOrEqual(peak, BeatEngine.amplitude + 0.000001)
+    }
+
+    func testSleepSpatializationAddsSlowStereoRockingWhileStayingBounded() throws {
+        let engine = BeatEngine()
+        let plain = try engine.generate(
+            profile: .program(.sleep, intensity: .high, sleepSpatialization: .off),
+            durationSeconds: 30,
+            sampleRate: 1_000
+        )
+        let spatial = try engine.generate(
+            profile: .program(.sleep, intensity: .high, sleepSpatialization: .high),
+            durationSeconds: 30,
+            sampleRate: 1_000
+        )
+
+        let plainDelta = abs(channelBalance(in: 5_000..<8_000, buffer: plain) - channelBalance(in: 15_000..<18_000, buffer: plain))
+        let spatialDelta = abs(channelBalance(in: 5_000..<8_000, buffer: spatial) - channelBalance(in: 15_000..<18_000, buffer: spatial))
+
+        XCTAssertGreaterThan(spatialDelta, plainDelta + 0.005)
+        XCTAssertLessThanOrEqual(peakAmplitude(in: 5_000..<18_000, channel: spatial.floatChannelData![0]), BeatEngine.amplitude + 0.000001)
+        XCTAssertLessThanOrEqual(peakAmplitude(in: 5_000..<18_000, channel: spatial.floatChannelData![1]), BeatEngine.amplitude + 0.000001)
     }
 
     func testLongRenderedLoopsRemainFiniteAndFadeToSilence() throws {
@@ -132,5 +176,13 @@ final class BeatEngineTests: XCTestCase {
         range.reduce(0) { currentPeak, index in
             max(currentPeak, abs(channel[index]))
         }
+    }
+
+    private func channelBalance(in range: Range<Int>, buffer: AVAudioPCMBuffer) -> Float {
+        let left = buffer.floatChannelData![0]
+        let right = buffer.floatChannelData![1]
+        return range.reduce(0) { total, index in
+            total + abs(right[index]) - abs(left[index])
+        } / Float(range.count)
     }
 }
