@@ -18,6 +18,29 @@ test("exports independent modulation profiles and intensity depths", () => {
   assert.equal(resolveModulationProfile("meditate", "high").targetBeatHz, 6);
 });
 
+test("sleep spatialization profiles scale rocking depth by intensity", () => {
+  const off = resolveModulationProfile("sleep", { intensity: "high", sleepSpatialization: "off" });
+  const low = resolveModulationProfile("sleep", { intensity: "low", sleepSpatialization: "low" });
+  const medium = resolveModulationProfile("sleep", { intensity: "medium", sleepSpatialization: "medium" });
+  const high = resolveModulationProfile("sleep", { intensity: "high", sleepSpatialization: "high" });
+  const focus = resolveModulationProfile("focus", { intensity: "high", sleepSpatialization: "high" });
+
+  assert.equal(off.sleepSpatialization.enabled, false);
+  assert.equal(focus.sleepSpatialization.enabled, false);
+  assert.ok(low.sleepSpatialization.panDepth < medium.sleepSpatialization.panDepth);
+  assert.ok(medium.sleepSpatialization.panDepth < high.sleepSpatialization.panDepth);
+  assert.equal(high.sleepSpatialization.rockingHz, 0.04);
+});
+
+test("control research condition disables modulation without changing mode routing", () => {
+  const control = resolveModulationProfile("focus", { intensity: "high", researchCondition: "control" });
+
+  assert.equal(control.researchCondition, "control");
+  assert.equal(control.mode, "focus");
+  assert.equal(control.modulationDepth, 0);
+  assert.equal(control.stereoPhaseOffset, 0);
+});
+
 test("generates stereo interleaved float32 PCM for a known duration", () => {
   const engine = new BeatEngine();
   const sampleRate = 100;
@@ -55,6 +78,27 @@ test("high intensity uses independent stereo modulation while staying bounded", 
 
   assert.ok(accumulatedDifference > 0.01);
   assert.ok(peak <= 0.120001);
+});
+
+test("sleep spatialization adds slow stereo rocking while staying bounded", () => {
+  const engine = new BeatEngine();
+  const sampleRate = 1000;
+  const plain = engine.generate("sleep", 30, sampleRate, {
+    intensity: "high",
+    sleepSpatialization: "off"
+  });
+  const spatial = engine.generate("sleep", 30, sampleRate, {
+    intensity: "high",
+    sleepSpatialization: "high"
+  });
+
+  const earlySpatialBalance = channelBalance(spatial, 5 * sampleRate, 3 * sampleRate);
+  const lateSpatialBalance = channelBalance(spatial, 15 * sampleRate, 3 * sampleRate);
+  const earlyPlainBalance = channelBalance(plain, 5 * sampleRate, 3 * sampleRate);
+  const latePlainBalance = channelBalance(plain, 15 * sampleRate, 3 * sampleRate);
+
+  assert.ok(Math.abs(earlySpatialBalance - lateSpatialBalance) > Math.abs(earlyPlainBalance - latePlainBalance) + 0.005);
+  assert.ok(maxAbs(spatial) <= 0.120001);
 });
 
 test("long rendered loops remain finite and fade to silence", () => {
@@ -108,4 +152,16 @@ function peakChannel(pcm, startFrame, frameCount) {
     peak = Math.max(peak, Math.abs(pcm[frame * 2]));
   }
   return peak;
+}
+
+function channelBalance(pcm, startFrame, frameCount) {
+  let total = 0;
+  for (let frame = startFrame; frame < startFrame + frameCount; frame += 1) {
+    total += Math.abs(pcm[(frame * 2) + 1]) - Math.abs(pcm[frame * 2]);
+  }
+  return total / frameCount;
+}
+
+function maxAbs(pcm) {
+  return pcm.reduce((peak, sample) => Math.max(peak, Math.abs(sample)), 0);
 }

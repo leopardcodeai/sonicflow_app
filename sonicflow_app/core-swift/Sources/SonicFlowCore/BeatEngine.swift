@@ -90,27 +90,68 @@ public enum ModulationProgram: String, CaseIterable, Sendable {
     }
 }
 
+public enum ResearchCondition: String, Sendable {
+    case modulated
+    case control
+}
+
+public enum SleepSpatializationLevel: String, Sendable {
+    case off
+    case low
+    case medium
+    case high
+
+    var profile: SleepSpatializationProfile {
+        switch self {
+        case .off:
+            return SleepSpatializationProfile(enabled: false, rockingHz: 0, panDepth: 0)
+        case .low:
+            return SleepSpatializationProfile(enabled: true, rockingHz: 0.04, panDepth: 0.12)
+        case .medium:
+            return SleepSpatializationProfile(enabled: true, rockingHz: 0.04, panDepth: 0.28)
+        case .high:
+            return SleepSpatializationProfile(enabled: true, rockingHz: 0.04, panDepth: 0.48)
+        }
+    }
+}
+
+public struct SleepSpatializationProfile: Equatable, Sendable {
+    public let enabled: Bool
+    public let rockingHz: Double
+    public let panDepth: Double
+}
+
 public struct ModulationProfile: Equatable, Sendable {
     public let program: ModulationProgram?
     public let mode: FlowMode
     public let intensity: NeuralIntensity
+    public let researchCondition: ResearchCondition
     public let targetBeatHz: Double
     public let carrierHz: Double
     public let modulationDepth: Double
     public let outputGain: Double
     public let stereoPhaseOffset: Double
+    public let sleepSpatialization: SleepSpatializationProfile
 
-    public static func program(_ program: ModulationProgram, intensity: NeuralIntensity) -> Self {
+    public static func program(
+        _ program: ModulationProgram,
+        intensity: NeuralIntensity,
+        researchCondition: ResearchCondition = .modulated,
+        sleepSpatialization: SleepSpatializationLevel = .off
+    ) -> Self {
         let mode = program.mode
+        let isControl = researchCondition == .control
         return Self(
             program: program,
             mode: mode,
             intensity: intensity,
+            researchCondition: researchCondition,
             targetBeatHz: mode.beatHz,
             carrierHz: mode.carrierHz,
-            modulationDepth: intensity.modulationDepth,
+            modulationDepth: isControl ? 0 : intensity.modulationDepth,
             outputGain: intensity.outputGain,
-            stereoPhaseOffset: intensity.stereoPhaseOffset
+            stereoPhaseOffset: isControl ? 0 : intensity.stereoPhaseOffset,
+            sleepSpatialization: mode == .sleep ? sleepSpatialization.profile : SleepSpatializationLevel.off.profile
         )
     }
 
@@ -119,11 +160,13 @@ public struct ModulationProfile: Equatable, Sendable {
             program: nil,
             mode: mode,
             intensity: .high,
+            researchCondition: .modulated,
             targetBeatHz: mode.beatHz,
             carrierHz: mode.carrierHz,
             modulationDepth: 1,
             outputGain: 1,
-            stereoPhaseOffset: 0
+            stereoPhaseOffset: 0,
+            sleepSpatialization: SleepSpatializationLevel.off.profile
         )
     }
 }
@@ -172,10 +215,11 @@ public struct BeatEngine: Sendable {
             let carrier = sin(2 * Double.pi * profile.carrierHz * time)
             let leftModulation = amplitudeModulation(profile: profile, time: time, phaseOffset: 0)
             let rightModulation = amplitudeModulation(profile: profile, time: time, phaseOffset: profile.stereoPhaseOffset)
+            let spatialGain = spatialGains(profile: profile, time: time)
             let envelope = envelope(at: frame, totalFrames: frameCount, fadeFrames: fadeFrames)
 
-            channelData[0][frame] = Float(carrier * leftModulation) * Self.amplitude * Float(profile.outputGain) * envelope
-            channelData[1][frame] = Float(carrier * rightModulation) * Self.amplitude * Float(profile.outputGain) * envelope
+            channelData[0][frame] = Float(carrier * leftModulation) * Self.amplitude * Float(profile.outputGain) * envelope * spatialGain.left
+            channelData[1][frame] = Float(carrier * rightModulation) * Self.amplitude * Float(profile.outputGain) * envelope * spatialGain.right
         }
 
         return buffer
@@ -205,6 +249,20 @@ public struct BeatEngine: Sendable {
     private func amplitudeModulation(profile: ModulationProfile, time: Double, phaseOffset: Double) -> Double {
         let lfo = 0.5 + 0.5 * sin((2 * Double.pi * profile.targetBeatHz * time) + phaseOffset)
         return (1 - profile.modulationDepth) + (profile.modulationDepth * lfo)
+    }
+
+    private func spatialGains(profile: ModulationProfile, time: Double) -> (left: Float, right: Float) {
+        let spatial = profile.sleepSpatialization
+        guard spatial.enabled else {
+            return (1, 1)
+        }
+
+        let pan = spatial.panDepth * sin(2 * Double.pi * spatial.rockingHz * time)
+        let normalizer = 1 + spatial.panDepth
+        return (
+            Float((1 - pan) / normalizer),
+            Float((1 + pan) / normalizer)
+        )
     }
 }
 

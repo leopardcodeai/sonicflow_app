@@ -36,6 +36,31 @@ class BeatEngineTest {
     }
 
     @Test
+    fun `sleep spatialization profiles scale rocking depth by intensity`() {
+        val off = ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.HIGH, sleepSpatialization = SleepSpatializationLevel.OFF)
+        val low = ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.LOW, sleepSpatialization = SleepSpatializationLevel.LOW)
+        val medium = ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.MEDIUM, sleepSpatialization = SleepSpatializationLevel.MEDIUM)
+        val high = ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.HIGH, sleepSpatialization = SleepSpatializationLevel.HIGH)
+        val focus = ModulationProfile.program(ModulationProgram.FOCUS, NeuralIntensity.HIGH, sleepSpatialization = SleepSpatializationLevel.HIGH)
+
+        assertEquals(false, off.sleepSpatialization.enabled)
+        assertEquals(false, focus.sleepSpatialization.enabled)
+        assertTrue(low.sleepSpatialization.panDepth < medium.sleepSpatialization.panDepth)
+        assertTrue(medium.sleepSpatialization.panDepth < high.sleepSpatialization.panDepth)
+        assertEquals(0.04, high.sleepSpatialization.rockingHz, 0.0001)
+    }
+
+    @Test
+    fun `control condition disables modulation without changing mode routing`() {
+        val control = ModulationProfile.program(ModulationProgram.FOCUS, NeuralIntensity.HIGH, researchCondition = ResearchCondition.CONTROL)
+
+        assertEquals(ResearchCondition.CONTROL, control.researchCondition)
+        assertEquals(FlowMode.FOCUS, control.mode)
+        assertEquals(0.0, control.modulationDepth, 0.0001)
+        assertEquals(0.0, control.stereoPhaseOffset, 0.0001)
+    }
+
+    @Test
     fun `generatePCM returns stereo interleaved 16-bit PCM with the expected length`() {
         val engine = BeatEngine()
 
@@ -83,6 +108,28 @@ class BeatEngineTest {
 
         assertTrue(accumulatedDifference > 100)
         assertTrue(peak <= (Short.MAX_VALUE * 0.120001).toInt())
+    }
+
+    @Test
+    fun `sleep spatialization adds slow stereo rocking while staying bounded`() {
+        val engine = BeatEngine()
+        val sampleRate = 1000
+        val plain = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.HIGH, sleepSpatialization = SleepSpatializationLevel.OFF),
+            durationSeconds = 30.0,
+            sampleRate = sampleRate
+        )
+        val spatial = engine.generatePCM(
+            ModulationProfile.program(ModulationProgram.SLEEP, NeuralIntensity.HIGH, sleepSpatialization = SleepSpatializationLevel.HIGH),
+            durationSeconds = 30.0,
+            sampleRate = sampleRate
+        )
+
+        val plainDelta = kotlin.math.abs(channelBalance(plain, 5 * sampleRate, 3 * sampleRate) - channelBalance(plain, 15 * sampleRate, 3 * sampleRate))
+        val spatialDelta = kotlin.math.abs(channelBalance(spatial, 5 * sampleRate, 3 * sampleRate) - channelBalance(spatial, 15 * sampleRate, 3 * sampleRate))
+
+        assertTrue(spatialDelta > plainDelta + 10)
+        assertTrue(spatial.maxOf { kotlin.math.abs(it.toInt()) } <= (Short.MAX_VALUE * 0.120001).toInt())
     }
 
     @Test
@@ -157,6 +204,14 @@ private fun peakChannel(pcm: ShortArray, startFrame: Int, frameCount: Int): Int 
         peak = maxOf(peak, kotlin.math.abs(pcm[frame * 2].toInt()))
     }
     return peak
+}
+
+private fun channelBalance(pcm: ShortArray, startFrame: Int, frameCount: Int): Double {
+    var total = 0.0
+    for (frame in startFrame until startFrame + frameCount) {
+        total += kotlin.math.abs(pcm[frame * 2 + 1].toInt()) - kotlin.math.abs(pcm[frame * 2].toInt())
+    }
+    return total / frameCount
 }
 
 private class RecordingPcmPlayer : PcmPlayer {
