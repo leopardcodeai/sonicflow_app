@@ -243,14 +243,32 @@ input[type="range"]:disabled {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.overlay-panel {
+.overlay-panel,
+.profile-panel {
   display: grid;
   gap: 14px;
 }
 
+.profile-panel strong,
 .overlay-panel strong {
   display: block;
   font-size: 1.35rem;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+select {
+  min-height: 40px;
+  width: 100%;
+  border: 1px solid rgba(245, 247, 251, 0.14);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--neutral-fg);
+  background: rgba(10, 10, 11, 0.62);
 }
 
 .capability-grid {
@@ -281,7 +299,8 @@ input[type="range"]:disabled {
   }
 
   .activity-list,
-  .segmented {
+  .segmented,
+  .profile-grid {
     grid-template-columns: 1fr;
   }
 

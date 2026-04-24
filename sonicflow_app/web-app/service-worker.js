@@ -4,6 +4,7 @@ const CACHE_URLS = [
   "./index.html",
   "./manifest.webmanifest",
   "./src/app.js",
+  "./src/personalizationModel.js",
   "./src/sessionModel.js",
   "./src/styles.css",
   "../chrome-extension/popup-model.js",
