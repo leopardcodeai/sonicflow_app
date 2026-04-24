@@ -9,7 +9,8 @@ sealed interface SessionCommand {
         val durationMinutes: Int,
         val ambientMix: Float,
         val pulseDepth: Float,
-        val selectedFile: String?
+        val selectedFile: String?,
+        val offlineAssetId: String? = null
     ) : SessionCommand
 
     data object Stop : SessionCommand

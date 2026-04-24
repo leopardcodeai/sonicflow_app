@@ -42,6 +42,8 @@ struct ContentView: View {
 
                     overlayCapabilityNote(for: screenState)
 
+                    offlinePanel(for: screenState)
+
                     starterPack
 
                     selectedSourceLabel(for: screenState)
@@ -272,6 +274,46 @@ struct ContentView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             metadataPill("Local file layer", tint: screenState.selectedMode.accentColor)
+        }
+        .padding(BrandTokens.Spacing.md)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cinematicGlass(
+            radius: 24,
+            tint: screenState.selectedMode.accentColor.opacity(0.07),
+            stroke: Color.white.opacity(0.12)
+        )
+    }
+
+    private func offlinePanel(for screenState: FlowScreenState) -> some View {
+        VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+            HStack {
+                Label("Offline session", systemImage: "arrow.down.circle")
+                    .font(.headline)
+                    .foregroundStyle(BrandTokens.Neutral.fg)
+                Spacer()
+                Text(audioManager.offlineAvailability.label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(screenState.selectedMode.accentColor)
+            }
+
+            Text("Download the generated session manifest for mobile offline playback. Browser offline export remains out of scope.")
+                .font(.footnote)
+                .foregroundStyle(BrandTokens.Neutral.muted)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: BrandTokens.Spacing.sm) {
+                Button("Download") {
+                    audioManager.downloadCurrentSession()
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(screenState.selectedMode.accentColor)
+
+                Button("Delete") {
+                    audioManager.deleteCurrentSessionDownload()
+                }
+                .buttonStyle(.bordered)
+                .tint(BrandTokens.Neutral.fg)
+            }
         }
         .padding(BrandTokens.Spacing.md)
         .frame(maxWidth: .infinity, alignment: .leading)

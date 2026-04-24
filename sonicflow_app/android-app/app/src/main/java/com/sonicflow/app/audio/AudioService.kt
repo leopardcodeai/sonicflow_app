@@ -64,7 +64,8 @@ class AudioService : Service() {
                     durationMinutes = intent.getIntExtra(EXTRA_DURATION_MINUTES, DEFAULT_DURATION_MINUTES),
                     ambientMix = intent.getFloatExtra(EXTRA_AMBIENT_MIX, DEFAULT_AMBIENT_MIX),
                     pulseDepth = intent.getFloatExtra(EXTRA_PULSE_DEPTH, DEFAULT_PULSE_DEPTH),
-                    selectedFile = intent.getStringExtra(EXTRA_SELECTED_FILE)
+                    selectedFile = intent.getStringExtra(EXTRA_SELECTED_FILE),
+                    offlineAssetId = intent.getStringExtra(EXTRA_OFFLINE_ASSET_ID)
                 )
                 if (!started) {
                     stopSelfResult(startId)
@@ -84,7 +85,8 @@ class AudioService : Service() {
         durationMinutes: Int,
         ambientMix: Float,
         pulseDepth: Float,
-        selectedFile: String?
+        selectedFile: String?,
+        offlineAssetId: String? = null
     ): Boolean {
         val focusResult = audioManager.requestAudioFocus(audioFocusRequest)
         if (focusResult != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
@@ -95,7 +97,8 @@ class AudioService : Service() {
                 durationMinutes = durationMinutes,
                 ambientMix = ambientMix.coerceIn(0.2f, 1f),
                 pulseDepth = pulseDepth.coerceIn(0.2f, 1f),
-                selectedFile = selectedFile
+                selectedFile = selectedFile,
+                offlineAssetId = offlineAssetId
             )
             return false
         }
@@ -113,7 +116,8 @@ class AudioService : Service() {
             durationMinutes = durationMinutes,
             ambientMix = ambientMix.coerceIn(0.2f, 1f),
             pulseDepth = pulseDepth.coerceIn(0.2f, 1f),
-            selectedFile = selectedFile
+            selectedFile = selectedFile,
+            offlineAssetId = offlineAssetId
         )
         return true
     }
@@ -237,6 +241,7 @@ class AudioService : Service() {
         const val EXTRA_AMBIENT_MIX = "ambientMix"
         const val EXTRA_PULSE_DEPTH = "pulseDepth"
         const val EXTRA_SELECTED_FILE = "selectedFile"
+        const val EXTRA_OFFLINE_ASSET_ID = "offlineAssetId"
 
         fun buildStartIntent(
             context: Context,
@@ -245,7 +250,8 @@ class AudioService : Service() {
             durationMinutes: Int,
             ambientMix: Float,
             pulseDepth: Float,
-            selectedFile: String?
+            selectedFile: String?,
+            offlineAssetId: String? = null
         ): Intent {
             return Intent(context, AudioService::class.java).apply {
                 action = ACTION_START
@@ -255,6 +261,7 @@ class AudioService : Service() {
                 putExtra(EXTRA_AMBIENT_MIX, ambientMix)
                 putExtra(EXTRA_PULSE_DEPTH, pulseDepth)
                 putExtra(EXTRA_SELECTED_FILE, selectedFile)
+                putExtra(EXTRA_OFFLINE_ASSET_ID, offlineAssetId)
             }
         }
 

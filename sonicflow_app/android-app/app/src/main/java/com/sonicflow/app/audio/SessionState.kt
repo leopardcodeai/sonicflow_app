@@ -9,5 +9,6 @@ data class SessionState(
     val durationMinutes: Int = 25,
     val ambientMix: Float = 0.45f,
     val pulseDepth: Float = 0.95f,
-    val selectedFile: String? = null
+    val selectedFile: String? = null,
+    val offlineAssetId: String? = null
 )
