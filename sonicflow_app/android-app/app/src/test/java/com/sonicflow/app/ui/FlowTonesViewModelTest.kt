@@ -111,6 +111,37 @@ class FlowTonesViewModelTest {
         assertEquals(0.46f, viewModel.pulseDepth.value)
     }
 
+    @Test
+    fun `downloaded session can start while network is unavailable`() = runTest {
+        val controller = FakeController()
+        val viewModel = FlowTonesViewModel(controller)
+
+        viewModel.onModeSelected(FlowMode.SLEEP)
+        viewModel.onDurationMinutesChanged(40)
+        assertTrue(viewModel.downloadCurrentSession(byteCount = 700_000))
+        viewModel.setNetworkAvailable(false)
+        viewModel.startSession()
+
+        val command = controller.lastCommand as SessionCommand.Start
+        assertEquals("Downloaded for offline", viewModel.offlineAvailability.value)
+        assertEquals(viewModel.offlineAssetId.value, command.offlineAssetId)
+        assertTrue(viewModel.isActive.value)
+    }
+
+    @Test
+    fun `offline cache enforces quota and supports deletion`() = runTest {
+        val controller = FakeController()
+        val viewModel = FlowTonesViewModel(controller)
+
+        assertTrue(viewModel.downloadCurrentSession(byteCount = 800_000))
+        viewModel.onDurationMinutesChanged(35)
+        assertFalse(viewModel.downloadCurrentSession(byteCount = 800_000))
+        assertEquals("Storage full", viewModel.offlineAvailability.value)
+
+        viewModel.deleteCurrentSessionDownload()
+        assertEquals("Not downloaded", viewModel.offlineAvailability.value)
+    }
+
     private class FakeController : FlowTonesSessionController {
         override val state = MutableStateFlow(SessionState())
         var lastCommand: SessionCommand? = null
@@ -126,6 +157,7 @@ class FlowTonesViewModelTest {
                         ambientMix = command.ambientMix,
                         pulseDepth = command.pulseDepth,
                         selectedFile = command.selectedFile,
+                        offlineAssetId = command.offlineAssetId,
                         isActive = true
                     )
                 }

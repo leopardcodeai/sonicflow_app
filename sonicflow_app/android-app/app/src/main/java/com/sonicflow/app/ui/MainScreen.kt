@@ -46,6 +46,7 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
     val pulseDepth by viewModel.pulseDepth.collectAsState()
     val selectedFile by viewModel.selectedFile.collectAsState()
     val overlayModeStatus by viewModel.overlayModeStatus.collectAsState()
+    val offlineAvailability by viewModel.offlineAvailability.collectAsState()
 
     val accent = currentMode.modeColor
 
@@ -202,6 +203,29 @@ fun MainScreen(viewModel: FlowTonesViewModel) {
                 label = { Text(overlayModeStatus) },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(BrandTokens.Spacing.sm.dp)
+            ) {
+                AssistChip(
+                    onClick = {},
+                    label = { Text("Offline: $offlineAvailability") },
+                    modifier = Modifier.weight(1f)
+                )
+                Button(
+                    onClick = { viewModel.downloadCurrentSession() },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Download")
+                }
+                Button(
+                    onClick = viewModel::deleteCurrentSessionDownload,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text("Delete")
+                }
+            }
 
             Button(
                 onClick = { if (isActive) viewModel.stopSession() else viewModel.startSession() },

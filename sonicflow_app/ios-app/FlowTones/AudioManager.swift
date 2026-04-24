@@ -4,15 +4,24 @@ import Foundation
 
 final class AudioManager: ObservableObject {
     @Published var isPlaying = false
+    @Published var isNetworkAvailable = true
+    @Published private(set) var activeOfflineAssetId: String?
+    @Published private(set) var offlineLibrary = OfflineSessionLibrary(storageLimitBytes: 1_000_000)
     @Published var currentMode: FlowMode = .focus {
         didSet {
             sessionSettings = sessionSettings.applyingPreset(
                 FlowTonePreset(mode: currentMode),
                 preserveDuration: true
             )
+            refreshOfflineAvailability()
         }
     }
-    @Published var sessionSettings = FlowToneSettings.standard(for: FlowTonePreset.focus)
+    @Published var sessionSettings = FlowToneSettings.standard(for: FlowTonePreset.focus) {
+        didSet {
+            refreshOfflineAvailability()
+        }
+    }
+    @Published private(set) var offlineAvailability: OfflineSessionAvailability = .notDownloaded
     @Published var beatVolume: Double = 0.15 {
         didSet {
             beatMixerNode.volume = Float(beatVolume)
@@ -31,6 +40,11 @@ final class AudioManager: ObservableObject {
     }
 
     func togglePlayback() {
+        if !isPlaying && !isNetworkAvailable && offlineLibrary.canStartOffline(settings: sessionSettings) {
+            activeOfflineAssetId = sessionSettings.cacheKey
+        } else if isPlaying {
+            activeOfflineAssetId = nil
+        }
         isPlaying.toggle()
     }
 
@@ -49,6 +63,25 @@ final class AudioManager: ObservableObject {
     func applyExample(_ example: FlowToneExample) {
         sessionSettings = example.settings
         currentMode = example.settings.mode
+    }
+
+    @discardableResult
+    func downloadCurrentSession(byteCount: Int = 700_000) -> Bool {
+        let stored = offlineLibrary.store(
+            OfflineSessionAsset(settings: sessionSettings, byteCount: byteCount)
+        )
+        refreshOfflineAvailability()
+        return stored
+    }
+
+    func deleteCurrentSessionDownload() {
+        offlineLibrary.delete(settings: sessionSettings)
+        activeOfflineAssetId = nil
+        refreshOfflineAvailability()
+    }
+
+    private func refreshOfflineAvailability() {
+        offlineAvailability = offlineLibrary.availability(for: sessionSettings)
     }
 
     func configureSession() {

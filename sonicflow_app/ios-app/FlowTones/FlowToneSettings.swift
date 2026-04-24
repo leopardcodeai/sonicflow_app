@@ -66,3 +66,80 @@ struct FlowToneSettings: Codable, Equatable, Hashable, Sendable {
         return digest.prefix(6).map { String(format: "%02x", $0) }.joined()
     }
 }
+
+enum OfflineSessionAvailability: Equatable, Sendable {
+    case notDownloaded
+    case downloaded
+    case storageFull
+
+    var label: String {
+        switch self {
+        case .notDownloaded:
+            return "Not downloaded"
+        case .downloaded:
+            return "Downloaded for offline"
+        case .storageFull:
+            return "Storage full"
+        }
+    }
+}
+
+struct OfflineSessionAsset: Equatable, Sendable {
+    let id: String
+    let settings: FlowToneSettings
+    let byteCount: Int
+
+    init(settings: FlowToneSettings, byteCount: Int) {
+        self.id = settings.cacheKey
+        self.settings = settings.clamped
+        self.byteCount = max(0, byteCount)
+    }
+}
+
+struct OfflineSessionLibrary: Equatable, Sendable {
+    private(set) var assets: [String: OfflineSessionAsset] = [:]
+    let storageLimitBytes: Int
+    private var blockedAssetIds: Set<String> = []
+
+    init(storageLimitBytes: Int) {
+        self.storageLimitBytes = max(0, storageLimitBytes)
+    }
+
+    var usedBytes: Int {
+        assets.values.reduce(0) { $0 + $1.byteCount }
+    }
+
+    mutating func store(_ asset: OfflineSessionAsset) -> Bool {
+        let currentBytes = assets[asset.id]?.byteCount ?? 0
+        let projectedBytes = usedBytes - currentBytes + asset.byteCount
+        if projectedBytes > storageLimitBytes {
+            blockedAssetIds.insert(asset.id)
+            return false
+        }
+
+        blockedAssetIds.remove(asset.id)
+        assets[asset.id] = asset
+        return true
+    }
+
+    mutating func delete(settings: FlowToneSettings) {
+        let id = settings.cacheKey
+        assets[id] = nil
+        blockedAssetIds.remove(id)
+    }
+
+    func canStartOffline(settings: FlowToneSettings) -> Bool {
+        assets[settings.cacheKey] != nil
+    }
+
+    func availability(for settings: FlowToneSettings) -> OfflineSessionAvailability {
+        let id = settings.cacheKey
+        if assets[id] != nil {
+            return .downloaded
+        }
+        if blockedAssetIds.contains(id) {
+            return .storageFull
+        }
+        return .notDownloaded
+    }
+}

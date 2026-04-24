@@ -51,4 +51,32 @@ final class FlowToneSettingsTests: XCTestCase {
         XCTAssertEqual(SessionTimer.pomodoro.durationMinutes, 25)
         XCTAssertNil(SessionTimer.infiniteSleep.durationMinutes)
     }
+
+    func testOfflineSessionLibraryTracksDownloadDeleteAndOfflineAvailability() {
+        let settings = FlowToneSettings.standard(for: FlowTonePreset.sleep, durationMinutes: 45)
+        let asset = OfflineSessionAsset(settings: settings, byteCount: 720_000)
+        var library = OfflineSessionLibrary(storageLimitBytes: 1_500_000)
+
+        XCTAssertEqual(asset.id, settings.cacheKey)
+        XCTAssertEqual(library.availability(for: settings), .notDownloaded)
+
+        XCTAssertTrue(library.store(asset))
+        XCTAssertEqual(library.availability(for: settings), .downloaded)
+        XCTAssertTrue(library.canStartOffline(settings: settings))
+
+        library.delete(settings: settings)
+        XCTAssertEqual(library.availability(for: settings), .notDownloaded)
+        XCTAssertFalse(library.canStartOffline(settings: settings))
+    }
+
+    func testOfflineSessionLibraryRejectsDownloadsOverQuota() {
+        let first = FlowToneSettings.standard(for: FlowTonePreset.focus, durationMinutes: 25)
+        let second = FlowToneSettings.standard(for: FlowTonePreset.meditation, durationMinutes: 25)
+        var library = OfflineSessionLibrary(storageLimitBytes: 1_000_000)
+
+        XCTAssertTrue(library.store(OfflineSessionAsset(settings: first, byteCount: 650_000)))
+        XCTAssertFalse(library.store(OfflineSessionAsset(settings: second, byteCount: 500_000)))
+        XCTAssertEqual(library.availability(for: second), .storageFull)
+        XCTAssertEqual(library.usedBytes, 650_000)
+    }
 }

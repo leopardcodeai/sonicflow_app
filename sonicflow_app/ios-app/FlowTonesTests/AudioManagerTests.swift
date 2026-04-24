@@ -19,4 +19,30 @@ final class AudioManagerTests: XCTestCase {
         audioManager.togglePlayback()
         XCTAssertFalse(audioManager.isPlaying)
     }
+
+    func testDownloadedSessionCanStartWithoutNetwork() {
+        let audioManager = AudioManager()
+        audioManager.currentMode = .sleep
+        audioManager.updateDuration(40)
+
+        XCTAssertTrue(audioManager.downloadCurrentSession(byteCount: 700_000))
+        audioManager.isNetworkAvailable = false
+        audioManager.togglePlayback()
+
+        XCTAssertTrue(audioManager.isPlaying)
+        XCTAssertEqual(audioManager.offlineAvailability, .downloaded)
+        XCTAssertEqual(audioManager.activeOfflineAssetId, audioManager.sessionSettings.cacheKey)
+    }
+
+    func testDeletingCurrentSessionDownloadClearsOfflineAvailability() {
+        let audioManager = AudioManager()
+
+        XCTAssertTrue(audioManager.downloadCurrentSession(byteCount: 700_000))
+        XCTAssertEqual(audioManager.offlineAvailability, .downloaded)
+
+        audioManager.deleteCurrentSessionDownload()
+
+        XCTAssertEqual(audioManager.offlineAvailability, .notDownloaded)
+        XCTAssertNil(audioManager.activeOfflineAssetId)
+    }
 }

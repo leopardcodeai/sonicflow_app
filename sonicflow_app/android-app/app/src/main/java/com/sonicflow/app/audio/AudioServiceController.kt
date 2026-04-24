@@ -47,7 +47,8 @@ class AudioServiceController @Inject constructor(
                     command.durationMinutes,
                     command.ambientMix,
                     command.pulseDepth,
-                    command.selectedFile
+                    command.selectedFile,
+                    command.offlineAssetId
                 )
                 context.startForegroundService(intent)
                 mutableState.value = SessionState(
@@ -57,7 +58,8 @@ class AudioServiceController @Inject constructor(
                     durationMinutes = command.durationMinutes,
                     ambientMix = command.ambientMix,
                     pulseDepth = command.pulseDepth,
-                    selectedFile = command.selectedFile
+                    selectedFile = command.selectedFile,
+                    offlineAssetId = command.offlineAssetId
                 )
             }
 
