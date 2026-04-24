@@ -15,6 +15,6 @@ jobs:
       contents: read
       pull-requests: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - name: Sync Linear state from PR event
         run: node scripts/linear/pr_state_sync.mjs

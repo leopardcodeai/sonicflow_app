@@ -1,4 +1,4 @@
-.PHONY: help chrome safari ios mac mac-smoke android web web-dev test test-core-js test-core-swift test-chrome test-web test-android test-ios verify clean-dist chrome-build-assets
+.PHONY: help chrome safari ios mac mac-smoke android web web-dev test test-core-js test-core-swift test-chrome test-web test-github-workflows test-android test-ios verify clean-dist chrome-build-assets
 
 CHROME_DIR := sonicflow_app/chrome-extension
 SAFARI_PROJECT := sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj
@@ -24,6 +24,7 @@ help:
 	@echo "  make test-core-swift Run Swift core tests"
 	@echo "  make test-chrome     Run Chrome extension tests"
 	@echo "  make test-web        Run web app tests"
+	@echo "  make test-github-workflows Run GitHub workflow guard tests"
 	@echo "  make test-android    Run Android unit tests when SDK/Java are configured"
 	@echo "  make test-ios        Run iOS app tests when a simulator is available"
 	@echo "  make verify          Run warning audit across supported platforms"
@@ -78,6 +79,9 @@ test-chrome:
 test-web:
 	npm --prefix $(WEB_APP_DIR) test
 
+test-github-workflows:
+	node --test scripts/github/*.test.mjs
+
 test-android:
 	@if [ -x $(ANDROID_APP_DIR)/gradlew ] && { [ -n "$${ANDROID_HOME:-$${ANDROID_SDK_ROOT:-}}" ] || [ -f $(ANDROID_APP_DIR)/local.properties ]; } && command -v java >/dev/null 2>&1; then \
 		cd $(ANDROID_APP_DIR) && ./gradlew testDebugUnitTest; \
@@ -88,7 +92,7 @@ test-android:
 test-ios:
 	./scripts/check_warnings.sh --ios-tests
 
-test: test-core-js test-core-swift test-chrome test-web test-android test-ios
+test: test-core-js test-core-swift test-chrome test-web test-github-workflows test-android test-ios
 
 verify:
 	./scripts/check_warnings.sh
