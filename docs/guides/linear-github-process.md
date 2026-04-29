@@ -38,6 +38,18 @@ Dieses Projekt arbeitet ticket-driven:
 - `.github/PULL_REQUEST_TEMPLATE.md`
   - standardisiert Linear- und Testdokumentation
 
+## Symphony Pilot
+
+`WORKFLOW.md` beschreibt den repo-eigenen Symphony-Vertrag fuer isolierte
+Codex-Runs aus Linear-Issues. Fuer den Start gilt:
+
+1. Nur `Todo`-Issues dispatchen.
+2. Mit `max_concurrent_agents: 1` starten.
+3. Nur Dokumentations- und Automations-Issues pilotieren.
+4. Pro Issue ein Workspace, ein Branch, ein Draft PR.
+5. PR-Body muss `make test` und `make verify` enthalten.
+6. Handoff ist `Preview` oder, falls nicht vorhanden, `In Review`.
+
 ## Erforderliche GitHub Einstellungen
 
 1. Repository Secret setzen:
