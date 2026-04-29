@@ -12,6 +12,7 @@
 - `guides/github-workflow.md` — branch/PR/verification conventions.
 - `guides/linear-github-process.md` — ticket-driven state machine and automation behavior.
 - `guides/codex-automation-prompts.md` — recommended scheduler prompt + Codex custom instruction.
+- `guides/harness-engineering-symphony.md` — OpenAI harness engineering takeaways, Symphony adoption plan, and Linear/PR templates.
 
 ## Graphics
 
