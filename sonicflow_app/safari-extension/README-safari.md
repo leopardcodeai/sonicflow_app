@@ -2,7 +2,7 @@
 
 ## What This Is
 
-Safari wrapper project for the SonicFlow Chrome extension, generated via `safari-web-extension-converter` and pointed at the shared extension sources in `../chrome-extension`.
+Safari wrapper project for the SonicFlow Safari web extension, generated via `safari-web-extension-converter` and pointed at the shared extension sources in `../safari-web-extension`.
 
 Public app name: `SonicFlow`.
 The generated Xcode project, paths, and schemes now use `SonicFlow`.
@@ -10,7 +10,7 @@ The generated Xcode project, paths, and schemes now use `SonicFlow`.
 ## Build And Run
 
 1. Install and build the shared extension assets:
-   - `cd sonicflow_app/chrome-extension`
+   - `cd sonicflow_app/safari-web-extension`
    - `npm ci`
    - `npx esbuild content_script.js --bundle --outfile=dist/content_script.js`
 2. Open `sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj`
@@ -38,7 +38,6 @@ You can also let the repo prepare those shared resources for you with `make mac`
 
 ## Known Safari Limitations
 
-- Safari flagged the Chrome manifest `background.type` key during conversion; the wrapper still builds, but MV3 support differs from Chrome
-- Messaging and storage APIs should go through `browser` when available and fall back to `chrome`
-- The project currently links the shared extension files from `../chrome-extension`, so rebuilding the Chrome bundle updates Safari resources too
-- Safari MV3 behavior can differ from Chrome for service worker lifecycle and some host-permission edge cases
+- Safari Web Extension MV3 behavior can vary by iOS and macOS release for service worker lifecycle and host-permission edge cases.
+- Messaging and storage APIs should go through the Safari `browser` namespace.
+- The project currently links the shared extension files from `../safari-web-extension`, so rebuilding the Safari web extension bundle updates Safari resources too.

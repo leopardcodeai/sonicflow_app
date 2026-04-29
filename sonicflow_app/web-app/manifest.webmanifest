@@ -9,7 +9,7 @@
   "theme_color": "#0A0A0B",
   "icons": [
     {
-      "src": "../../brand/assets/icons/android-512.svg",
+      "src": "../../brand/assets/icons/app-512.svg",
       "sizes": "512x512",
       "type": "image/svg+xml",
       "purpose": "any maskable"

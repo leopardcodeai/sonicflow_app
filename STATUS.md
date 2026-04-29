@@ -17,7 +17,6 @@ Date: 2026-04-19
 - `brand/generated/` — deterministic per-platform outputs:
   - `tokens.css` (CSS custom properties)
   - `BrandTokens.swift` (Swift enum tree)
-  - `BrandTokens.kt` (Kotlin object tree)
   - `README.md` (do-not-edit notice, regen command)
 - `scripts/brand/generate-tokens.mjs` — idempotent generator, verified byte-identical on repeated runs.
 - `docs/guides/codex-automation-prompts.md` — worker prompt hardened to re-check active `Todo` / `In Progress` / `In Review` issues directly from Linear issue details.
@@ -26,7 +25,7 @@ Date: 2026-04-19
 
 - `node scripts/brand/generate-tokens.mjs` → byte-identical twice. ✅
 - `cd sonicflow_app/core-js && npm test` → 5/5 pass. ✅
-- `cd sonicflow_app/chrome-extension && npm test` → 10/10 pass. ✅
+- `cd sonicflow_app/safari-web-extension && npm test` → 10/10 pass. ✅
 - `./scripts/check_warnings.sh` → blocked in `core_swift` by sandboxed Swift toolchain cache access (`sandbox_apply: Operation not permitted`), not by an SF-23 code failure.
 
 ## Open / Flags

@@ -1,7 +1,7 @@
 import {
   PRODUCT_MODES,
   resolveSessionPlan
-} from "../../chrome-extension/popup-model.js";
+} from "../../safari-web-extension/popup-model.js";
 
 export const DEFAULT_WEB_SESSION = {
   intensity: "medium",

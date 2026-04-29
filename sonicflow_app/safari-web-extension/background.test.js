@@ -9,7 +9,7 @@ function captureResponse(run) {
   });
 }
 
-test("background handles callback-based tabs API (Chrome style)", async () => {
+test("background handles callback-based tabs API", async () => {
   const api = {
     tabs: {
       query(_query, callback) {

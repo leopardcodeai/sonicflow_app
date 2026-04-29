@@ -43,7 +43,7 @@ test("popup model exposes all four beat modes and defaults", () => {
 test("popup model exposes browser overlay source capability", () => {
   assert.deepEqual(
     OVERLAY_SOURCES.map((source) => source.id),
-    ["browser-tab", "macos-system", "ios-local", "android-policy-review"]
+    ["browser-tab", "macos-system", "ios-local"]
   );
   assert.equal(
     resolveOverlayStatus({ pageHasAudioSource: true }).message,

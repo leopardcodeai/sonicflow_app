@@ -3,7 +3,7 @@ import {
   PRODUCT_MODES,
   SESSION_ACTIVITIES,
   SESSION_TIMERS
-} from "../../chrome-extension/popup-model.js";
+} from "../../safari-web-extension/popup-model.js";
 import {
   createFeedbackEvent,
   createInitialSessionState,
@@ -202,7 +202,7 @@ function render() {
         <p class="session-line">${engineMode.name} · ${engineMode.beatHz} Hz · ${activeTimer.label}</p>
       </div>
       <div class="hero-orb" aria-hidden="true">
-        <img src="../chrome-extension/assets/bowl_hero.png" alt="">
+        <img src="../safari-web-extension/assets/bowl_hero.png" alt="">
       </div>
     </section>
 

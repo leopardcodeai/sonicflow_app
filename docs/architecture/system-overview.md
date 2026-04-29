@@ -9,11 +9,10 @@ flowchart TB
     subgraph Shared["Shared Beat Engines"]
         JS["core-js"]
         SW["core-swift (SonicFlowCore)"]
-        KT["core-android/beatengine"]
     end
 
     subgraph Browser["Browser Layer"]
-        CH["chrome-extension"]
+        CH["safari-web-extension"]
         SAF["safari-extension"]
     end
 
@@ -22,15 +21,10 @@ flowchart TB
         MAC["macOS app target"]
     end
 
-    subgraph Android["Android App"]
-        APP["android-app"]
-    end
-
     JS --> CH
     JS --> SAF
     SW --> IOS
     SAF --> MAC
-    KT --> APP
 ```
 
 ## Runtime Audio Flow
@@ -51,5 +45,5 @@ sequenceDiagram
 ## Notes
 
 - The JS core is consumed by browser extension surfaces.
-- The Swift and Kotlin cores mirror beat mode constants and synthesis shape for platform parity.
+- The Swift core mirrors beat mode constants and synthesis shape for Apple-native parity.
 - Playback and session-control logic remains platform-specific by design.
