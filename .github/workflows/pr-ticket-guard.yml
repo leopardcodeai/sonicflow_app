@@ -6,7 +6,7 @@ on:
 
 jobs:
   guard:
-    runs-on: ubuntu-latest
+    runs-on: macos-15
     permissions:
       contents: read
     steps:
