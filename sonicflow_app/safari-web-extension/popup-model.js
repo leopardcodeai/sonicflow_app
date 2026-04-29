@@ -182,12 +182,6 @@ export const OVERLAY_SOURCES = [
     label: "iOS local",
     status: "Local only",
     description: "Picked files can layer with SonicFlow. Spotify and YouTube capture are unavailable."
-  },
-  {
-    id: "android-policy-review",
-    label: "Android",
-    status: "Policy review",
-    description: "External app capture needs platform and store policy review."
   }
 ];
 

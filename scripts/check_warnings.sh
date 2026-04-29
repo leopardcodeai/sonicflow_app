@@ -183,14 +183,16 @@ fi
 
 run_self_test
 
+run_step active_platforms "$ROOT_DIR/scripts/check_active_platforms.sh"
+
 run_step core_js npm --prefix "$ROOT_DIR/sonicflow_app/core-js" test
 check_step core_js
 
-run_step chrome_build bash -lc "cd '$ROOT_DIR/sonicflow_app/chrome-extension' && npm ci && npm run build"
-check_step chrome_build
+run_step safari_web_extension_build bash -lc "cd '$ROOT_DIR/sonicflow_app/safari-web-extension' && npm ci && npm run build"
+check_step safari_web_extension_build
 
-run_step chrome_test bash -lc "cd '$ROOT_DIR/sonicflow_app/chrome-extension' && npm test"
-check_step chrome_test
+run_step safari_web_extension_test bash -lc "cd '$ROOT_DIR/sonicflow_app/safari-web-extension' && npm test"
+check_step safari_web_extension_test
 
 run_step core_swift swift test --package-path "$ROOT_DIR/sonicflow_app/core-swift"
 check_step core_swift
@@ -202,17 +204,3 @@ run_ios_tests_if_available
 
 run_step mac_build xcodebuild -project "$ROOT_DIR/sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj" -scheme "SonicFlow (macOS)" -configuration Debug -destination "generic/platform=macOS" CODE_SIGNING_ALLOWED=NO build
 check_step mac_build
-
-if [[ -z "${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}" && ! -f "$ROOT_DIR/sonicflow_app/android-app/local.properties" ]]; then
-  echo "==> android_build"
-  echo "Skipping Android warning audit because no Android SDK path is configured."
-elif ! command -v java >/dev/null 2>&1; then
-  echo "==> android_build"
-  echo "Skipping Android warning audit because Java is not available on PATH."
-else
-  run_step android_unit_tests bash -lc "cd '$ROOT_DIR/sonicflow_app/android-app' && ./gradlew testDebugUnitTest"
-  check_step android_unit_tests
-
-  run_step android_build bash -lc "cd '$ROOT_DIR/sonicflow_app/android-app' && ./gradlew assembleDebug"
-  check_step android_build
-fi

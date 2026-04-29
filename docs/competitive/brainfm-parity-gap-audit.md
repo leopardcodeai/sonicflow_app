@@ -19,7 +19,7 @@ Official Brain.fm pages also describe:
 - no headphone requirement
 - sleep 3D spatialization / rocking or cradling effect
 - science-first positioning with NSF-funded and peer-reviewed research claims
-- web, iOS, Android, and desktop availability
+- web, iOS, and desktop availability
 - current public pricing of $14.99/month and $99.99/year
 
 Primary references:
@@ -33,18 +33,18 @@ Primary references:
 
 | Capability | Current SonicFlow state | Parity assessment |
 | --- | --- | --- |
-| Four functional modes | Focus, Flow, Meditation, Sleep exist across core JS, core Swift, iOS, macOS, Chrome, and Android surfaces. | Partial. Brain.fm names Relax instead of Flow; Flow is currently alpha productivity, not explicitly relaxation. |
+| Four functional modes | Focus, Flow, Meditation, Sleep exist across core JS, core Swift, iOS, macOS, Safari, and web surfaces. | Partial. Brain.fm names Relax instead of Flow; Flow is currently alpha productivity, not explicitly relaxation. |
 | Target frequency bands | Gamma 40 Hz, alpha 10 Hz, theta 6 Hz, delta 2 Hz are implemented in shared engines. | Partial. Bands exist, but there is no richer mode taxonomy or activity sub-mode mapping. |
 | Direct amplitude modulation | JS and Swift engines apply amplitude modulation to generated stereo PCM. | Partial. Current left/right channels are identical and simple sinusoidal modulation; no independent channel design, temporal patterning, frequency shaping, or sub-perceptual calibration. |
 | Session controls | Duration, ambient mix, pulse depth, beat volume, starter sessions, source/file controls, Pomodoro, infinite sleep, and web feedback/check events exist. | Partial. Session history and aggregate reporting remain future work. |
-| External audio overlay | Chrome can layer over web-tab audio; macOS has partial system/source capture; iOS and Android do not yet expose a complete Spotify/YouTube overlay mode. | Partial. This should become a first-class "Overlay Mode" across platforms where OS rules allow it. |
+| External audio overlay | Safari can layer over supported web-tab audio; macOS has partial system/source capture; iOS does not expose a complete Spotify/YouTube overlay mode. | Partial. This should become a first-class "Overlay Mode" across platforms where OS rules allow it. |
 | Web app / PWA | Browser extension exists; standalone web app is tracked in Linear SF-34 but not implemented in the repo. | Missing. Needed for Brain.fm-style web availability and standalone browser sessions. |
 | Personalization | No onboarding quiz, neurotype, genre preference, or intensity defaults. | Missing. |
 | Genre/activity selection | Starter sessions exist; genres do not. | Missing for Brain.fm-level parity. |
 | Offline access | README explicitly says browser shells do not offer native offline render/export/cache flows. | Missing. Mobile offline should be prioritized before desktop offline. |
-| Sleep spatialization | Shared JS, Swift, and Kotlin cores expose sleep-only slow stereo rocking with off/low/medium/high levels and bounded output tests. | Partial. Needs platform UI rollout beyond the web app and speaker/headphone QA. |
+| Sleep spatialization | Shared JS and Swift cores expose sleep-only slow stereo rocking with off/low/medium/high levels and bounded output tests. | Partial. Needs platform UI rollout beyond the web app and speaker/headphone QA. |
 | Research validation | Web app exposes modulated/control sessions, subjective feedback, lightweight attention checks, and a public science-claim gate. | Partial. EEG/fMRI partnership tracking, aggregate reporting, and validated evidence are still missing. |
-| Platform coverage | Browser, iOS, macOS, Android exist. | Mostly present. Product depth varies by platform. |
+| Platform coverage | Safari, web, iOS, and macOS are the active surfaces. | Mostly present. Product depth varies by platform. |
 | Monetization | No subscription/paywall plan in app surfaces. | Missing, but not required before core functional parity. |
 
 ## Required Parity Tracks
@@ -111,7 +111,7 @@ Mobile should support offline sessions first:
 
 Add a sleep-specific spatial layer:
 
-- slow stereo pan / 3D rocking profile: implemented in shared JS, Swift, and Kotlin cores
+- slow stereo pan / 3D rocking profile: implemented in shared JS and Swift cores
 - low-distraction movement curve: implemented as slow 0.04 Hz rocking
 - no abrupt dynamic shifts: covered by bounded synthesis tests
 - speaker and headphone QA: still required
@@ -148,15 +148,12 @@ Platform rules:
 
 - Web app / PWA: support standalone generated sessions first; expose Overlay Mode
   only where browser APIs or companion extension permissions make it reliable.
-- Chrome/web extension: prioritize YouTube and supported browser tabs with the
+- Safari web extension: prioritize YouTube and supported browser tabs with the
   existing content-script/tab-audio path.
 - macOS: use system capture where permitted and keep file fallback.
 - iOS: system-wide Spotify/YouTube capture is not generally available; support
   local/media-library or app-owned playback first and avoid promising full
   Spotify overlay unless a compliant API path exists.
-- Android: investigate media session / audio capture policy, then implement only
-  sources that are legal and technically reliable.
-
 Acceptance criteria:
 
 - Overlay Mode has a shared product model and platform capability matrix.

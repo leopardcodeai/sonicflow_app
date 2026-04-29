@@ -7,11 +7,11 @@ const CACHE_URLS = [
   "./src/personalizationModel.js",
   "./src/sessionModel.js",
   "./src/styles.css",
-  "../chrome-extension/popup-model.js",
+  "../safari-web-extension/popup-model.js",
   "../core-js/beatEngine.js",
   "../../brand/generated/tokens.css",
   "../../brand/assets/wallpapers/leopard_wallpaper.png",
-  "../chrome-extension/assets/bowl_hero.png"
+  "../safari-web-extension/assets/bowl_hero.png"
 ];
 
 self.addEventListener("install", (event) => {

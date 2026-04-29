@@ -17,11 +17,9 @@ soundhealing_sonicflow/
 sonicflow_app/
 ├── core-js/           # shared JS beat engine
 ├── core-swift/        # shared Swift package beat engine
-├── core-android/      # shared Kotlin/Android beat engine
-├── chrome-extension/  # Chromium extension runtime
+├── safari-web-extension/  # Safari web extension runtime
 ├── safari-extension/  # Safari extension + macOS target
-├── ios-app/           # native iOS app
-└── android-app/       # native Android app
+└── ios-app/           # native iOS app
 ```
 
 ## Organization Principles
@@ -30,6 +28,7 @@ sonicflow_app/
 - Platform-specific session/playback and UI logic stays in platform runtime directories.
 - Repo-level docs and reports belong under `docs/` at the root, not inside platform folders.
 - Cross-platform checks and scripts stay in `scripts/`.
+- Legacy non-Apple source folders are not active build, verification, or product targets.
 
 ## Recommended Workflow
 

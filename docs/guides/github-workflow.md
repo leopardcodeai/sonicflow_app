@@ -23,12 +23,11 @@
 
 - `SF-1`: `cd sonicflow_app/core-js && npm test`
 - `SF-2`: `cd sonicflow_app/core-swift && swift test`
-- `SF-3`: `cd sonicflow_app/android-app && ./gradlew assembleDebug`
 - Fast local confidence before opening a PR: `make test`
 - All PRs touching shipped code: `make verify`
 
 ## Warning Standard
 
-- PRs are expected to merge with zero project warnings across JS, Swift, iOS, macOS, Chrome extension, and Android app test/build surfaces.
+- PRs are expected to merge with zero project warnings across JS, Swift, iOS, macOS, Safari web extension, and web app test/build surfaces.
 - `./scripts/check_warnings.sh` is the shared audit entry point for local verification and CI enforcement.
 - Toolchain-only noise that cannot be acted on in repo code should be explicitly filtered in the script instead of being ignored in review.
