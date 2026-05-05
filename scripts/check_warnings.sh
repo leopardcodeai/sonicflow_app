@@ -163,11 +163,16 @@ fi
 
 run_self_test
 
+run_step active_platforms "$ROOT_DIR/scripts/check_active_platforms.sh"
+
 run_step core_js npm --prefix "$ROOT_DIR/sonicflow_app/shared/core-js" test
 check_step core_js
 
 run_step safari_web_assets bash -lc "cd '$ROOT_DIR/sonicflow_app/extensions/safari' && npm ci && npm run build"
 check_step safari_web_assets
+
+run_step safari_web_extension_test bash -lc "cd '$ROOT_DIR/sonicflow_app/extensions/safari' && npm test"
+check_step safari_web_extension_test
 
 run_step web_app npm --prefix "$ROOT_DIR/sonicflow_app/apps/web" test
 check_step web_app

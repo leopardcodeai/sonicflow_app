@@ -1,8 +1,9 @@
-.PHONY: help safari ios mac mac-smoke web web-dev xcodegen test test-core-js test-core-swift test-safari-web-extension test-web test-web-e2e test-github-workflows test-ios test-ios-ui verify clean-dist safari-web-assets
+.PHONY: help safari-web-extension safari ios mac mac-smoke web web-dev xcodegen test test-core-js test-core-swift test-safari-web-extension test-web test-web-e2e test-github-workflows test-ios test-ios-ui verify clean-dist safari-web-assets safari-web-extension-build-assets
 
 WEB_EXTENSION_DIR := sonicflow_app/extensions/safari
 MACOS_PROJECT := sonicflow_app/apps/macos/SonicFlow.xcodeproj
 IOS_PROJECT := sonicflow_app/apps/ios/SonicFlow.xcodeproj
+DIST_SAFARI_WEB_EXTENSION := dist/safari-web-extension
 CORE_JS_DIR := sonicflow_app/shared/core-js
 CORE_SWIFT_DIR := sonicflow_app/shared/core-swift
 WEB_APP_DIR := sonicflow_app/apps/web
@@ -10,6 +11,7 @@ XCODE_WARNING_CLEAN_SETTINGS := CODE_SIGNING_ALLOWED=NO ENABLE_APP_INTENTS_METAD
 
 help:
 	@echo "SonicFlow monorepo targets:"
+	@echo "  make safari-web-extension          Build Safari Web Extension and copy unpacked output to dist/safari-web-extension"
 	@echo "  make safari-web-assets Build Safari Web Extension JavaScript assets"
 	@echo "  make safari          Open Safari extension Xcode project"
 	@echo "  make ios             Build iOS app for simulator"
@@ -30,9 +32,16 @@ help:
 	@echo "  make verify          Run warning audit for active Apple/Safari/web platforms"
 	@echo "  make clean-dist      Remove dist artifacts"
 
-safari-web-assets:
+safari-web-extension-build-assets:
 	cd $(WEB_EXTENSION_DIR) && npm ci
 	cd $(WEB_EXTENSION_DIR) && npm run build
+
+safari-web-assets: safari-web-extension-build-assets
+
+safari-web-extension: safari-web-extension-build-assets
+	$(MAKE) clean-dist
+	mkdir -p $(DIST_SAFARI_WEB_EXTENSION)
+	rsync -a --delete --exclude node_modules --exclude package-lock.json --exclude '*.test.js' $(WEB_EXTENSION_DIR)/ $(DIST_SAFARI_WEB_EXTENSION)/
 
 safari:
 	open -a Xcode $(MACOS_PROJECT)

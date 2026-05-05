@@ -7,22 +7,22 @@ This document explains how shared beat-generation cores map into the active Soni
 ```mermaid
 flowchart TB
     subgraph Shared["Shared Beat Engines"]
-        JS["core-js (Safari Web Extension resources)"]
-        SW["core-swift (SonicFlowCore)"]
+        JS["shared/core-js (Safari/Web resources)"]
+        SW["shared/core-swift (SonicFlowCore)"]
     end
 
     subgraph Safari["Safari Layer"]
-        WEBEXT["safari-web-extension resources"]
-        SAF["safari-extension Xcode wrapper"]
+        WEBEXT["extensions/safari resources"]
+        SAF["apps/macos Safari wrapper"]
     end
 
     subgraph Web["Web App"]
-        PWA["web-app"]
+        PWA["apps/web"]
     end
 
     subgraph Apple["Apple Apps"]
-        IOS["ios-app (iPhone)"]
-        MAC["macOS menu-bar target"]
+        IOS["apps/ios (iPhone)"]
+        MAC["apps/macos menu-bar target"]
     end
 
     JS --> WEBEXT
@@ -52,5 +52,5 @@ sequenceDiagram
 - The JS core is consumed by Safari Web Extension resources and the active Apple-look web app.
 - The Swift core powers active native Apple targets.
 - Playback and session-control logic remains platform-specific by design.
-- Android and Chrome product code are removed from the active platform tree and excluded from default verification.
+- Legacy non-Safari browser and non-iOS mobile product code are removed from the active platform tree and excluded from default verification.
 - Architecture note: iOS already links `SonicFlowCore`; the macOS menu app still has a local beat-engine fork. The next core cleanup is a shared streaming renderer in `SonicFlowCore` that both iOS and macOS can call from their realtime audio nodes.

@@ -5,7 +5,7 @@ Date: 2026-04-28
 ## Platform Focus
 
 - Active product targets: iPhone app, Safari Web Extension, macOS menu-bar app, and Apple-look web app/PWA.
-- Removed product targets: Android and Chrome.
+- Removed product targets: legacy non-Safari browser and non-iOS mobile surfaces.
 - Safari Web Extension resources now live in `sonicflow_app/extensions/safari`.
 - Native macOS menu-bar app now lives beside iOS under `sonicflow_app/apps/macos`.
 
@@ -21,7 +21,7 @@ Date: 2026-04-28
 
 - `make test` covers JS core, Swift core, Safari Web Extension resources, GitHub workflow guards, and available iOS tests.
 - `make verify` runs the zero-warning audit across active Apple/Safari build and test surfaces.
-- Android and Chrome product targets are removed from default verification.
+- Removed legacy browser/mobile product targets are excluded from default verification.
 
 ## Next Step
 

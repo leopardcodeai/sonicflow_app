@@ -1,15 +1,15 @@
 flowchart LR
     subgraph Cores["Shared Beat Cores"]
-        JS["core-js (Safari resources)"]
-        SW["core-swift (Swift Package)"]
+        JS["shared/core-js (Safari resources)"]
+        SW["shared/core-swift (Swift Package)"]
     end
 
     subgraph Active["Active Apple/Safari Targets"]
-        WEBEXT["safari-web-extension resources"]
-        SF["safari-extension"]
-        IOS["ios-app (iPhone)"]
-        MAC["macOS menu-bar target"]
-        WEB["web-app"]
+        WEBEXT["extensions/safari resources"]
+        SF["apps/macos Safari wrapper"]
+        IOS["apps/ios (iPhone)"]
+        MAC["apps/macos menu-bar target"]
+        WEB["apps/web"]
     end
 
     JS --> WEBEXT

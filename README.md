@@ -70,7 +70,7 @@ soundhealing_sonicflow/
 | macOS app | Leopard-native menu-bar popover with starter sessions, Overlay Mode, preset metadata, and advanced controls | Local file/system capture + generated beat layer | Partial/limited | Native app exposes permitted system overlay capture with file fallback. |
 | Web app/PWA | Apple-look Liquid Glass SonicFlow surface for standalone sessions and research/product flows | Browser Web Audio + generated beat layer | Browser-gated/limited | Active lightweight web surface aligned with the Apple visual system. |
 
-Chrome and Android product surfaces have been removed from the active platform tree. Safari Web Extension resources live in `sonicflow_app/extensions/safari`.
+Legacy non-Safari browser and non-iOS mobile product surfaces have been removed from the active platform tree. Safari Web Extension resources live in `sonicflow_app/extensions/safari`.
 
 ## Brand Asset Usage
 
@@ -165,4 +165,4 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 - Mobile offline support is limited to generated-session asset/cache state in the native iOS app, including download/delete controls and quota handling.
 - Safari Web Extension resources expose SonicFlow-style controls, but they do not offer native offline render/export or cache flows.
 - Sleep spatialization and research control sessions are implemented in shared cores/web, but formal evidence validation is still pending.
-- Android and Chrome product code are removed from the active platform tree; default verification covers only iPhone, Safari, macOS menu bar, and web app surfaces.
+- Legacy non-Safari browser and non-iOS mobile product code are removed from the active platform tree; default verification covers only iPhone, Safari, macOS menu bar, and web app surfaces.

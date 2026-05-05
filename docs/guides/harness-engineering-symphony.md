@@ -47,14 +47,14 @@ The harness article emphasizes constraints that agents can check mechanically.
 For SonicFlow, the current boundaries are:
 
 - Active product targets: iPhone, Safari Web Extension, macOS menu bar, web app.
-- Removed product targets: Android and Chrome.
+- Removed product targets: legacy non-Safari browser and non-iOS mobile surfaces.
 - Shared engine code: `core-js` and `core-swift`.
 - Safari resources: `sonicflow_app/extensions/safari`.
 - Native Apple surfaces: `sonicflow_app/apps/ios` and `sonicflow_app/apps/macos/macOS (App)`.
 
 Useful next checks:
 
-- A script that fails on active references to removed Android/Chrome product trees.
+- A script that fails on active references to removed legacy product trees.
 - A docs freshness check that keeps active platform paths current.
 - A docs freshness check that requires `docs/README.md` to link every active
   guide.
@@ -135,7 +135,7 @@ Description:
 Add mechanical checks that protect the Apple-only platform focus.
 
 Acceptance criteria:
-- Add a script that fails on active references to removed Android/Chrome product trees.
+- Add a script that fails on active references to removed legacy product trees.
 - Add a docs freshness check that keeps active platform paths current.
 - Wire the check into `make verify` or a focused docs/architecture audit.
 - Document allowed exceptions.
