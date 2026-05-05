@@ -1,6 +1,6 @@
 # SonicFlow Monorepo
 
-SonicFlow is a cross-platform audio project that overlays entrainment-style beat layers on user audio across browser, iOS, macOS, and Android surfaces.
+SonicFlow is an Apple-first audio project that overlays entrainment-style beat layers on user audio across iPhone, Safari, the macOS menu-bar app, and an Apple-look web app.
 
 Public product name: `SonicFlow`
 
@@ -20,23 +20,20 @@ The key runtime concepts now shaping this repo are:
 ```mermaid
 flowchart LR
     subgraph Cores["Shared Beat Cores"]
-        JS["core-js (JavaScript)"]
-        SW["core-swift (Swift Package)"]
-        KT["core-android/beatengine (Kotlin)"]
+        SW["shared/core-swift (Swift Package)"]
+        JS["shared/core-js (Safari/Web resources)"]
     end
 
-    subgraph Platforms["Platform Apps & Extensions"]
-        CH["chrome-extension"]
-        SF["safari-extension (iOS/macOS wrapper)"]
-        IOS["ios-app"]
-        MAC["macOS target in safari-extension"]
-        AND["android-app"]
+    subgraph Platforms["Active Apple Platforms"]
+        SF["extensions/safari"]
+        IOS["apps/ios"]
+        MAC["macOS menu-bar target"]
+        WEB["apps/web"]
     end
 
-    JS --> CH
     JS --> SF
+    JS --> WEB
     SW --> IOS
-    KT --> AND
     SF --> MAC
 ```
 
@@ -51,13 +48,15 @@ soundhealing_sonicflow/
 │   └── reports/
 ├── scripts/
 ├── sonicflow_app/
-│   ├── android-app/
-│   ├── chrome-extension/
-│   ├── core-android/
-│   ├── core-js/
-│   ├── core-swift/
-│   ├── ios-app/
-│   └── safari-extension/
+│   ├── apps/
+│   │   ├── ios/
+│   │   ├── macos/
+│   │   └── web/
+│   ├── extensions/
+│   │   └── safari/
+│   └── shared/
+│       ├── core-js/
+│       └── core-swift/
 ├── Makefile
 └── README.md
 ```
@@ -66,12 +65,12 @@ soundhealing_sonicflow/
 
 | Platform | Runtime/UI status | Audio source path | System audio capture | Notes |
 |---|---|---|---|---|
-| Chrome extension | SonicFlow-style popup with preset-first controls, Overlay Mode, beat volume, duration, ambient mix, pulse depth | Web tab audio via content script + shared JS beat engine | No | Browser-safe overlay for tabs with media elements. No native render/export promises. |
-| Web app / PWA | Standalone SonicFlow sessions with Focus/Relax/Sleep/Meditate taxonomy, activity defaults, Pomodoro, infinite sleep, local personalization, genre, intensity, sleep spatialization, and research-gated feedback controls | Generated beat layer via shared JS beat engine | Browser-specific/extension-assisted | Browser app runs local generated sessions. Browser-tab overlay copy stays honest about extension/API permission limits. Personalization stays local-first and sync-ready. |
 | Safari extension (web shell) | Leopard-backed SonicFlow-style wrapper messaging | Web extension runtime shell | No dedicated system capture path | Mirrors product language, but native-only features belong in the app targets. |
 | iOS app | Native SonicFlow settings model plus upgraded screen state, Overlay Mode status, advanced controls, and mobile offline download/delete state | Local file + generated beat layer with generated-session cache identifiers | No | Downloaded generated sessions can be started without network; Spotify/YouTube system overlay is unavailable, so picked files remain the local overlay path. |
 | macOS app | Leopard-native menu-bar popover with starter sessions, Overlay Mode, preset metadata, and advanced controls | Local file/system capture + generated beat layer | Partial/limited | Native app exposes permitted system overlay capture with file fallback. |
-| Android app | SonicFlow-style session model in ViewModel/service path plus Overlay Mode status, advanced controls, and mobile offline download/delete state in Compose | Local session/service + generated beat layer with generated-session cache identifiers | No | Downloaded generated sessions can be started without network; external app capture needs platform/store policy review, so local sessions remain available. |
+| Web app/PWA | Apple-look Liquid Glass SonicFlow surface for standalone sessions and research/product flows | Browser Web Audio + generated beat layer | Browser-gated/limited | Active lightweight web surface aligned with the Apple visual system. |
+
+Chrome and Android product surfaces have been removed from the active platform tree. Safari Web Extension resources live in `sonicflow_app/extensions/safari`.
 
 ## Brand Asset Usage
 
@@ -92,24 +91,23 @@ Usage guidelines in the current rollout:
 
 - Node.js 22+
 - Xcode 17+ (for iOS/macOS/Safari targets)
-- Java 17+ and Android SDK API 34 (for Android targets)
 
 ### Main Commands
 
 ```bash
 make help
-make chrome
+make safari-web-assets
+make web
+make web-dev
 make ios
 make mac
 make mac-smoke
-make android
-make web-dev
 make test
 make verify
 ```
 
-`make chrome` copies unpacked extension artifacts to `dist/chrome/`.
-`make web-dev` serves the PWA at `http://localhost:53124/sonicflow_app/web-app/`.
+`make safari-web-assets` builds the JavaScript resources consumed by the Safari extension.
+`make web-dev` starts the local Apple-look web app.
 
 ## Development Checks
 
@@ -117,16 +115,13 @@ make verify
 - Full merge gate with warning audit: `make verify`
 - JS core tests: `make test-core-js`
 - Swift core tests: `make test-core-swift`
-- Chrome extension tests: `make test-chrome`
-- Android unit tests: `make test-android`
+- Safari Web Extension resource tests: `make test-safari-web-extension`
+- Web app tests: `make test-web`
 - iOS app tests: `make test-ios`
-- Chrome popup upgrade slice: `cd sonicflow_app/chrome-extension && node --test popup.test.js`
-- Web app slice: `make test-web`
-- Android session model slice: `cd sonicflow_app/android-app && ./gradlew --console=plain :app:testDebugUnitTest --tests 'com.sonicflow.app.ui.SonicFlowViewModelTest'`
 - iOS focused test gate: `make test-ios`
 - macOS menu-bar smoke gate: `make mac-smoke`
 
-The warning audit runs cross-platform tests/builds and skips Android only when SDK/Java prerequisites are not configured locally. iOS app tests run when a compatible simulator destination is available.
+The warning audit runs active Apple/Safari/web tests and builds. iOS app tests run when a compatible simulator destination is available.
 
 ## Workflow (Linear-First)
 
@@ -165,10 +160,9 @@ Parallel work is supported via agents for independent tickets, with one branch/P
 
 ## Known Limitations
 
-- iOS and Android targets do not implement Spotify/system-output capture in this repository; their Overlay Mode copy calls out local-session support and policy limits.
+- iOS does not implement Spotify/system-output capture in this repository; Overlay Mode copy calls out local-session support and policy limits.
 - Safari behavior can differ between iOS Safari and macOS Safari due to Web Extension API differences.
-- Mobile offline support is limited to generated-session asset/cache state in the native iOS and Android apps, including download/delete controls and quota handling.
-- Browser shells expose SonicFlow-style controls, but they do not offer native offline render/export or cache flows.
-- Web Overlay Mode is capability-gated: standalone generated sessions work in the PWA, while browser-tab overlay may require the SonicFlow extension or browser-specific capture permissions.
-- Sleep spatialization and research control sessions are implemented in shared cores/web, but broader native UI rollout and formal evidence validation are still pending.
-- Android currently carries `durationMinutes`, `ambientMix`, and `pulseDepth` through the session model and UI, but the underlying audio engine is not yet feature-parity with the Apple-native runtime.
+- Mobile offline support is limited to generated-session asset/cache state in the native iOS app, including download/delete controls and quota handling.
+- Safari Web Extension resources expose SonicFlow-style controls, but they do not offer native offline render/export or cache flows.
+- Sleep spatialization and research control sessions are implemented in shared cores/web, but formal evidence validation is still pending.
+- Android and Chrome product code are removed from the active platform tree; default verification covers only iPhone, Safari, macOS menu bar, and web app surfaces.

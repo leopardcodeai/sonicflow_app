@@ -12,7 +12,7 @@ The brand is dark, warm, and quietly premium. Leopard pattern is a texture, neve
 
 ## Source of truth
 
-All tokens live in `brand/tokens.json`. Everything else (CSS variables, Swift struct, Kotlin object) is **generated** from that file — see `brand/generated/README.md`. No hex literal should appear outside of `brand/` after SF-24…SF-28 land.
+All tokens live in `brand/tokens.json`. Everything else (CSS variables and Swift structs) is **generated** from that file — see `brand/generated/README.md`. No hex literal should appear outside of `brand/` after SF-24…SF-28 land.
 
 If a new color is needed, add it to `tokens.json` first, regenerate, then use the generated token. Direct hex usage is reviewable as a blocker.
 

@@ -11,10 +11,91 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: sonicflow_app/core-js
+        working-directory: sonicflow_app/shared/core-js
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - run: npm ci
       - run: npm test
+
+  core-swift:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: sonicflow_app/shared/core-swift
+    steps:
+      - uses: actions/checkout@v4
+      - run: swift test
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sonicflow_app/apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+
+  web-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sonicflow_app/apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npx playwright install chromium
+      - run: npm run test:e2e
+
+  safari-web-extension:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: sonicflow_app/extensions/safari
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+
+  github-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node --test scripts/github/*.test.mjs
+
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm --prefix sonicflow_app/shared/core-js audit --audit-level=high
+      - run: npm --prefix sonicflow_app/extensions/safari audit --audit-level=high
+      - run: npm --prefix sonicflow_app/apps/web audit --audit-level=high
+
+  ios:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: brew install xcodegen xcbeautify swiftlint
+      - run: xcodegen generate --spec sonicflow_app/apps/ios/project.yml --project sonicflow_app/apps/ios/
+      - run: xcodebuild -project sonicflow_app/apps/ios/SonicFlow.xcodeproj -scheme SonicFlow -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO ENABLE_APP_INTENTS_METADATA_GENERATION=NO EXTRACT_APP_INTENTS_METADATA=NO OTHER_LDFLAGS="-framework AppIntents" build | xcbeautify

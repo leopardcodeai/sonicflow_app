@@ -6,11 +6,11 @@
 //   brand/assets/logomark.svg   (canonical geometric mark)
 //
 // Writes (overwrites):
-//   brand/assets/icons/chrome-16.svg
-//   brand/assets/icons/chrome-48.svg
-//   brand/assets/icons/chrome-128.svg
+//   brand/assets/icons/safari-16.svg
+//   brand/assets/icons/safari-48.svg
+//   brand/assets/icons/safari-128.svg
 //   brand/assets/icons/ios-1024.svg
-//   brand/assets/icons/android-512.svg
+//   brand/assets/icons/app-512.svg
 //   brand/assets/icons/favicon-16.svg
 //   brand/assets/icons/favicon-32.svg
 //
@@ -37,13 +37,13 @@ const leopardBase = tokens.background.leopard.base;
 
 // Targets are sorted by filename so iteration order is stable across runs.
 const TARGETS = [
-  { name: "android-512.svg", size: 512, withBackground: true },
-  { name: "chrome-128.svg", size: 128, withBackground: true },
-  { name: "chrome-16.svg", size: 16, withBackground: true },
-  { name: "chrome-48.svg", size: 48, withBackground: true },
+  { name: "app-512.svg", size: 512, withBackground: true },
   { name: "favicon-16.svg", size: 16, withBackground: true },
   { name: "favicon-32.svg", size: 32, withBackground: true },
   { name: "ios-1024.svg", size: 1024, withBackground: true },
+  { name: "safari-128.svg", size: 128, withBackground: true },
+  { name: "safari-16.svg", size: 16, withBackground: true },
+  { name: "safari-48.svg", size: 48, withBackground: true },
 ];
 
 mkdirSync(outDir, { recursive: true });

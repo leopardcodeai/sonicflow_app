@@ -8,6 +8,8 @@ node_modules/
 *.xcuserstate
 *.xcworkspace/xcuserdata/
 *.xcodeproj/xcuserdata/
+xcuserdata/
+.swiftpm/
 .idea/
 *.iml
 local.properties

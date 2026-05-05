@@ -10,9 +10,8 @@ node scripts/brand/generate-tokens.mjs
 
 Generated outputs:
 
-- `tokens.css` — CSS custom properties, consumed by Chrome + Safari extensions.
+- `tokens.css` — CSS custom properties, consumed by Safari Web Extension and web surfaces.
 - `BrandTokens.swift` — Swift struct with `Color` fields, consumed by iOS + macOS + Safari macOS app.
-- `BrandTokens.kt` — Kotlin object with `Color.fromHex` fields, consumed by Android Compose theme.
 
 The generator is deterministic — running it twice on the same input produces byte-identical output.
 
