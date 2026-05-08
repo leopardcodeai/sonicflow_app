@@ -92,8 +92,32 @@ final class FlowScreenStateTests: XCTestCase {
         XCTAssertEqual(HomeDesignPolicy.compactIconButtonSize, 42)
         XCTAssertTrue(HomeDesignPolicy.constrainsHomeContentToViewport)
         XCTAssertTrue(HomeDesignPolicy.usesLayoutNeutralLeopardBackdrop)
+        XCTAssertTrue(HomeDesignPolicy.usesSafeAreaBottomActions)
+        XCTAssertEqual(HomeDesignPolicy.horizontalSafeAreaPadding, 16)
         XCTAssertEqual(HomeDesignPolicy.homeVerticalOuterPadding, 0)
         XCTAssertEqual(HomeDesignPolicy.miniPlayerVerticalInsetPadding, 0)
         XCTAssertEqual(HomeDesignPolicy.miniPlayerTabBarClearance, 64)
+    }
+
+    func testHomeSwiftUILayoutAvoidsAbsolutePositioningAndFixedContentWidths() throws {
+        let source = try String(contentsOfFile: homeContentViewPath, encoding: .utf8)
+
+        XCTAssertTrue(source.contains(".safeAreaInset(edge: .bottom"))
+        XCTAssertFalse(source.contains(".offset("))
+        XCTAssertFalse(source.contains(".position("))
+        XCTAssertFalse(source.contains(".frame(width:"))
+    }
+
+    private var homeContentViewPath: String {
+        URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("SonicFlow")
+            .appendingPathComponent("Features")
+            .appendingPathComponent("Home")
+            .appendingPathComponent("ContentView.swift")
+            .path
     }
 }

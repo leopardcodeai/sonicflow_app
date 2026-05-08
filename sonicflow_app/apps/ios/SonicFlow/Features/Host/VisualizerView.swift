@@ -11,7 +11,8 @@ struct VisualizerView: View {
                 ForEach(0..<5, id: \.self) { index in
                     RoundedRectangle(cornerRadius: 4)
                         .fill(mode.accentColor)
-                        .frame(width: 16, height: barHeight(index: index, date: context.date))
+                        .frame(maxWidth: 16)
+                        .frame(height: barHeight(index: index, date: context.date))
                         .animation(.spring(response: 0.35, dampingFraction: 0.72), value: context.date)
                 }
             }

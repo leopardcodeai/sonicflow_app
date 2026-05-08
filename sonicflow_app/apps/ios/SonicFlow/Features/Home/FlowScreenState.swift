@@ -62,6 +62,8 @@ enum HomeDesignPolicy {
     static let compactIconButtonSize: CGFloat = 42
     static let constrainsHomeContentToViewport = true
     static let usesLayoutNeutralLeopardBackdrop = true
+    static let usesSafeAreaBottomActions = true
+    static let horizontalSafeAreaPadding: CGFloat = 16
     static let homeVerticalOuterPadding: CGFloat = 0
     static let miniPlayerVerticalInsetPadding: CGFloat = 0
     static let miniPlayerTabBarClearance: CGFloat = 64

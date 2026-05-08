@@ -74,7 +74,7 @@ struct ContentView: View {
             .toolbarBackground(.hidden, for: .tabBar)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 miniPlayer(for: screenState)
-                    .padding(.horizontal, BrandTokens.Spacing.md)
+                    .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
                     .padding(.top, HomeDesignPolicy.miniPlayerVerticalInsetPadding)
                     .padding(.bottom, HomeDesignPolicy.miniPlayerTabBarClearance)
             }
@@ -118,7 +118,7 @@ struct ContentView: View {
 
                 HStack(spacing: BrandTokens.Spacing.sm) {
                     leopardArtwork(accent: screenState.selectedMode.accentColor)
-                        .frame(width: 48, height: 48)
+                        .frame(maxWidth: 48, maxHeight: 48)
 
                     VStack(alignment: .leading, spacing: 2) {
                         Text(language.text(.ember))
@@ -149,7 +149,7 @@ struct ContentView: View {
 
                 compactSessionPanel(for: screenState)
             }
-            .padding(.horizontal, BrandTokens.Spacing.md)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
             .padding(.top, HomeDesignPolicy.homeVerticalOuterPadding)
             .padding(.bottom, HomeDesignPolicy.homeVerticalOuterPadding)
         }
@@ -173,7 +173,7 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
                 Circle()
                     .fill(mode.accentColor)
-                    .frame(width: 8, height: 8)
+                    .frame(maxWidth: 8, maxHeight: 8)
 
                 Text(DesignLabels.modeName(mode))
                     .font(.caption.weight(.bold))
@@ -257,69 +257,63 @@ struct ContentView: View {
 
 
     private func libraryTab(for screenState: FlowScreenState) -> some View {
-        GeometryReader { proxy in
-            let contentWidth = max(proxy.size.width - BrandTokens.Spacing.lg * 2, 0)
+        ScrollView {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
+                sectionHeader(title: language.text(.library), subtitle: language.text(.curatedSessions))
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
-                    sectionHeader(title: language.text(.library), subtitle: language.text(.curatedSessions))
+                HStack(spacing: BrandTokens.Spacing.sm) {
+                    Image(systemName: "magnifyingglass")
+                        .foregroundStyle(BrandTokens.Neutral.muted)
+                    TextField(language.text(.searchLibrary), text: $librarySearchText)
+                        .textInputAutocapitalization(.never)
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+                }
+                .padding(BrandTokens.Spacing.md)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cinematicGlass(radius: 18, tint: BrandTokens.Neutral.panel.opacity(0.25), stroke: Color.white.opacity(0.12))
 
-                    HStack(spacing: BrandTokens.Spacing.sm) {
-                        Image(systemName: "magnifyingglass")
-                            .foregroundStyle(BrandTokens.Neutral.muted)
-                        TextField(language.text(.searchLibrary), text: $librarySearchText)
-                            .textInputAutocapitalization(.never)
-                            .foregroundStyle(BrandTokens.Neutral.fg)
-                    }
-                    .padding(BrandTokens.Spacing.md)
-                    .cinematicGlass(radius: 18, tint: BrandTokens.Neutral.panel.opacity(0.25), stroke: Color.white.opacity(0.12))
-
-                    LazyVGrid(columns: libraryColumns, spacing: BrandTokens.Spacing.md) {
-                        ForEach(LibrarySession.filtered(librarySearchText)) { session in
-                            libraryCard(session, screenState: screenState)
-                        }
+                LazyVGrid(columns: libraryColumns, spacing: BrandTokens.Spacing.md) {
+                    ForEach(LibrarySession.filtered(librarySearchText)) { session in
+                        libraryCard(session, screenState: screenState)
                     }
                 }
-                .frame(width: contentWidth, alignment: .leading)
-                .padding(.horizontal, BrandTokens.Spacing.lg)
-                .padding(.top, BrandTokens.Spacing.lg)
-                .padding(.bottom, BrandTokens.Spacing.lg)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
+            .padding(.top, BrandTokens.Spacing.lg)
+            .padding(.bottom, BrandTokens.Spacing.lg)
         }
         .scrollContentBackground(.hidden)
         .background(LeopardBackgroundView())
     }
 
     private func statsTab(for screenState: FlowScreenState) -> some View {
-        GeometryReader { proxy in
-            let contentWidth = max(proxy.size.width - BrandTokens.Spacing.lg * 2, 0)
+        ScrollView {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
+                sectionHeader(title: language.text(.stats), subtitle: language.text(.weeklyRhythm))
 
-            ScrollView {
-                VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
-                    sectionHeader(title: language.text(.stats), subtitle: language.text(.weeklyRhythm))
-
-                    HStack(spacing: BrandTokens.Spacing.md) {
-                        statPanel(title: language.text(.thisWeekLabel), value: "4h 32m", symbol: "clock.fill", tint: BrandTokens.Accent.gold)
-                        statPanel(title: language.text(.streakLabel), value: "12 days", symbol: "flame.fill", tint: screenState.selectedMode.accentColor)
-                    }
-
-                    VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
-                        Text(language.text(.systemSurfaces))
-                            .font(.headline)
-                            .foregroundStyle(BrandTokens.Neutral.fg)
-
-                        ForEach(SystemAffordanceStub.allCases) { affordance in
-                            systemAffordanceRow(affordance, tint: screenState.selectedMode.accentColor)
-                        }
-                    }
-                    .padding(BrandTokens.Spacing.md)
-                    .cinematicGlass(radius: 24, tint: screenState.selectedMode.accentColor.opacity(0.08), stroke: Color.white.opacity(0.12))
+                HStack(spacing: BrandTokens.Spacing.md) {
+                    statPanel(title: language.text(.thisWeekLabel), value: "4h 32m", symbol: "clock.fill", tint: BrandTokens.Accent.gold)
+                    statPanel(title: language.text(.streakLabel), value: "12 days", symbol: "flame.fill", tint: screenState.selectedMode.accentColor)
                 }
-                .frame(width: contentWidth, alignment: .leading)
-                .padding(.horizontal, BrandTokens.Spacing.lg)
-                .padding(.top, BrandTokens.Spacing.lg)
-                .padding(.bottom, BrandTokens.Spacing.lg)
+
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.md) {
+                    Text(language.text(.systemSurfaces))
+                        .font(.headline)
+                        .foregroundStyle(BrandTokens.Neutral.fg)
+
+                    ForEach(SystemAffordanceStub.allCases) { affordance in
+                        systemAffordanceRow(affordance, tint: screenState.selectedMode.accentColor)
+                    }
+                }
+                .padding(BrandTokens.Spacing.md)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cinematicGlass(radius: 24, tint: screenState.selectedMode.accentColor.opacity(0.08), stroke: Color.white.opacity(0.12))
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
+            .padding(.top, BrandTokens.Spacing.lg)
+            .padding(.bottom, BrandTokens.Spacing.lg)
         }
         .scrollContentBackground(.hidden)
         .background(
@@ -329,43 +323,39 @@ struct ContentView: View {
     }
 
     private func profileTab(for screenState: FlowScreenState) -> some View {
-        GeometryReader { proxy in
-            let contentWidth = max(proxy.size.width - BrandTokens.Spacing.lg * 2, 0)
-
-            ScrollView {
-                VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
-                    HStack(spacing: BrandTokens.Spacing.md) {
-                        Image(systemName: "person.crop.circle.fill")
-                            .font(.system(size: 54))
-                            .foregroundStyle(screenState.selectedMode.accentColor)
-                        VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
-                            Text(language.text(.sonicflow))
-                                .font(.title2.weight(.black))
-                                .foregroundStyle(BrandTokens.Neutral.fg)
-                            Text(language.text(.localFirstProfile))
-                                .font(.caption)
-                                .foregroundStyle(BrandTokens.Neutral.muted)
-                        }
+        ScrollView {
+            VStack(alignment: .leading, spacing: BrandTokens.Spacing.lg) {
+                HStack(spacing: BrandTokens.Spacing.md) {
+                    Image(systemName: "person.crop.circle.fill")
+                        .font(.system(size: 54))
+                        .foregroundStyle(screenState.selectedMode.accentColor)
+                    VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
+                        Text(language.text(.sonicflow))
+                            .font(.title2.weight(.black))
+                            .foregroundStyle(BrandTokens.Neutral.fg)
+                        Text(language.text(.localFirstProfile))
+                            .font(.caption)
+                            .foregroundStyle(BrandTokens.Neutral.muted)
                     }
-                    .padding(BrandTokens.Spacing.lg)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .cinematicGlass(radius: 28, tint: screenState.selectedMode.accentColor.opacity(0.1), stroke: screenState.selectedMode.accentColor.opacity(0.24))
-
-                    Button {
-                        activeSheet = .settings
-                    } label: {
-                        Label(language.text(.settings), systemImage: "gearshape.fill")
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                    }
-                    .buttonStyle(SonicFlowGlassButtonStyle(tint: screenState.selectedMode.accentColor, prominence: .primary))
-
-                    settingsSummary(for: screenState)
                 }
-                .frame(width: contentWidth, alignment: .leading)
-                .padding(.horizontal, BrandTokens.Spacing.lg)
-                .padding(.top, BrandTokens.Spacing.lg)
-                .padding(.bottom, BrandTokens.Spacing.lg)
+                .padding(BrandTokens.Spacing.lg)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .cinematicGlass(radius: 28, tint: screenState.selectedMode.accentColor.opacity(0.1), stroke: screenState.selectedMode.accentColor.opacity(0.24))
+
+                Button {
+                    activeSheet = .settings
+                } label: {
+                    Label(language.text(.settings), systemImage: "gearshape.fill")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(SonicFlowGlassButtonStyle(tint: screenState.selectedMode.accentColor, prominence: .primary))
+
+                settingsSummary(for: screenState)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
+            .padding(.top, BrandTokens.Spacing.lg)
+            .padding(.bottom, BrandTokens.Spacing.lg)
         }
         .scrollContentBackground(.hidden)
         .background(LeopardBackgroundView())
@@ -378,17 +368,13 @@ struct ContentView: View {
             BrandTokens.Neutral.bg.ignoresSafeArea()
             LeopardBackgroundView().ignoresSafeArea()
 
-            GeometryReader { proxy in
-                let contentWidth = max(min(proxy.size.width - BrandTokens.Spacing.xl * 2, 360), 280)
-                let heroWidth = min(contentWidth * 0.72, 216)
+            VStack(spacing: BrandTokens.Spacing.lg) {
+                Spacer(minLength: BrandTokens.Spacing.lg)
 
-                VStack(spacing: BrandTokens.Spacing.lg) {
-                    Spacer(minLength: max(BrandTokens.Spacing.lg, proxy.safeAreaInsets.top))
+                onboardingArtwork()
+                    .frame(maxWidth: 216)
 
-                    onboardingArtwork()
-                        .frame(width: heroWidth)
-
-                    VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
+                VStack(alignment: .leading, spacing: BrandTokens.Spacing.sm) {
                     Text(language.text(.sonicflow))
                         .font(.caption.weight(.bold))
                         .foregroundStyle(BrandTokens.Accent.gold)
@@ -406,22 +392,22 @@ struct ContentView: View {
                             .foregroundStyle(BrandTokens.Neutral.fg.opacity(0.76))
                             .multilineTextAlignment(.leading)
                             .fixedSize(horizontal: false, vertical: true)
-                    }
-                    .frame(width: contentWidth, alignment: .leading)
-
-                    Button {
-                        hasCompletedOnboarding = true
-                    } label: {
-                        Label(state.primaryActionTitle, systemImage: "sparkles")
-                            .font(.headline.weight(.bold))
-                            .frame(width: contentWidth, height: 54)
-                    }
-                    .buttonStyle(SonicFlowGlassButtonStyle(tint: BrandTokens.Accent.gold, prominence: .primary, minHeight: 54))
-
-                    Spacer(minLength: max(BrandTokens.Spacing.lg, proxy.safeAreaInsets.bottom))
                 }
-                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .center)
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                Button {
+                    hasCompletedOnboarding = true
+                } label: {
+                    Label(state.primaryActionTitle, systemImage: "sparkles")
+                        .font(.headline.weight(.bold))
+                        .frame(maxWidth: .infinity, minHeight: 54)
+                }
+                .buttonStyle(SonicFlowGlassButtonStyle(tint: BrandTokens.Accent.gold, prominence: .primary, minHeight: 54))
+
+                Spacer(minLength: BrandTokens.Spacing.lg)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
         }
     }
 
@@ -442,15 +428,15 @@ struct ContentView: View {
 
             Circle()
                 .fill(BrandTokens.Accent.gold.opacity(0.24))
-                .frame(width: 144, height: 144)
+                .frame(maxWidth: 144, maxHeight: 144)
                 .blur(radius: 18)
-                .offset(x: -42, y: -48)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
             Circle()
                 .fill(BrandTokens.Mode.meditation.opacity(0.28))
-                .frame(width: 128, height: 128)
+                .frame(maxWidth: 128, maxHeight: 128)
                 .blur(radius: 20)
-                .offset(x: 48, y: 52)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
 
             VStack(spacing: BrandTokens.Spacing.md) {
                 Image(systemName: "waveform.path.ecg")
@@ -461,7 +447,7 @@ struct ContentView: View {
                     ForEach(FlowMode.allCases, id: \.self) { mode in
                         Circle()
                             .fill(mode.accentColor)
-                            .frame(width: 11, height: 11)
+                            .frame(maxWidth: 11, maxHeight: 11)
                     }
                 }
             }
@@ -549,7 +535,7 @@ struct ContentView: View {
             Image(systemName: affordance.symbolName)
                 .font(.headline.weight(.bold))
                 .foregroundStyle(tint)
-                .frame(width: 34, height: 34)
+                .frame(minWidth: 34, minHeight: 34)
                 .background(tint.opacity(0.14), in: Circle())
 
             VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
@@ -581,7 +567,7 @@ struct ContentView: View {
         HStack(spacing: BrandTokens.Spacing.md) {
             Image(systemName: symbol)
                 .foregroundStyle(BrandTokens.Accent.gold)
-                .frame(width: 28)
+                .frame(minWidth: 28)
             Text(title)
                 .foregroundStyle(BrandTokens.Neutral.fg)
             Spacer()
@@ -603,7 +589,7 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.headline.weight(.bold))
-                            .frame(width: 42, height: 42)
+                            .frame(minWidth: 42, minHeight: 42)
                     }
                     .buttonStyle(SonicFlowGlassButtonStyle(tint: screenState.selectedMode.accentColor, prominence: .icon))
                     .accessibilityLabel(language.text(.closeTimer))
@@ -619,12 +605,13 @@ struct ContentView: View {
                     Spacer()
 
                     Color.clear
-                        .frame(width: 42, height: 42)
+                        .frame(minWidth: 42, minHeight: 42)
                 }
 
                 Capsule()
                     .fill(screenState.selectedMode.accentColor.opacity(0.22))
-                    .frame(width: 120, height: 120)
+                    .aspectRatio(1, contentMode: .fit)
+                    .frame(maxWidth: 120)
                     .overlay(
                         VStack(spacing: BrandTokens.Spacing.xs) {
                             Image(systemName: "timer")
@@ -653,6 +640,7 @@ struct ContentView: View {
                 }
             }
             .padding(BrandTokens.Spacing.xl)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
         }
     }
 
@@ -668,7 +656,7 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.headline.weight(.bold))
-                            .frame(width: 42, height: 42)
+                            .frame(minWidth: 42, minHeight: 42)
                     }
                     .buttonStyle(SonicFlowGlassButtonStyle(tint: screenState.selectedMode.accentColor, prominence: .icon))
                     .accessibilityLabel(language.text(.closeSettings))
@@ -685,6 +673,7 @@ struct ContentView: View {
                 Spacer()
             }
             .padding(BrandTokens.Spacing.lg)
+            .padding(.horizontal, HomeDesignPolicy.horizontalSafeAreaPadding)
         }
     }
 
@@ -769,15 +758,9 @@ struct ContentView: View {
 
     private func miniPlayer(for screenState: FlowScreenState) -> some View {
         VStack(spacing: BrandTokens.Spacing.sm) {
-            GeometryReader { proxy in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(Color.white.opacity(0.12))
-                    Capsule()
-                        .fill(screenState.selectedMode.accentColor)
-                        .frame(width: proxy.size.width * (audioManager.isPlaying ? 0.38 : 0.08))
-                }
-            }
+            ProgressView(value: audioManager.isPlaying ? 0.38 : 0.08)
+                .progressViewStyle(.linear)
+                .tint(screenState.selectedMode.accentColor)
             .frame(height: 3)
 
             HStack(spacing: BrandTokens.Spacing.sm) {
@@ -801,7 +784,7 @@ struct ContentView: View {
                     } label: {
                         Image(systemName: audioManager.isPlaying ? "pause.fill" : "play.fill")
                             .font(.headline.weight(.black))
-                            .frame(width: 40, height: 40)
+                            .frame(minWidth: 40, minHeight: 40)
                     }
                     .buttonStyle(SonicFlowGlassButtonStyle(tint: screenState.selectedMode.accentColor, prominence: .icon))
                     .accessibilityIdentifier(audioManager.isPlaying ? DesignLabels.Accessibility.pauseButton : DesignLabels.Accessibility.playButton)
@@ -829,7 +812,7 @@ struct ContentView: View {
                 .font(.caption.weight(.black))
                 .foregroundStyle(BrandTokens.Neutral.fg.opacity(0.72))
         }
-        .frame(width: 38, height: 38)
+        .frame(minWidth: 38, minHeight: 38)
     }
 
     private func playbackErrorBanner(_ message: String, accent: Color) -> some View {

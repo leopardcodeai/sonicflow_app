@@ -91,7 +91,7 @@ private struct SonicFlowIslandBadge: View {
     var body: some View {
         HStack(spacing: 8) {
             SonicFlowLeopardMark(isPlaying: context.state.isPlaying)
-                .frame(width: 34, height: 34)
+                .frame(maxWidth: 34, maxHeight: 34)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("SonicFlow")
@@ -113,7 +113,8 @@ private struct SonicFlowIslandWaveform: View {
             ForEach(0..<28, id: \.self) { index in
                 Capsule()
                     .fill(Color(red: 0.90, green: 0.66, blue: 0.29))
-                    .frame(width: 3, height: barHeight(index))
+                    .frame(maxWidth: 3)
+                    .frame(height: barHeight(index))
                     .opacity(isPlaying ? 0.95 : 0.36)
             }
         }
@@ -135,25 +136,33 @@ private struct SonicFlowLeopardMark: View {
             Circle()
                 .fill(Color(red: 0.90, green: 0.66, blue: 0.29))
 
-            Circle()
-                .fill(.black.opacity(0.74))
-                .frame(width: 7, height: 5)
-                .offset(x: -7, y: -4)
+            VStack {
+                HStack {
+                    leopardSpot(maxWidth: 7, maxHeight: 5)
+                    Spacer()
+                    leopardSpot(maxWidth: 6, maxHeight: 4)
+                }
 
-            Circle()
-                .fill(.black.opacity(0.74))
-                .frame(width: 6, height: 4)
-                .offset(x: 5, y: -6)
+                Spacer()
 
-            Circle()
-                .fill(.black.opacity(0.74))
-                .frame(width: 8, height: 5)
-                .offset(x: 2, y: 6)
+                HStack {
+                    Spacer()
+                    leopardSpot(maxWidth: 8, maxHeight: 5)
+                    Spacer()
+                }
+            }
+            .padding(10)
 
             Image(systemName: isPlaying ? "waveform" : "play.fill")
                 .font(.caption.weight(.black))
                 .foregroundStyle(.black.opacity(0.78))
         }
-        .frame(width: 42, height: 42)
+        .frame(maxWidth: 42, maxHeight: 42)
+    }
+
+    private func leopardSpot(maxWidth: CGFloat, maxHeight: CGFloat) -> some View {
+        Circle()
+            .fill(.black.opacity(0.74))
+            .frame(maxWidth: maxWidth, maxHeight: maxHeight)
     }
 }

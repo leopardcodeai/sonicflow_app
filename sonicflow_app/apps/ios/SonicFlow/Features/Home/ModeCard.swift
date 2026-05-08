@@ -12,7 +12,7 @@ struct ModeCard: View {
             HStack(spacing: BrandTokens.Spacing.md) {
                 Circle()
                     .fill(mode.accentColor)
-                    .frame(width: 12, height: 12)
+                    .frame(maxWidth: 12, maxHeight: 12)
 
                 VStack(alignment: .leading, spacing: BrandTokens.Spacing.xs) {
                     Text(language.modeName(mode))
