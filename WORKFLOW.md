@@ -45,7 +45,7 @@ Rules:
 1. Work only inside the assigned workspace.
 2. Keep SonicFlow Apple-first: active targets are iPhone, Safari Web Extension,
    macOS menu bar, and the web app.
-3. Do not reactivate Android or Chrome product targets.
+3. Do not reactivate removed legacy mobile/browser product targets.
 4. Use one branch and one draft PR for this issue.
 5. Branch format: `sf/{{ issue.identifier }}-short-slug`.
 6. PR title format: `[{{ issue.identifier }}] concise outcome`.

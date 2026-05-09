@@ -2,10 +2,13 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-IOS_PROJECT="$ROOT_DIR/sonicflow_app/ios-app/SonicFlow.xcodeproj"
+IOS_PROJECT="$ROOT_DIR/sonicflow_app/apps/ios/SonicFlow.xcodeproj"
 IOS_SCHEME="SonicFlow"
+MACOS_PROJECT="$ROOT_DIR/sonicflow_app/apps/macos/SonicFlow.xcodeproj"
+MACOS_SCHEME="SonicFlow (macOS)"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
+XCODE_WARNING_CLEAN_SETTINGS=(CODE_SIGNING_ALLOWED=NO ENABLE_APP_INTENTS_METADATA_GENERATION=NO EXTRACT_APP_INTENTS_METADATA=NO "OTHER_LDFLAGS=-framework AppIntents")
 
 run_step() {
   local name="$1"
@@ -38,16 +41,8 @@ warning_patterns = [
     re.compile(r"warning:", re.IGNORECASE),
     re.compile(r"^w:\s", re.IGNORECASE),
 ]
-ignore_patterns = [
-    re.compile(r"Metadata extraction skipped\. No AppIntents\.framework dependency found\."),
-    re.compile(r"Deprecated Gradle features were used in this build, making it incompatible with Gradle 9\.0\."),
-    re.compile(r"The following options were not recognized by any processor: '\[dagger\."),
-]
-
 for line in log_path.read_text(errors="ignore").splitlines():
     if any(pattern.search(line) for pattern in warning_patterns):
-        if any(pattern.search(line) for pattern in ignore_patterns):
-            continue
         print(line)
 PY
 }
@@ -82,32 +77,17 @@ assert_warnings() {
 
 run_self_test() {
   local appintents_log="$TMP_DIR/appintents.log"
-  local gradle_log="$TMP_DIR/gradle.log"
-  local kapt_log="$TMP_DIR/kapt.log"
   local swift_warning_log="$TMP_DIR/swift-warning.log"
-  local kotlin_warning_log="$TMP_DIR/kotlin-warning.log"
 
   printf '%s\n' \
     "2026-04-23 appintentsmetadataprocessor[1:1] warning: Metadata extraction skipped. No AppIntents.framework dependency found." \
     >"$appintents_log"
   printf '%s\n' \
-    "Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0." \
-    >"$gradle_log"
-  printf '%s\n' \
-    "warning: The following options were not recognized by any processor: '[dagger.fastInit, kapt.kotlin.generated]'" \
-    >"$kapt_log"
-  printf '%s\n' \
     "/tmp/File.swift:12:8: warning: variable 'value' was never mutated" \
     >"$swift_warning_log"
-  printf '%s\n' \
-    "w: /tmp/File.kt: (7, 13): Parameter 'unused' is never used" \
-    >"$kotlin_warning_log"
 
-  assert_warnings "accepted AppIntents metadata warning" none "$appintents_log"
-  assert_warnings "accepted Gradle deprecation summary" none "$gradle_log"
-  assert_warnings "accepted KAPT processor options warning" none "$kapt_log"
+  assert_warnings "AppIntents metadata warning" some "$appintents_log"
   assert_warnings "real Swift warning" some "$swift_warning_log"
-  assert_warnings "real Kotlin warning" some "$kotlin_warning_log"
 
   echo "check_warnings self-test passed"
 }
@@ -167,7 +147,7 @@ run_ios_tests_if_available() {
     return 0
   fi
 
-  run_step ios_tests xcodebuild -project "$IOS_PROJECT" -scheme "$IOS_SCHEME" -configuration Debug -destination "$destination" CODE_SIGNING_ALLOWED=NO test
+  run_step ios_tests xcodebuild -project "$IOS_PROJECT" -scheme "$IOS_SCHEME" -configuration Debug -destination "$destination" "${XCODE_WARNING_CLEAN_SETTINGS[@]}" test
   check_step ios_tests
 }
 
@@ -185,22 +165,25 @@ run_self_test
 
 run_step active_platforms "$ROOT_DIR/scripts/check_active_platforms.sh"
 
-run_step core_js npm --prefix "$ROOT_DIR/sonicflow_app/core-js" test
+run_step core_js npm --prefix "$ROOT_DIR/sonicflow_app/shared/core-js" test
 check_step core_js
 
-run_step safari_web_extension_build bash -lc "cd '$ROOT_DIR/sonicflow_app/safari-web-extension' && npm ci && npm run build"
-check_step safari_web_extension_build
+run_step safari_web_assets bash -lc "cd '$ROOT_DIR/sonicflow_app/extensions/safari' && npm ci && npm run build"
+check_step safari_web_assets
 
-run_step safari_web_extension_test bash -lc "cd '$ROOT_DIR/sonicflow_app/safari-web-extension' && npm test"
+run_step safari_web_extension_test bash -lc "cd '$ROOT_DIR/sonicflow_app/extensions/safari' && npm test"
 check_step safari_web_extension_test
 
-run_step core_swift swift test --package-path "$ROOT_DIR/sonicflow_app/core-swift"
+run_step web_app npm --prefix "$ROOT_DIR/sonicflow_app/apps/web" test
+check_step web_app
+
+run_step core_swift swift test --package-path "$ROOT_DIR/sonicflow_app/shared/core-swift"
 check_step core_swift
 
-run_step ios_build xcodebuild -project "$IOS_PROJECT" -scheme "$IOS_SCHEME" -configuration Debug -destination "generic/platform=iOS Simulator" CODE_SIGNING_ALLOWED=NO build
+run_step ios_build xcodebuild -project "$IOS_PROJECT" -scheme "$IOS_SCHEME" -configuration Debug -destination "generic/platform=iOS Simulator" "${XCODE_WARNING_CLEAN_SETTINGS[@]}" build
 check_step ios_build
 
 run_ios_tests_if_available
 
-run_step mac_build xcodebuild -project "$ROOT_DIR/sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj" -scheme "SonicFlow (macOS)" -configuration Debug -destination "generic/platform=macOS" CODE_SIGNING_ALLOWED=NO build
+run_step mac_build xcodebuild -project "$MACOS_PROJECT" -scheme "$MACOS_SCHEME" -configuration Debug -destination "platform=macOS,arch=arm64" "${XCODE_WARNING_CLEAN_SETTINGS[@]}" build
 check_step mac_build

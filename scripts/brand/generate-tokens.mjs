@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Generate per-platform brand token files from brand/tokens.json.
 // Source of truth: brand/tokens.json  (SF-23)
-// Consumers: Safari CSS and iOS/macOS Swift.
+// Consumers: Safari/Web CSS and iOS/macOS Swift.
 //
 // Usage: node scripts/brand/generate-tokens.mjs
 //

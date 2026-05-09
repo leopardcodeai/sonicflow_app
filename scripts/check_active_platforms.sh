@@ -13,8 +13,13 @@ if [[ -d "sonicflow_app/chrome-extension" ]]; then
   missing_paths=1
 fi
 
-if [[ ! -d "sonicflow_app/safari-web-extension" ]]; then
-  echo "Expected Safari web extension path is missing: sonicflow_app/safari-web-extension"
+if [[ -d "sonicflow_app/safari-web-extension" ]]; then
+  echo "Legacy Safari web extension path still present: sonicflow_app/safari-web-extension"
+  missing_paths=1
+fi
+
+if [[ ! -d "sonicflow_app/extensions/safari" ]]; then
+  echo "Expected Safari web extension path is missing: sonicflow_app/extensions/safari"
   missing_paths=1
 fi
 

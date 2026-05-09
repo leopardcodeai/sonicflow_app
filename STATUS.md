@@ -1,41 +1,28 @@
 # STATUS
 
-Date: 2026-04-19
+Date: 2026-04-28
 
-## Ticket
+## Platform Focus
 
-- Active ticket: `SF-23`
-- Parent ticket: `SF-22` (Leopard Look redesign)
-- Branch: `feature/SF-23-brand-foundation`
-- Goal: establish the shared Leopard AI brand foundation consumed by follow-up platform tickets.
+- Active product targets: iPhone app, Safari Web Extension, macOS menu-bar app, and Apple-look web app/PWA.
+- Removed product targets: legacy non-Safari browser and non-iOS mobile surfaces.
+- Safari Web Extension resources now live in `sonicflow_app/extensions/safari`.
+- Native macOS menu-bar app now lives beside iOS under `sonicflow_app/apps/macos`.
 
-## Done
+## Current Work
 
-### SF-23 — brand foundation
-- `brand/tokens.json` — canonical source of truth (chakra palette, mode-to-chakra mapping, neutral surfaces, accents, typography, radius, spacing, elevation, leopard parameters).
-- `brand/BRAND.md` — human-readable guidelines (identity, mode↔chakra, leopard pattern rules, logo/clearspace, glow formula, do/don't).
-- `brand/generated/` — deterministic per-platform outputs:
-  - `tokens.css` (CSS custom properties)
-  - `BrandTokens.swift` (Swift enum tree)
-  - `README.md` (do-not-edit notice, regen command)
-- `scripts/brand/generate-tokens.mjs` — idempotent generator, verified byte-identical on repeated runs.
-- `docs/guides/codex-automation-prompts.md` — worker prompt hardened to re-check active `Todo` / `In Progress` / `In Review` issues directly from Linear issue details.
+- Runtime beat-engine hot paths were tightened in JS and Swift by removing per-frame angle/gain recomputation.
+- Web Extension playback now tracks scheduled sources so stop/start cycles clean up active audio nodes.
+- Default build/test architecture now follows the active Apple/Safari target set.
+- Warning audits pass `ENABLE_APP_INTENTS_METADATA_GENERATION=NO` for Xcode builds so toolchain metadata warnings are treated as real warnings, not ignored noise.
+- Safari Web Extension resource dependencies were refreshed, including `esbuild`.
 
-## Verification (this session)
+## Verification Scope
 
-- `node scripts/brand/generate-tokens.mjs` → byte-identical twice. ✅
-- `cd sonicflow_app/core-js && npm test` → 5/5 pass. ✅
-- `cd sonicflow_app/safari-web-extension && npm test` → 10/10 pass. ✅
-- `./scripts/check_warnings.sh` → blocked in `core_swift` by sandboxed Swift toolchain cache access (`sandbox_apply: Operation not permitted`), not by an SF-23 code failure.
-
-## Open / Flags
-
-- `SF-24` through `SF-29` remain follow-up tickets that consume this foundation and should be split into their own branches/PRs after SF-23 is pushed.
-- GitHub PR listing/comment inspection is currently blocked from this sandbox (`api.github.com` unreachable).
-- Prefer moving `SF-23` to `Preview` if that Linear state exists; otherwise use `In Review`.
+- `make test` covers JS core, Swift core, Safari Web Extension resources, GitHub workflow guards, and available iOS tests.
+- `make verify` runs the zero-warning audit across active Apple/Safari build and test surfaces.
+- Removed legacy browser/mobile product targets are excluded from default verification.
 
 ## Next Step
 
-- Commit and push SF-23 branch contents.
-- Open PR titled `[SF-23] ...` with the Linear link and the verification notes above.
-- Move the ticket to `Preview` / `In Review`, then start the next platform slice on its own branch.
+- Add a streaming renderer to `SonicFlowCore` so iOS and macOS can share realtime beat generation instead of maintaining a macOS-local engine fork.

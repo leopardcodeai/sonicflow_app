@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "SonicFlow",
+  "version": "0.1.0",
+  "description": "Layer focus beats over supported audio sites.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "*://*.youtube.com/*",
+    "*://*.soundcloud.com/*",
+    "*://*.music.apple.com/*",
+    "*://docs.google.com/*",
+    "*://*.notion.so/*",
+    "*://meet.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SonicFlow"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.youtube.com/*",
+        "*://*.soundcloud.com/*",
+        "*://*.music.apple.com/*",
+        "*://docs.google.com/*",
+        "*://*.notion.so/*",
+        "*://meet.google.com/*"
+      ],
+      "js": ["dist/content_script.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.svg",
+    "32": "icons/icon-32.svg",
+    "48": "icons/icon-48.svg",
+    "128": "icons/icon-128.svg"
+  }
+}

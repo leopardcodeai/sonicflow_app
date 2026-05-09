@@ -3,8 +3,8 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-SAFARI_PROJECT="sonicflow_app/safari-extension/SonicFlow/SonicFlow.xcodeproj"
-SAFARI_SCHEME="SonicFlow (macOS)"
+MACOS_PROJECT="sonicflow_app/apps/macos/SonicFlow.xcodeproj"
+MACOS_SCHEME="SonicFlow (macOS)"
 
 cd "$ROOT_DIR"
 
@@ -12,11 +12,13 @@ make mac
 
 BUILD_SETTINGS="$(
     xcodebuild \
-        -project "$SAFARI_PROJECT" \
-        -scheme "$SAFARI_SCHEME" \
+        -project "$MACOS_PROJECT" \
+        -scheme "$MACOS_SCHEME" \
         -configuration Debug \
-        -sdk macosx \
+        -destination "platform=macOS,arch=arm64" \
         CODE_SIGNING_ALLOWED=NO \
+        ENABLE_APP_INTENTS_METADATA_GENERATION=NO \
+        EXTRACT_APP_INTENTS_METADATA=NO \
         -showBuildSettings
 )"
 
