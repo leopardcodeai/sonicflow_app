@@ -1,5 +1,7 @@
 # SonicFlow Monorepo
 
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE) [![AI Built](https://img.shields.io/badge/vibecoded-AI-purple)](https://github.com/leopardcodeai) [![SwiftUI](https://img.shields.io/badge/SwiftUI-iOS-orange)](https://developer.apple.com/xcode/swiftui/)
+
 SonicFlow is an Apple-first audio project that overlays entrainment-style beat layers on user audio across iPhone, Safari, the macOS menu-bar app, and an Apple-look web app.
 
 Public product name: `SonicFlow`
