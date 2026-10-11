@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SonicFlow</title>
+    <link rel="stylesheet" href="brand.css">
+    <style>
+      html, body {
+        background: var(--neutral-ink);
+      }
+
+      body {
+        position: relative;
+        margin: 0;
+        width: 340px;
+        min-height: 520px;
+        padding: 14px;
+        color: var(--sf-fg);
+        font: 14px/1.4 var(--font-body);
+        isolation: isolate;
+      }
+
+      /* Leopard wallpaper — shared 2K brand asset, sits behind blurred panels. */
+      .leopard-bg {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(180deg, var(--sf-panel), var(--sf-panel)),
+          url("./assets/leopard_pattern_2048x2048.png");
+        background-size: cover, cover;
+        background-position: center, center;
+        opacity: 0.34;
+        filter: blur(0.4px);
+        pointer-events: none;
+      }
+
+      .shell {
+        position: relative;
+        display: grid;
+        gap: var(--space-md);
+        z-index: 1;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 72px minmax(0, 1fr);
+        gap: var(--space-sm);
+        align-items: center;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header strong {
+        font-family: var(--font-display);
+        letter-spacing: -0.01em;
+        color: var(--sf-fg);
+        text-transform: lowercase;
+      }
+
+      .status {
+        display: inline-flex;
+        gap: var(--space-sm);
+        align-items: center;
+        color: var(--sf-muted);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: var(--radius-pill);
+        background: var(--neutral-muted);
+      }
+
+      .dot.active {
+        background: var(--accent-danger);
+        box-shadow: 0 0 0 2px var(--sf-danger-soft);
+      }
+
+      .panel {
+        padding: 12px;
+        border: 1px solid var(--sf-border);
+        border-radius: 12px;
+        background: var(--sf-panel);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        box-shadow: 0 12px 28px var(--sf-border);
+      }
+
+      strong {
+        display: block;
+        margin-bottom: var(--space-xs);
+      }
+
+      p {
+        margin: 0;
+        color: var(--sf-muted);
+      }
+
+      .eyebrow {
+        color: var(--sf-muted);
+        font-family: var(--font-mono);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .hero-copy {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .hero-art {
+        width: 62px;
+        height: 62px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--sf-fg);
+        box-shadow: none;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .mode-card {
+        border: 1px solid var(--sf-border);
+        border-radius: 10px;
+        background: var(--sf-panel);
+        padding: 12px;
+        text-align: left;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        transition: box-shadow 160ms ease, border-color 160ms ease, transform 160ms ease;
+      }
+
+      .mode-card:hover {
+        border-color: var(--mode-color, var(--neutral-border));
+      }
+
+      /* Active mode card glow per BRAND.md:
+         0 0 24px modeColor + 0 0 64px (modeColor at 30% alpha) */
+      .mode-card.active {
+        border-color: var(--sf-fg);
+        background: var(--accent-gold);
+        box-shadow: none;
+        color: var(--neutral-ink);
+      }
+
+      .mode-card.active small,
+      .mode-card.active span,
+      .source-pill.active small {
+        color: var(--neutral-ink);
+      }
+
+      .mode-card small {
+        display: block;
+        margin-bottom: var(--space-xs);
+        color: var(--sf-muted);
+        font-family: var(--font-mono);
+      }
+
+      .slider-row {
+        display: grid;
+        gap: var(--space-sm);
+      }
+
+      .activity-select {
+        width: 100%;
+        margin-top: var(--space-sm);
+        border: 1px solid var(--neutral-border);
+        border-radius: var(--radius-md);
+        padding: 10px 12px;
+        color: var(--neutral-fg);
+        background: rgba(12, 12, 14, 0.82);
+        background: var(--sf-panel);
+        color: var(--sf-fg);
+        font: inherit;
+      }
+
+      .overlay-source-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        margin: var(--space-sm) 0;
+      }
+
+      .source-pill {
+        display: grid;
+        gap: 2px;
+        min-height: 54px;
+        border: 1px solid var(--sf-border);
+        border-radius: 10px;
+        padding: 9px 10px;
+        color: var(--sf-fg);
+        background: var(--sf-panel);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .source-pill.active {
+        border-color: var(--sf-fg);
+        background: var(--accent-gold);
+        color: var(--neutral-ink);
+      }
+
+      .source-pill span,
+      .source-pill small {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .source-pill span {
+        font-weight: 700;
+      }
+
+      .source-pill small {
+        color: var(--neutral-muted);
+        font-family: var(--font-mono);
+        font-size: 11px;
+      }
+
+      .stack {
+        display: grid;
+        gap: var(--space-md);
+      }
+
+      .slider-meta {
+        display: flex;
+        justify-content: space-between;
+        color: var(--sf-muted);
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: var(--accent-gold);
+      }
+
+      .toggle {
+        border: 1px solid var(--sf-border-strong);
+        border-radius: 999px;
+        padding: var(--space-md) var(--space-lg);
+        font: inherit;
+        font-weight: 600;
+        color: var(--neutral-ink);
+        background: var(--accent-gold);
+        cursor: pointer;
+        box-shadow: var(--elev-gold);
+        transition: box-shadow 160ms ease, opacity 160ms ease;
+      }
+
+      .toggle:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .toggle.stop {
+        background: var(--accent-danger);
+        color: var(--sf-fg);
+      }
+
+      .site-rule {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid var(--accent-danger);
+        border-radius: 10px;
+        padding: 10px;
+        background: var(--sf-panel-strong);
+        color: var(--sf-fg);
+        font-size: 12px;
+      }
+
+      .rule-switch {
+        width: 30px;
+        height: 18px;
+        border: 1px solid var(--sf-border-strong);
+        border-radius: 999px;
+        background: var(--accent-gold);
+        position: relative;
+        flex: 0 0 auto;
+      }
+
+      .rule-switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        right: 3px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--neutral-ink);
+        border: 1px solid var(--sf-border-strong);
+      }
+
+      .rule-controls,
+      .preferences-grid {
+        display: grid;
+        gap: 8px;
+        margin-top: var(--space-sm);
+      }
+
+      .rule-controls {
+        grid-template-columns: minmax(0, 1fr) 88px;
+      }
+
+      .rule-controls input,
+      .rule-controls select {
+        min-width: 0;
+        border: 1px solid var(--sf-border);
+        border-radius: 10px;
+        padding: 8px 10px;
+        background: var(--sf-panel);
+        color: var(--sf-fg);
+        font: inherit;
+      }
+
+      .rule-controls button,
+      .rule-delete {
+        border: 1px solid var(--sf-border-strong);
+        border-radius: 10px;
+        background: var(--accent-gold);
+        color: var(--neutral-ink);
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .site-rule-list {
+        display: grid;
+        gap: 8px;
+        margin-top: var(--space-sm);
+      }
+
+      .site-rule-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+        align-items: center;
+        border: 1px solid var(--sf-border);
+        border-radius: 10px;
+        padding: 8px 10px;
+        background: var(--sf-panel);
+      }
+
+      .site-rule-row span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .preferences-grid label {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        color: var(--sf-fg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="leopard-bg" aria-hidden="true"></div>
+    <div class="shell">
+      <div class="header">
+        <strong>SonicFlow</strong>
+        <div class="status">
+          <span class="dot" id="status-dot"></span>
+          <span id="status-text">Off</span>
+        </div>
+      </div>
+      <div class="panel hero">
+        <img class="hero-art" id="hero-art" src="./icons/icon-128.svg" alt="SonicFlow mark">
+        <div>
+          <span class="eyebrow" data-i18n="detected-doc">Detected · Writing Doc</span>
+          <strong id="hero-title">suggested: deep focus</strong>
+          <p class="hero-copy" id="hero-description">ember · cinematic · 60m · high</p>
+        </div>
+      </div>
+      <div class="site-rule" id="current-site-rule">
+        <span id="current-site-rule-label">auto-play <b>focus</b> on this site</span>
+        <span class="rule-switch" aria-hidden="true"></span>
+      </div>
+      <div class="panel" id="site-rule-panel">
+        <strong>Site Rules</strong>
+        <p>Add or edit automatic mode rules for this Safari site.</p>
+        <div class="rule-controls">
+          <input id="site-rule-host" type="text" placeholder="example.com" aria-label="Rule host">
+          <select id="site-rule-mode" aria-label="Rule mode">
+            <option value="focus">Focus</option>
+            <option value="flow">Flow</option>
+            <option value="meditation">Meditation</option>
+            <option value="sleep">Sleep</option>
+          </select>
+          <select id="site-rule-activity" aria-label="Rule activity"></select>
+          <button id="site-rule-save" type="button">Save</button>
+        </div>
+        <label class="site-rule">
+          <span>auto-start when this rule matches</span>
+          <input id="site-rule-autostart" type="checkbox">
+        </label>
+        <div class="site-rule-list" id="site-rule-list"></div>
+      </div>
+      <div class="panel">
+        <strong data-i18n="starter-sessions">Starter Sessions</strong>
+        <div class="grid" id="example-grid"></div>
+      </div>
+      <div class="panel">
+        <div class="grid" id="mode-grid"></div>
+      </div>
+      <div class="panel" id="activity-panel">
+        <strong data-i18n="activity">Activity</strong>
+        <p data-i18n="activity-copy">Choose a one-click session path. Flow now powers Creative Flow inside Focus.</p>
+        <select class="activity-select" id="activity-select" aria-label="Session activity"></select>
+        <p id="activity-timer">Pomodoro · 25 min</p>
+      </div>
+      <div class="panel" id="overlay-mode-panel">
+        <strong data-i18n="overlay-mode">Overlay Mode</strong>
+        <p data-i18n="overlay-copy">Layer SonicFlow under supported media while keeping native-only capture paths explicit.</p>
+        <div class="overlay-source-list" id="overlay-source-list"></div>
+        <p id="overlay-source-status">Checking browser tab for overlay media...</p>
+      </div>
+      <div class="panel stack">
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong data-i18n="beat-volume">Beat volume</strong>
+            <span id="volume-value">15</span>
+          </div>
+          <input id="volume-slider" type="range" min="0" max="100" value="15">
+        </div>
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong data-i18n="duration">Duration</strong>
+            <span id="duration-value">25 min</span>
+          </div>
+          <input id="duration-slider" type="range" min="5" max="60" step="5" value="25">
+        </div>
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong data-i18n="ambient-mix">Ambient mix</strong>
+            <span id="ambient-value">45%</span>
+          </div>
+          <input id="ambient-slider" type="range" min="20" max="100" step="1" value="45">
+        </div>
+        <div class="slider-row">
+          <div class="slider-meta">
+            <strong data-i18n="pulse-depth">Pulse depth</strong>
+            <span id="pulse-value">95%</span>
+          </div>
+          <input id="pulse-slider" type="range" min="20" max="100" step="1" value="95">
+        </div>
+      </div>
+      <div class="panel">
+        <p id="page-message">Checking current tab for YouTube or SoundCloud media...</p>
+      </div>
+      <div class="panel" id="preferences-panel">
+        <strong>Preferences</strong>
+        <div class="preferences-grid">
+          <label>
+            <span>Floating mini player</span>
+            <input id="floating-player-toggle" type="checkbox">
+          </label>
+          <label>
+            <span>Apply site rules</span>
+            <input id="site-rules-toggle" type="checkbox">
+          </label>
+          <label>
+            <span>Compact popup</span>
+            <input id="compact-popup-toggle" type="checkbox">
+          </label>
+        </div>
+      </div>
+      <button class="toggle" id="toggle-button" type="button">Start SonicFlow</button>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/sonicflow_app/shared/core-js"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps/dev"
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/sonicflow_app/extensions/safari"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps/dev"
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "npm"
+    directory: "/sonicflow_app/apps/web"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps/dev"
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "swift"
+    directory: "/sonicflow_app/shared/core-swift"
+    schedule:
+      interval: "weekly"
+    commit-message:
+      prefix: "deps"

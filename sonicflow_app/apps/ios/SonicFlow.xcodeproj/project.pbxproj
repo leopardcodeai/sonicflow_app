@@ -1,0 +1,893 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		032FD055BE7CF75B0C303FF8 /* BowlHero.png in Resources */ = {isa = PBXBuildFile; fileRef = F237A516A518B8B2F5DEE939 /* BowlHero.png */; };
+		164582D491E8A9A93751D0B0 /* SonicFlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1356464A4F5CF1D785D35141 /* SonicFlowCore */; };
+		201EDA6157B26150C771B32C /* SonicFlowExample.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC8770D95B3FB9F17D16E6E /* SonicFlowExample.swift */; };
+		2319EC87E533F85ECEC7F6C6 /* SonicFlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = D5996B61DAE29818BBDE51E9 /* SonicFlowCore */; };
+		23AB7A321A1882623008C1D1 /* BrandTokens.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6B4F5F78B1B404D5697DBC /* BrandTokens.swift */; };
+		24B3FAA7ADFD05E97A18EFCA /* FlowMode+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A517539F3BBE3EF05CE21C5 /* FlowMode+UI.swift */; };
+		331ED30AC1EE716A3419C7F7 /* FlowModePresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF57DDD14E600876AD0DDE1 /* FlowModePresentationTests.swift */; };
+		3D23F555D6101232AD520C78 /* LeopardWallpaper.png in Resources */ = {isa = PBXBuildFile; fileRef = 0C443F2BE6B8D72BD81FD725 /* LeopardWallpaper.png */; };
+		41E867C5F7DFBA231B8D4A55 /* SonicFlowCore in Frameworks */ = {isa = PBXBuildFile; productRef = BF0F3C4DF935EC4D9873F4F8 /* SonicFlowCore */; };
+		4696EEE238D8D72DF34093D5 /* FlowScreenStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8089D4E145902296DF5BDD24 /* FlowScreenStateTests.swift */; };
+		554AEF249BCF060277AE6D45 /* SonicFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B516352594F78A78E579E2 /* SonicFlowApp.swift */; };
+		7279875497473625AEE5F3CC /* SonicFlowSettingsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0596ABBCA048CC3438655EFB /* SonicFlowSettingsTests.swift */; };
+		7827B1F61BFFFF17DFE465C6 /* LeopardBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B3280BDD8F2C5AFEE74E47 /* LeopardBackgroundView.swift */; };
+		7D05EF897F84A966482B102A /* SonicFlowLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5731D5A5647EC3675C0254DD /* SonicFlowLiveActivity.swift */; };
+		81B1C8C71BBDA036CD5DE611 /* SonicFlowExampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBA44F045F2B1E1670B2AECB /* SonicFlowExampleTests.swift */; };
+		A2B7E59896AF62E50EEE893E /* BundledRasterImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5003A935C96FDB4813812A4B /* BundledRasterImage.swift */; };
+		A2E628115AA6116229E2EEE7 /* SonicFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BB47E7ACA11FC2D2A6DDD61 /* SonicFlowUITests.swift */; };
+		A5A234CEB792FABA45BD8609 /* ModeCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 403A3DE322E7805F2605838C /* ModeCard.swift */; };
+		A5DEAA2046163AACDA9C7609 /* SonicFlowLiveActivityExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FCFC4E0629418A81579A82A1 /* SonicFlowLiveActivityExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		AFC3D881D37F336DD278A979 /* AudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8456CB8D34ACD49E725160 /* AudioManager.swift */; };
+		B724404B0DB8217D3502CB59 /* SonicFlowLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5731D5A5647EC3675C0254DD /* SonicFlowLiveActivity.swift */; };
+		C145285BCA8D2F75CCA641C1 /* SonicFlowLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E37E6957542218DC924A279 /* SonicFlowLiveActivityWidget.swift */; };
+		C614795F81701E6576FA7DD3 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33F144C80E6813F2DACAEBD /* ContentView.swift */; };
+		D3C51CAA34EE9D5D16531435 /* SonicFlowSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581CE068FF69D00305014F1E /* SonicFlowSettings.swift */; };
+		DCAB2C34A3965F9D48611CE8 /* VisualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DE12304AE454BB4619B9061 /* VisualizerView.swift */; };
+		DDE96EADE74C3E692B680DB8 /* SonicFlowPreset.swift in Sources */ = {isa = PBXBuildFile; fileRef = C021C952BAFCF0687098D671 /* SonicFlowPreset.swift */; };
+		EBEE91D17244AD5A957E790E /* FlowScreenState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91889452C59D04630B9D040D /* FlowScreenState.swift */; };
+		F62461520BC44FDE8BDA28F1 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A223E255266D82491C00B7F /* Color+Hex.swift */; };
+		FB345E4AC52227294FDE2401 /* SonicFlowFeatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E07E7CC06E7AC8710F13AFB2 /* SonicFlowFeatureTests.swift */; };
+		FD2AE36D23CCD6A7D760278F /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D69429F11693E488D531E44 /* AudioManagerTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		357E4826F231AA120879A397 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 015DA5706AD92D13A9EC2B2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F50E4BCB7BA97121D9A679D0;
+			remoteInfo = SonicFlowLiveActivityExtension;
+		};
+		4E74D5F5BB8EC8DBDAA790B3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 015DA5706AD92D13A9EC2B2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAD91503658E6309E261FF1A;
+			remoteInfo = SonicFlow;
+		};
+		AEABF963816FFBE921DADD86 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 015DA5706AD92D13A9EC2B2C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAD91503658E6309E261FF1A;
+			remoteInfo = SonicFlow;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		EC999832CEA303F05A254ABA /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A5DEAA2046163AACDA9C7609 /* SonicFlowLiveActivityExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0596ABBCA048CC3438655EFB /* SonicFlowSettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowSettingsTests.swift; sourceTree = "<group>"; };
+		0C443F2BE6B8D72BD81FD725 /* LeopardWallpaper.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LeopardWallpaper.png; sourceTree = "<group>"; };
+		1DE12304AE454BB4619B9061 /* VisualizerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualizerView.swift; sourceTree = "<group>"; };
+		3E37E6957542218DC924A279 /* SonicFlowLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowLiveActivityWidget.swift; sourceTree = "<group>"; };
+		403A3DE322E7805F2605838C /* ModeCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCard.swift; sourceTree = "<group>"; };
+		5003A935C96FDB4813812A4B /* BundledRasterImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundledRasterImage.swift; sourceTree = "<group>"; };
+		5731D5A5647EC3675C0254DD /* SonicFlowLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowLiveActivity.swift; sourceTree = "<group>"; };
+		581CE068FF69D00305014F1E /* SonicFlowSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowSettings.swift; sourceTree = "<group>"; };
+		6E8456CB8D34ACD49E725160 /* AudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManager.swift; sourceTree = "<group>"; };
+		7BB47E7ACA11FC2D2A6DDD61 /* SonicFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowUITests.swift; sourceTree = "<group>"; };
+		7D69429F11693E488D531E44 /* AudioManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioManagerTests.swift; sourceTree = "<group>"; };
+		8089D4E145902296DF5BDD24 /* FlowScreenStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowScreenStateTests.swift; sourceTree = "<group>"; };
+		8A223E255266D82491C00B7F /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		8A517539F3BBE3EF05CE21C5 /* FlowMode+UI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FlowMode+UI.swift"; sourceTree = "<group>"; };
+		91889452C59D04630B9D040D /* FlowScreenState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowScreenState.swift; sourceTree = "<group>"; };
+		98D7362D2EB76B7AED4B57AE /* SonicFlow.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SonicFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D349AEC571BBA95B4815DD6 /* SonicFlowTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SonicFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A33F144C80E6813F2DACAEBD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A6B516352594F78A78E579E2 /* SonicFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowApp.swift; sourceTree = "<group>"; };
+		ADC8770D95B3FB9F17D16E6E /* SonicFlowExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowExample.swift; sourceTree = "<group>"; };
+		B0B3280BDD8F2C5AFEE74E47 /* LeopardBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeopardBackgroundView.swift; sourceTree = "<group>"; };
+		B81AA0B6791820A4DB6830FA /* SonicFlowUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = SonicFlowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B261252E2A5E12E171ED1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		BBA44F045F2B1E1670B2AECB /* SonicFlowExampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowExampleTests.swift; sourceTree = "<group>"; };
+		C021C952BAFCF0687098D671 /* SonicFlowPreset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowPreset.swift; sourceTree = "<group>"; };
+		CDF57DDD14E600876AD0DDE1 /* FlowModePresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowModePresentationTests.swift; sourceTree = "<group>"; };
+		DA340B98A68BDD81FD20B3D3 /* core-swift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "core-swift"; path = "../../shared/core-swift"; sourceTree = SOURCE_ROOT; };
+		E07E7CC06E7AC8710F13AFB2 /* SonicFlowFeatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SonicFlowFeatureTests.swift; sourceTree = "<group>"; };
+		F237A516A518B8B2F5DEE939 /* BowlHero.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = BowlHero.png; sourceTree = "<group>"; };
+		F2B172D397A84412C292468E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FCFC4E0629418A81579A82A1 /* SonicFlowLiveActivityExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SonicFlowLiveActivityExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		FD6B4F5F78B1B404D5697DBC /* BrandTokens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTokens.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		250ECBC788B6B649A36F77D5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2319EC87E533F85ECEC7F6C6 /* SonicFlowCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D385626FE20F1A663124CF2D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				164582D491E8A9A93751D0B0 /* SonicFlowCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA420752ECBE44129CA3AC04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				41E867C5F7DFBA231B8D4A55 /* SonicFlowCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		179FBE56196D2CCADFA5AA99 /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				7D69429F11693E488D531E44 /* AudioManagerTests.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
+		2F4BD5571FB53B58248370DA /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				0596ABBCA048CC3438655EFB /* SonicFlowSettingsTests.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		354AF555B84F541879094B96 = {
+			isa = PBXGroup;
+			children = (
+				489493093165E43E1D15A0C0 /* Packages */,
+				CB6D89EFF037030BDCDC9D0A /* SonicFlow */,
+				4E32F82DC82E836B20DC67F1 /* SonicFlowLiveActivityExtension */,
+				DB0EB34A5B663E38E2698F3C /* SonicFlowTests */,
+				D0FA34B9749BC55E693368F8 /* SonicFlowUITests */,
+				E4C73F7CBFD8AA0798F89BEE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3DDFB728D6F1D5AB2FD25C96 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				A6B516352594F78A78E579E2 /* SonicFlowApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		489493093165E43E1D15A0C0 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				DA340B98A68BDD81FD20B3D3 /* core-swift */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		4E32F82DC82E836B20DC67F1 /* SonicFlowLiveActivityExtension */ = {
+			isa = PBXGroup;
+			children = (
+				F2B172D397A84412C292468E /* Info.plist */,
+				3E37E6957542218DC924A279 /* SonicFlowLiveActivityWidget.swift */,
+			);
+			path = SonicFlowLiveActivityExtension;
+			sourceTree = "<group>";
+		};
+		567C7CA1A25FC14322A98FCD /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				A33F144C80E6813F2DACAEBD /* ContentView.swift */,
+				91889452C59D04630B9D040D /* FlowScreenState.swift */,
+				403A3DE322E7805F2605838C /* ModeCard.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		65C87711B2038E0DF334DD13 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				C021C952BAFCF0687098D671 /* SonicFlowPreset.swift */,
+				581CE068FF69D00305014F1E /* SonicFlowSettings.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
+		6E73937A12190DAFBEEDD0D0 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				8089D4E145902296DF5BDD24 /* FlowScreenStateTests.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		8557A66EC8CC9175D7D0E22C /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				6E73937A12190DAFBEEDD0D0 /* Home */,
+				179FBE56196D2CCADFA5AA99 /* Host */,
+				9C9F29B16DA7C11DCBBB1B3B /* Profile */,
+				2F4BD5571FB53B58248370DA /* Session */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		9C9F29B16DA7C11DCBBB1B3B /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				CDF57DDD14E600876AD0DDE1 /* FlowModePresentationTests.swift */,
+				BBA44F045F2B1E1670B2AECB /* SonicFlowExampleTests.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		AD49770E2AF51393FE96974B /* Host */ = {
+			isa = PBXGroup;
+			children = (
+				6E8456CB8D34ACD49E725160 /* AudioManager.swift */,
+				1DE12304AE454BB4619B9061 /* VisualizerView.swift */,
+			);
+			path = Host;
+			sourceTree = "<group>";
+		};
+		AF6E4BDEC50E1C19133585D4 /* DesignSystem */ = {
+			isa = PBXGroup;
+			children = (
+				FD6B4F5F78B1B404D5697DBC /* BrandTokens.swift */,
+				5003A935C96FDB4813812A4B /* BundledRasterImage.swift */,
+				8A223E255266D82491C00B7F /* Color+Hex.swift */,
+				B0B3280BDD8F2C5AFEE74E47 /* LeopardBackgroundView.swift */,
+			);
+			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		BED6A41127BCE9F93C53D524 /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				567C7CA1A25FC14322A98FCD /* Home */,
+				AD49770E2AF51393FE96974B /* Host */,
+				D8C6A84AF73B014ABA010F92 /* Profile */,
+				65C87711B2038E0DF334DD13 /* Session */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		C169F1DC41C5E3D2649037D2 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				5731D5A5647EC3675C0254DD /* SonicFlowLiveActivity.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CB6D89EFF037030BDCDC9D0A /* SonicFlow */ = {
+			isa = PBXGroup;
+			children = (
+				F237A516A518B8B2F5DEE939 /* BowlHero.png */,
+				B8B261252E2A5E12E171ED1F /* Info.plist */,
+				0C443F2BE6B8D72BD81FD725 /* LeopardWallpaper.png */,
+				3DDFB728D6F1D5AB2FD25C96 /* App */,
+				E03C9F28DED066402497D2DE /* Core */,
+				BED6A41127BCE9F93C53D524 /* Features */,
+			);
+			path = SonicFlow;
+			sourceTree = "<group>";
+		};
+		D0FA34B9749BC55E693368F8 /* SonicFlowUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7BB47E7ACA11FC2D2A6DDD61 /* SonicFlowUITests.swift */,
+			);
+			path = SonicFlowUITests;
+			sourceTree = "<group>";
+		};
+		D8C6A84AF73B014ABA010F92 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				8A517539F3BBE3EF05CE21C5 /* FlowMode+UI.swift */,
+				ADC8770D95B3FB9F17D16E6E /* SonicFlowExample.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		DB0EB34A5B663E38E2698F3C /* SonicFlowTests */ = {
+			isa = PBXGroup;
+			children = (
+				E07E7CC06E7AC8710F13AFB2 /* SonicFlowFeatureTests.swift */,
+				8557A66EC8CC9175D7D0E22C /* Features */,
+			);
+			path = SonicFlowTests;
+			sourceTree = "<group>";
+		};
+		E03C9F28DED066402497D2DE /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				AF6E4BDEC50E1C19133585D4 /* DesignSystem */,
+				C169F1DC41C5E3D2649037D2 /* Models */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E4C73F7CBFD8AA0798F89BEE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				98D7362D2EB76B7AED4B57AE /* SonicFlow.app */,
+				FCFC4E0629418A81579A82A1 /* SonicFlowLiveActivityExtension.appex */,
+				9D349AEC571BBA95B4815DD6 /* SonicFlowTests.xctest */,
+				B81AA0B6791820A4DB6830FA /* SonicFlowUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0B4D9CC9268BFE5B07E135AE /* SonicFlowUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2DCEBC22FA144130615AE08A /* Build configuration list for PBXNativeTarget "SonicFlowUITests" */;
+			buildPhases = (
+				2E1F90472778FF4ACE825945 /* Sources */,
+				DA420752ECBE44129CA3AC04 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5EC0EC68B7047AE4BA9635B7 /* PBXTargetDependency */,
+			);
+			name = SonicFlowUITests;
+			packageProductDependencies = (
+				BF0F3C4DF935EC4D9873F4F8 /* SonicFlowCore */,
+			);
+			productName = SonicFlowUITests;
+			productReference = B81AA0B6791820A4DB6830FA /* SonicFlowUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		0E286A25D77035FEBD1C1C31 /* SonicFlowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B7773A365FF84AE0BCDC71FA /* Build configuration list for PBXNativeTarget "SonicFlowTests" */;
+			buildPhases = (
+				F6C91F7C8FEDE881BA24C2F5 /* Sources */,
+				250ECBC788B6B649A36F77D5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				12073C32F0E78A4682EB743D /* PBXTargetDependency */,
+			);
+			name = SonicFlowTests;
+			packageProductDependencies = (
+				D5996B61DAE29818BBDE51E9 /* SonicFlowCore */,
+			);
+			productName = SonicFlowTests;
+			productReference = 9D349AEC571BBA95B4815DD6 /* SonicFlowTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		F50E4BCB7BA97121D9A679D0 /* SonicFlowLiveActivityExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D07208DF475376C92B3BAD6 /* Build configuration list for PBXNativeTarget "SonicFlowLiveActivityExtension" */;
+			buildPhases = (
+				38E2914C65D50DEEC9DDAA05 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SonicFlowLiveActivityExtension;
+			packageProductDependencies = (
+			);
+			productName = SonicFlowLiveActivityExtension;
+			productReference = FCFC4E0629418A81579A82A1 /* SonicFlowLiveActivityExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		FAD91503658E6309E261FF1A /* SonicFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79D60974360E0C846489CD22 /* Build configuration list for PBXNativeTarget "SonicFlow" */;
+			buildPhases = (
+				CF3B0C6D3AC0E92A6B2EFCEE /* Sources */,
+				446E8C45E4EC54E833BB1DDF /* Resources */,
+				D385626FE20F1A663124CF2D /* Frameworks */,
+				EC999832CEA303F05A254ABA /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8B3798470B6918C502BA3C5C /* PBXTargetDependency */,
+			);
+			name = SonicFlow;
+			packageProductDependencies = (
+				1356464A4F5CF1D785D35141 /* SonicFlowCore */,
+			);
+			productName = SonicFlow;
+			productReference = 98D7362D2EB76B7AED4B57AE /* SonicFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		015DA5706AD92D13A9EC2B2C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0B4D9CC9268BFE5B07E135AE = {
+						TestTargetID = FAD91503658E6309E261FF1A;
+					};
+					F50E4BCB7BA97121D9A679D0 = {
+						ProvisioningStyle = Automatic;
+					};
+					FAD91503658E6309E261FF1A = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 2ECEC78086B1B498F930BB75 /* Build configuration list for PBXProject "SonicFlow" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 354AF555B84F541879094B96;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				21BA575DD8410E3F91091F11 /* XCLocalSwiftPackageReference "../../shared/core-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E4C73F7CBFD8AA0798F89BEE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FAD91503658E6309E261FF1A /* SonicFlow */,
+				F50E4BCB7BA97121D9A679D0 /* SonicFlowLiveActivityExtension */,
+				0E286A25D77035FEBD1C1C31 /* SonicFlowTests */,
+				0B4D9CC9268BFE5B07E135AE /* SonicFlowUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		446E8C45E4EC54E833BB1DDF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				032FD055BE7CF75B0C303FF8 /* BowlHero.png in Resources */,
+				3D23F555D6101232AD520C78 /* LeopardWallpaper.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2E1F90472778FF4ACE825945 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2E628115AA6116229E2EEE7 /* SonicFlowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		38E2914C65D50DEEC9DDAA05 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D05EF897F84A966482B102A /* SonicFlowLiveActivity.swift in Sources */,
+				C145285BCA8D2F75CCA641C1 /* SonicFlowLiveActivityWidget.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CF3B0C6D3AC0E92A6B2EFCEE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AFC3D881D37F336DD278A979 /* AudioManager.swift in Sources */,
+				23AB7A321A1882623008C1D1 /* BrandTokens.swift in Sources */,
+				A2B7E59896AF62E50EEE893E /* BundledRasterImage.swift in Sources */,
+				F62461520BC44FDE8BDA28F1 /* Color+Hex.swift in Sources */,
+				C614795F81701E6576FA7DD3 /* ContentView.swift in Sources */,
+				24B3FAA7ADFD05E97A18EFCA /* FlowMode+UI.swift in Sources */,
+				EBEE91D17244AD5A957E790E /* FlowScreenState.swift in Sources */,
+				7827B1F61BFFFF17DFE465C6 /* LeopardBackgroundView.swift in Sources */,
+				A5A234CEB792FABA45BD8609 /* ModeCard.swift in Sources */,
+				554AEF249BCF060277AE6D45 /* SonicFlowApp.swift in Sources */,
+				201EDA6157B26150C771B32C /* SonicFlowExample.swift in Sources */,
+				B724404B0DB8217D3502CB59 /* SonicFlowLiveActivity.swift in Sources */,
+				DDE96EADE74C3E692B680DB8 /* SonicFlowPreset.swift in Sources */,
+				D3C51CAA34EE9D5D16531435 /* SonicFlowSettings.swift in Sources */,
+				DCAB2C34A3965F9D48611CE8 /* VisualizerView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F6C91F7C8FEDE881BA24C2F5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD2AE36D23CCD6A7D760278F /* AudioManagerTests.swift in Sources */,
+				331ED30AC1EE716A3419C7F7 /* FlowModePresentationTests.swift in Sources */,
+				4696EEE238D8D72DF34093D5 /* FlowScreenStateTests.swift in Sources */,
+				81B1C8C71BBDA036CD5DE611 /* SonicFlowExampleTests.swift in Sources */,
+				FB345E4AC52227294FDE2401 /* SonicFlowFeatureTests.swift in Sources */,
+				7279875497473625AEE5F3CC /* SonicFlowSettingsTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		12073C32F0E78A4682EB743D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAD91503658E6309E261FF1A /* SonicFlow */;
+			targetProxy = AEABF963816FFBE921DADD86 /* PBXContainerItemProxy */;
+		};
+		5EC0EC68B7047AE4BA9635B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAD91503658E6309E261FF1A /* SonicFlow */;
+			targetProxy = 4E74D5F5BB8EC8DBDAA790B3 /* PBXContainerItemProxy */;
+		};
+		8B3798470B6918C502BA3C5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F50E4BCB7BA97121D9A679D0 /* SonicFlowLiveActivityExtension */;
+			targetProxy = 357E4826F231AA120879A397 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		2DE20B75AB2D26A89C53FD3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		3500FA8D373F8B3CF0B3EF26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TU5SQ3L4CC;
+				INFOPLIST_FILE = SonicFlowLiveActivityExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.liveactivity;
+				PRODUCT_NAME = SonicFlowLiveActivityExtension;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3C573DD54BE2B8F367EC7014 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TU5SQ3L4CC;
+				INFOPLIST_FILE = SonicFlowLiveActivityExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.liveactivity;
+				PRODUCT_NAME = SonicFlowLiveActivityExtension;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6F40C1B7A35C0C8DDE2DE481 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SonicFlow;
+			};
+			name = Release;
+		};
+		7D8673A8DF48AC05504BCFAA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SonicFlow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios;
+				PRODUCT_NAME = SonicFlow;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B263186D53D7A6D07B5550E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CC467C94E16EB6C6ED9C825E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
+			};
+			name = Debug;
+		};
+		F1201F6B3CE40FC9C0092063 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SonicFlow.app/SonicFlow";
+			};
+			name = Release;
+		};
+		FD8CA9F45B5883DE1A72850F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = SonicFlow;
+			};
+			name = Debug;
+		};
+		FF6EB793275123D88D725972 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SonicFlow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonicflow.ios;
+				PRODUCT_NAME = SonicFlow;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2DCEBC22FA144130615AE08A /* Build configuration list for PBXNativeTarget "SonicFlowUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FD8CA9F45B5883DE1A72850F /* Debug */,
+				6F40C1B7A35C0C8DDE2DE481 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		2ECEC78086B1B498F930BB75 /* Build configuration list for PBXProject "SonicFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B263186D53D7A6D07B5550E2 /* Debug */,
+				2DE20B75AB2D26A89C53FD3F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		79D60974360E0C846489CD22 /* Build configuration list for PBXNativeTarget "SonicFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D8673A8DF48AC05504BCFAA /* Debug */,
+				FF6EB793275123D88D725972 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7D07208DF475376C92B3BAD6 /* Build configuration list for PBXNativeTarget "SonicFlowLiveActivityExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C573DD54BE2B8F367EC7014 /* Debug */,
+				3500FA8D373F8B3CF0B3EF26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B7773A365FF84AE0BCDC71FA /* Build configuration list for PBXNativeTarget "SonicFlowTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC467C94E16EB6C6ED9C825E /* Debug */,
+				F1201F6B3CE40FC9C0092063 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		21BA575DD8410E3F91091F11 /* XCLocalSwiftPackageReference "../../shared/core-swift" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = "../../shared/core-swift";
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1356464A4F5CF1D785D35141 /* SonicFlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SonicFlowCore;
+		};
+		BF0F3C4DF935EC4D9873F4F8 /* SonicFlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SonicFlowCore;
+		};
+		D5996B61DAE29818BBDE51E9 /* SonicFlowCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SonicFlowCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 015DA5706AD92D13A9EC2B2C /* Project object */;
+}

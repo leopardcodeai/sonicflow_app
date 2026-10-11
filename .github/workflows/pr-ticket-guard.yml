@@ -1,0 +1,21 @@
+name: PR Ticket Guard
+
+on:
+  workflow_dispatch:
+
+jobs:
+  guard:
+    runs-on: macos-15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Validate Branch, Title, and Linear Reference
+        env:
+          PR_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: node scripts/github/pr_ticket_guard.mjs
